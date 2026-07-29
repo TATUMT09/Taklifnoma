@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Namuna — Taklifnoma</title>
+<link rel="stylesheet" href="/assets/css/invite.css" />
+<style>
+  .preview-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center; gap: 0.9rem;
+    flex-wrap: wrap;
+    padding: 0.7rem 1rem;
+    background: rgba(10, 8, 6, 0.82);
+    backdrop-filter: blur(6px);
+    font-family: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  }
+  .preview-bar span { color: #f3ede0; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; }
+  .preview-bar a.start {
+    background: #c9a24a; color: #1a1330; font-weight: 700; font-size: 0.82rem;
+    padding: 0.5rem 1.1rem; border-radius: 999px; text-decoration: none;
+  }
+  .preview-bar a.back { color: #d8cdb8; font-size: 0.82rem; text-decoration: underline; }
+  body { padding-top: 46px; }
+</style>
+</head>
+<body>
+  <div class="preview-bar">
+    <span>Bu — namuna ko'rinish</span>
+    <a class="start" id="preview-start-btn" href="/create">Bu andoza bilan boshlash</a>
+    <a class="back" href="/#templates">Andazalarga qaytish</a>
+  </div>
+
+  <div id="app">
+    <div class="skeleton-loading">Namuna yuklanmoqda...</div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/categories.js"></script>
+  <script src="/assets/js/format.js"></script>
+  <script src="/assets/js/invite.js"></script>
+  <script>
+    document.getElementById('preview-start-btn').href = '/create' + window.location.search;
+  </script>
+</body>
+</html>
