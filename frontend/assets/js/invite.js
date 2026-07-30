@@ -349,6 +349,13 @@
 
             <div class="actions-row">
               <button class="btn-ghost" id="share-btn">Taklifnomani ulashish</button>
+              <a class="btn-ghost" id="telegram-share-btn" target="_blank" rel="noopener">
+                <svg class="tg-icon" viewBox="0 0 240 240" aria-hidden="true">
+                  <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                  <path fill="#fff" d="M52 118l122-47c5.6-2.2 10.5 1.4 8.7 9.7l-20.8 98c-1.5 6.9-5.6 8.6-11.4 5.3l-31.5-23.2-15.2 14.6c-1.7 1.7-3.1 3.1-6.3 3.1l2.2-31.8 58-52.4c2.5-2.2-.5-3.5-3.9-1.3l-71.7 45.1-30.9-9.6c-6.7-2.1-6.8-6.7 1.8-9.5z"/>
+                </svg>
+                Telegramda ulashish
+              </a>
             </div>
           </div>
         </section>
@@ -420,6 +427,13 @@
           <div class="rule" id="finale-mark" style="margin:0 auto 1.6rem;"></div>
           <div class="actions-row">
             <button class="btn-ghost" id="share-btn">Taklifnomani ulashish</button>
+            <a class="btn-ghost" id="telegram-share-btn" target="_blank" rel="noopener">
+              <svg class="tg-icon" viewBox="0 0 240 240" aria-hidden="true">
+                <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                <path fill="#fff" d="M52 118l122-47c5.6-2.2 10.5 1.4 8.7 9.7l-20.8 98c-1.5 6.9-5.6 8.6-11.4 5.3l-31.5-23.2-15.2 14.6c-1.7 1.7-3.1 3.1-6.3 3.1l2.2-31.8 58-52.4c2.5-2.2-.5-3.5-3.9-1.3l-71.7 45.1-30.9-9.6c-6.7-2.1-6.8-6.7 1.8-9.5z"/>
+              </svg>
+              Telegramda ulashish
+            </a>
           </div>
         </section>
 
@@ -523,6 +537,23 @@
       toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('Havola nusxalandi');
+      } catch (e) {
+        showToast("Nusxalab bo'lmadi");
+      }
+      document.body.removeChild(ta);
+    }
+
     document.getElementById('share-btn').addEventListener('click', () => {
       const shareData = {
         title: document.title,
@@ -531,13 +562,21 @@
       };
       if (navigator.share) {
         navigator.share(shareData).catch(() => {});
-      } else if (navigator.clipboard) {
+      } else if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(shareData.url).then(
           () => showToast('Havola nusxalandi'),
-          () => showToast("Ulashish qo'llab-quvvatlanmaydi")
+          () => fallbackCopy(shareData.url)
         );
+      } else {
+        fallbackCopy(shareData.url);
       }
     });
+
+    const telegramShareBtn = document.getElementById('telegram-share-btn');
+    if (telegramShareBtn) {
+      const shareText = document.title;
+      telegramShareBtn.href = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(shareText)}`;
+    }
 
     if (!reduceMotion) {
       let fired = false;

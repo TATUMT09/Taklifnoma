@@ -5,3 +5,4 @@ backend/.env
 backend/uploads/*
 !backend/uploads/.gitkeep
 backend/*.log
+.claude/

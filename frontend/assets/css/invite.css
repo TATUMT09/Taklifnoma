@@ -503,7 +503,8 @@ body[data-layout="nafis"] .cover.revealed .scroll-hint { opacity: 1; }
   transition: color 0.2s ease;
 }
 .contact-tg:hover { color: var(--gold-hi); }
-.contact-tg .tg-icon { width: 26px; height: 26px; flex-shrink: 0; }
+.tg-icon { width: 18px; height: 18px; flex-shrink: 0; }
+.contact-tg .tg-icon { width: 26px; height: 26px; }
 
 .toast {
   position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 12px);

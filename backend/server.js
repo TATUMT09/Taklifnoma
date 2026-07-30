@@ -1,8 +1,10 @@
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
+const db = require('./db');
 const authRoutes = require('./routes/auth');
 const googleAuthRoutes = require('./routes/googleAuth');
 const invitationRoutes = require('./routes/invitations');
@@ -36,9 +38,44 @@ pages.forEach((p) => {
   app.get(`/${p}`, (req, res) => res.sendFile(path.join(FRONTEND_DIR, `${p}.html`)));
 });
 
-// Public invitation page: /i/:slug -> static shell that fetches data client-side
+// Public invitation page: /i/:slug -> static shell (client-side fetches the full data),
+// but with server-rendered Open Graph tags so link previews (Telegram, etc.) show
+// the couple's name/photo — those scrapers don't run JavaScript.
+const INVITE_TEMPLATE = fs.readFileSync(path.join(FRONTEND_DIR, 'i.html'), 'utf8');
+
+function escapeHtmlAttr(str) {
+  return String(str || '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
 app.get('/i/:slug', (req, res) => {
-  res.sendFile(path.join(FRONTEND_DIR, 'i.html'));
+  const inv = db.prepare('SELECT * FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.send(INVITE_TEMPLATE);
+
+  const names = inv.bride_name ? `${inv.groom_name} & ${inv.bride_name}` : inv.groom_name;
+  const title = `${names} — Taklifnoma`;
+  const description = inv.custom_message
+    || [inv.venue_name, inv.address].filter(Boolean).join(', ')
+    || "Sizni ushbu maxsus kunga taklif qilamiz";
+  const origin = `${req.protocol}://${req.get('host')}`;
+  const imageUrl = inv.photo_url
+    ? (inv.photo_url.startsWith('http') ? inv.photo_url : `${origin}${inv.photo_url}`)
+    : `${origin}/assets/images/hero/hero-1.jpg`;
+  const pageUrl = `${origin}/i/${inv.slug}`;
+
+  const ogTags = `<title>${escapeHtmlAttr(title)}</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="${escapeHtmlAttr(title)}" />
+<meta property="og:description" content="${escapeHtmlAttr(description)}" />
+<meta property="og:image" content="${escapeHtmlAttr(imageUrl)}" />
+<meta property="og:url" content="${escapeHtmlAttr(pageUrl)}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${escapeHtmlAttr(title)}" />
+<meta name="twitter:description" content="${escapeHtmlAttr(description)}" />
+<meta name="twitter:image" content="${escapeHtmlAttr(imageUrl)}" />`;
+
+  res.send(INVITE_TEMPLATE.replace('<title>Taklifnoma</title>', ogTags));
 });
 
 app.use((req, res) => {
