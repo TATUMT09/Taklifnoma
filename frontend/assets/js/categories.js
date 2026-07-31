@@ -93,7 +93,9 @@ const EVENT_CATEGORIES = [
     venueEyebrow: '',
     dateLabel: 'Maxsus kun (ixtiyoriy)',
     msgLabel: 'Hat matni',
-    msgPlaceholder: 'Yuragingizdagi gaplarni shu yerga yozing...'
+    msgPlaceholder: 'Yuragingizdagi gaplarni shu yerga yozing...',
+    hideFamily: true,
+    noVenue: true
   }
 ];
 

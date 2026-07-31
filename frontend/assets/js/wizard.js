@@ -25,6 +25,7 @@
   };
 
   const brideField = document.getElementById('bride-field');
+  const familyField = document.getElementById('family-field');
   const dateLabel = document.getElementById('date-label');
   const messageLabel = document.getElementById('message-label');
   const messageInput = document.getElementById('custom_message');
@@ -59,6 +60,7 @@
   function applyCategory(id) {
     const cat = getEventCategory(id);
     brideField.hidden = !cat.pair;
+    familyField.hidden = !!cat.hideFamily;
     dateLabel.textContent = cat.dateLabel;
     messageLabel.textContent = cat.msgLabel;
     messageInput.placeholder = cat.msgPlaceholder;
@@ -226,6 +228,10 @@
     return Array.from(steps[n - 1].querySelectorAll('input, textarea')).filter((el) => el.hasAttribute('required'));
   }
 
+  function skipsVenueStep() {
+    return !!getEventCategory(state.event_type).noVenue;
+  }
+
   nextBtn.addEventListener('click', () => {
     const required = fieldsForStep(current);
     for (const el of required) {
@@ -236,12 +242,16 @@
       }
     }
     errEl.textContent = '';
-    current = Math.min(total, current + 1);
+    let next = current + 1;
+    if (next === 2 && skipsVenueStep()) next = 3;
+    current = Math.min(total, next);
     renderStep();
   });
 
   backBtn.addEventListener('click', () => {
-    current = Math.max(1, current - 1);
+    let prev = current - 1;
+    if (prev === 2 && skipsVenueStep()) prev = 1;
+    current = Math.max(1, prev);
     renderStep();
   });
 
