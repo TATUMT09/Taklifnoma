@@ -55,6 +55,7 @@ const api = (() => {
     adminStats: () => request('GET', '/api/admin/stats'),
     adminUsers: () => request('GET', '/api/admin/users'),
     adminDeleteUser: (id) => request('DELETE', `/api/admin/users/${id}`),
+    adminResetPassword: (id, password) => request('POST', `/api/admin/users/${id}/password`, { password }),
     adminInvitations: () => request('GET', '/api/admin/invitations'),
     adminDeleteInvitation: (id) => request('DELETE', `/api/admin/invitations/${id}`),
 

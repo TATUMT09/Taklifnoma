@@ -100,7 +100,8 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 if (ADMIN_EMAIL && ADMIN_PASSWORD) {
   const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get(ADMIN_EMAIL);
   if (existingAdmin) {
-    db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(existingAdmin.id);
+    db.prepare('UPDATE users SET is_admin = 1, password_hash = ? WHERE id = ?')
+      .run(bcrypt.hashSync(ADMIN_PASSWORD, 10), existingAdmin.id);
   } else {
     db.prepare('INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 1)')
       .run('Admin', ADMIN_EMAIL, bcrypt.hashSync(ADMIN_PASSWORD, 10));

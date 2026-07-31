@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { requireAdmin } = require('../middleware/auth');
 
@@ -27,6 +28,19 @@ router.get('/users', (req, res) => {
     )
     .all();
   res.json({ users: rows.map((r) => ({ ...r, is_admin: !!r.is_admin })) });
+});
+
+router.post('/users/:id/password', (req, res) => {
+  const id = Number(req.params.id);
+  const { password } = req.body || {};
+  if (!password || password.length < 6) {
+    return res.status(400).json({ error: "Parol kamida 6 belgidan iborat bo'lsin" });
+  }
+  const row = db.prepare('SELECT id FROM users WHERE id = ?').get(id);
+  if (!row) return res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
+  const passwordHash = bcrypt.hashSync(password, 10);
+  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, id);
+  res.json({ ok: true });
 });
 
 router.delete('/users/:id', (req, res) => {

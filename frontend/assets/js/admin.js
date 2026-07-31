@@ -78,10 +78,27 @@
           <td class="cell-sub">${escapeHtml(u.created_at)}</td>
           <td>${u.is_admin ? '<span class="admin-badge">Admin</span>' : ''}</td>
           <td>
-            ${u.id === user.id ? '' : `<button class="btn btn-danger-ghost btn-sm" data-del-user="${u.id}">O'chirish</button>`}
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn-outline btn-sm" data-reset-user="${u.id}">Parolni yangilash</button>
+              ${u.id === user.id ? '' : `<button class="btn btn-danger-ghost btn-sm" data-del-user="${u.id}">O'chirish</button>`}
+            </div>
           </td>
         </tr>
       `).join('');
+
+      usersBody.querySelectorAll('[data-reset-user]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const password = window.prompt("Yangi parolni kiriting (kamida 6 belgi):");
+          if (password === null) return;
+          if (password.length < 6) { showToast("Parol kamida 6 belgidan iborat bo'lsin", true); return; }
+          try {
+            await api.adminResetPassword(btn.getAttribute('data-reset-user'), password);
+            showToast('Parol yangilandi');
+          } catch (e) {
+            showToast(e.message, true);
+          }
+        });
+      });
 
       usersBody.querySelectorAll('[data-del-user]').forEach((btn) => {
         btn.addEventListener('click', async () => {
