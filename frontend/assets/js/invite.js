@@ -2,7 +2,7 @@
   const app = document.getElementById('app');
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon'];
+  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub'];
   const isPreview = window.location.pathname.replace(/\/$/, '') === '/preview';
 
   function escapeHtml(str) {
@@ -18,7 +18,8 @@
     tabrik: '/assets/images/categories/tabrik.webp',
     haj_safari: '/assets/images/categories/haj_safari.jpg',
     sevgi_izhor: '/assets/images/categories/sevgi_izhor.svg',
-    nahor_oshi: '/assets/images/categories/nahor_oshi.png'
+    nahor_oshi: '/assets/images/categories/nahor_oshi.png',
+    sevgimga_hat: '/assets/images/categories/sevgi_izhor.svg'
   };
 
   function buildSampleInvitation(params) {
@@ -82,11 +83,14 @@
     const coverHtml = layout === 'klassik' ? coverKlassik(ctx)
       : layout === 'zamonaviy' ? coverZamonaviy(ctx)
       : layout === 'dasturxon' ? coverDasturxon(ctx)
+      : layout === 'maktub' ? coverMaktub(ctx)
       : coverNafis(ctx);
-    const sectionsHtml = layout === 'dasturxon' ? dasturxonSectionsHtml(ctx) : sharedSectionsHtml(ctx);
+    const sectionsHtml = layout === 'dasturxon' ? dasturxonSectionsHtml(ctx)
+      : layout === 'maktub' ? maktubSectionsHtml(ctx)
+      : sharedSectionsHtml(ctx);
 
     app.innerHTML = `
-      ${layout === 'dasturxon' ? '' : dotnavHtml(inv)}
+      ${(layout === 'dasturxon' || layout === 'maktub') ? '' : dotnavHtml(inv)}
 
       <main>
         ${coverHtml}
@@ -227,6 +231,26 @@
             <p>${escapeHtml(inv.custom_message) || `Ertalabki osh dasturxonimiz uchun sizlarni ${escapeHtml(names)} oilasining faxriy mehmoni bo'lishga taklif qilamiz.`}</p>
           </div>
           <div class="dasturxon-scroll-hint">Pastga suring</div>
+        </section>`;
+  }
+
+  function coverMaktub(ctx) {
+    const { groom, headline, cat } = ctx;
+    const initial = (groom[0] || '?').toUpperCase();
+    return `
+        <section class="maktub-cover" id="cover">
+          <div class="maktub-mid">
+            <p class="maktub-eyebrow">${escapeHtml(headline)}</p>
+            <button type="button" class="wax-seal" id="envelope-btn" aria-label="Muhrni ochish">
+              <span class="wax-seal-glyph">${escapeHtml(initial)}</span>
+            </button>
+            <p class="maktub-hint" id="envelope-hint">Muhrni bosib oching</p>
+            <p class="maktub-tagline" id="cover-tagline">${escapeHtml(cat.tagline)}</p>
+          </div>
+          <div class="scroll-hint">
+            <span>Pastga suring</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </div>
         </section>`;
   }
 
@@ -424,6 +448,62 @@
         <img class="floral-divider" src="/assets/images/dividers/floral-bouquet.svg" alt="" aria-hidden="true" />
         <section class="dasturxon-closing reveal">
           <p>Ushbu nahor oshiga tashrif buyurishingiz biz uchun katta sharaf. Sizni ko'rishdan mamnun bo'lamiz.</p>
+          <div class="rule" id="finale-mark" style="margin:0 auto 1.6rem;"></div>
+          <div class="actions-row">
+            <button class="btn-ghost" id="share-btn">Taklifnomani ulashish</button>
+            <a class="btn-ghost" id="telegram-share-btn" target="_blank" rel="noopener">
+              <svg class="tg-icon" viewBox="0 0 240 240" aria-hidden="true">
+                <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                <path fill="#fff" d="M52 118l122-47c5.6-2.2 10.5 1.4 8.7 9.7l-20.8 98c-1.5 6.9-5.6 8.6-11.4 5.3l-31.5-23.2-15.2 14.6c-1.7 1.7-3.1 3.1-6.3 3.1l2.2-31.8 58-52.4c2.5-2.2-.5-3.5-3.9-1.3l-71.7 45.1-30.9-9.6c-6.7-2.1-6.8-6.7 1.8-9.5z"/>
+              </svg>
+              Telegramda ulashish
+            </a>
+          </div>
+        </section>
+
+        ${siteFootHtml(ctx)}`;
+  }
+
+  function maktubSectionsHtml(ctx) {
+    const { inv, groom, bride, isCouple, dateLabel } = ctx;
+    const greeting = isCouple && bride ? `${bride},` : 'Sevgilim,';
+    const defaultBody = "Har bir soniya seni o'ylash bilan o'tadi. Ushbu satrlar orqali yuragimdagi barcha gaplarni senga yetkazmoqchiman — sen mening hayotimning eng go'zal tasodifisan.";
+    return `
+        <section class="section" id="hat">
+          <div class="maktub-letter reveal">
+            <p class="maktub-greeting">${escapeHtml(greeting)}</p>
+            <div class="maktub-flourish"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
+            <p class="maktub-body">${escapeHtml(inv.custom_message) || defaultBody}</p>
+            <div class="maktub-signoff">
+              <p class="maktub-signoff-label">Mehr bilan,</p>
+              <p class="maktub-signoff-name">${escapeHtml(groom)}</p>
+            </div>
+            ${inv.song_url ? `<p class="maktub-music-note">&#9835; Bu hatni shu ohang jo'rligida o'qing</p>` : ''}
+          </div>
+        </section>
+
+        ${inv.photo_url ? `
+        <section class="section">
+          <div class="maktub-photo-frame reveal">
+            <img src="${escapeHtml(inv.photo_url)}" alt="${escapeHtml(groom)}" />
+          </div>
+        </section>` : ''}
+
+        ${inv.event_date ? `
+        <section class="section">
+          <div class="reveal" style="text-align:center;">
+            <p class="cd-letter-label">${escapeHtml(dateLabel)}</p>
+            <div class="cd-letter-grid">
+              <div class="cd-letter-tile"><span class="cd-num" id="cd-days">00</span><span class="cd-label">kun</span></div>
+              <div class="cd-letter-tile"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">soat</span></div>
+              <div class="cd-letter-tile"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">daqiqa</span></div>
+              <div class="cd-letter-tile"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">soniya</span></div>
+            </div>
+          </div>
+        </section>` : ''}
+
+        <section class="maktub-closing reveal">
+          <p>Ushbu hatni o'qib, yuragimdagi gaplarni his qilganingizdan minnatdorman.</p>
           <div class="rule" id="finale-mark" style="margin:0 auto 1.6rem;"></div>
           <div class="actions-row">
             <button class="btn-ghost" id="share-btn">Taklifnomani ulashish</button>

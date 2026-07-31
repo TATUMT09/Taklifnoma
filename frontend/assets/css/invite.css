@@ -113,6 +113,20 @@ body[data-theme="bahor"] {
   --deep-dim: #5c7263;
   --rule: rgba(47, 143, 82, 0.35);
 }
+body[data-theme="layli"] {
+  --ink: #2a1420;
+  --panel: #3a1c2c;
+  --paper: #fdf6f0;
+  --paper-dim: #f6e9de;
+  --gold: #c98a6e;
+  --gold-hi: #e0ab8c;
+  --wine: #7a2035;
+  --ivory-text: #f7e9e2;
+  --ivory-dim: #d6bcae;
+  --deep-text: #3a2018;
+  --deep-dim: #7a5f52;
+  --rule: rgba(201, 138, 110, 0.35);
+}
 
 :root {
   --serif: 'Fraunces', ui-serif, Georgia, serif;
@@ -745,3 +759,151 @@ body[data-layout="dasturxon"] .btn-ghost:hover { border-color: var(--wine); back
 body[data-layout="dasturxon"] .monogram-letters { color: var(--deep-text); }
 body[data-layout="dasturxon"] .foot-line { color: var(--deep-dim); }
 body[data-layout="dasturxon"] .contact-tg { color: var(--deep-dim); }
+
+/* ============================================================
+   Layout: Maktub (Sevgimga hat) — a love letter, not an event.
+   Cream stationery paper throughout, a wax seal instead of an
+   envelope, no venue/location section at all.
+   ============================================================ */
+body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); }
+
+.maktub-cover {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: space-between;
+  padding: clamp(2.5rem, 7vw, 4rem) 1.5rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.maktub-cover::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(60% 50% at 50% 30%, rgba(122, 32, 53, 0.07), transparent 70%);
+  pointer-events: none;
+}
+.maktub-mid {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.7rem; position: relative; z-index: 1;
+}
+.maktub-eyebrow {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(1.1rem, 4vw, 1.4rem); color: var(--wine); max-width: 20ch;
+}
+
+.wax-seal {
+  appearance: none; border: none; cursor: pointer; padding: 0;
+  width: clamp(84px, 22vw, 108px); height: clamp(84px, 22vw, 108px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, var(--gold-hi), var(--wine) 65%, #3a0f1c 100%);
+  box-shadow: 0 16px 32px -14px rgba(58, 20, 32, 0.5), inset 0 2px 3px rgba(255,255,255,0.35), inset 0 -3px 6px rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.5s cubic-bezier(.3,.8,.4,1), opacity 0.5s ease, box-shadow 0.5s ease;
+}
+.wax-seal:hover { transform: scale(1.05); }
+.wax-seal:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 6px; }
+.wax-seal-glyph {
+  font-family: 'Signature Script', cursive;
+  font-size: clamp(2rem, 7vw, 2.6rem);
+  color: rgba(255,255,255,0.92);
+  line-height: 1;
+}
+.maktub-cover.opened .wax-seal {
+  transform: scale(0.65) rotate(-14deg); opacity: 0; box-shadow: none;
+}
+
+.maktub-hint {
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--deep-dim); transition: opacity 0.5s ease;
+}
+.maktub-cover.revealed .maktub-hint { opacity: 0; pointer-events: none; }
+
+.maktub-tagline {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 1.05rem; color: var(--deep-dim); max-width: 28ch;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.maktub-cover.revealed .maktub-tagline { opacity: 1; transform: translateY(0); }
+
+body[data-layout="maktub"] .scroll-hint { opacity: 0; transition: opacity 0.6s ease; color: var(--deep-dim); }
+.maktub-cover.revealed .scroll-hint { opacity: 1; }
+body[data-layout="maktub"] .chevron { border-color: var(--wine); }
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-layout="maktub"] .wax-seal, body[data-layout="maktub"] .maktub-hint,
+  body[data-layout="maktub"] .maktub-tagline, body[data-layout="maktub"] .scroll-hint { transition: none; }
+}
+
+.maktub-letter {
+  background: var(--paper);
+  color: var(--deep-text);
+  width: min(100%, 560px);
+  text-align: left;
+  border-left: 3px solid var(--wine);
+  border-radius: 2px;
+  padding: clamp(2.2rem, 7vw, 3.2rem) clamp(1.6rem, 6vw, 3rem);
+  box-shadow: 0 26px 55px -32px rgba(58, 20, 32, 0.3);
+}
+.maktub-greeting {
+  font-family: 'Signature Script', cursive;
+  font-size: clamp(2.1rem, 8vw, 2.9rem);
+  color: var(--wine);
+  margin: 0 0 1.1rem;
+  line-height: 1;
+}
+.maktub-flourish { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1.5rem; }
+.maktub-flourish .line { flex: 1; height: 1px; background: var(--rule); }
+.maktub-flourish .diamond { width: 6px; height: 6px; border: 1px solid var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+.maktub-body {
+  font-family: var(--serif); font-style: italic; font-size: 1.08rem;
+  line-height: 1.85; color: var(--deep-text); white-space: pre-wrap;
+  margin: 0 0 2rem;
+}
+.maktub-signoff { text-align: right; }
+.maktub-signoff-label { font-size: 0.85rem; color: var(--deep-dim); margin: 0 0 0.15rem; }
+.maktub-signoff-name {
+  font-family: 'Signature Script', cursive;
+  font-size: clamp(1.8rem, 6vw, 2.3rem);
+  color: var(--wine); margin: 0; line-height: 1;
+}
+.maktub-music-note {
+  margin-top: 1.8rem; padding-top: 1.4rem; border-top: 1px solid var(--rule);
+  font-size: 0.85rem; color: var(--deep-dim); text-align: center;
+}
+
+.maktub-photo-frame {
+  width: min(100%, 320px); aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden;
+  box-shadow: 0 26px 50px -28px rgba(58, 20, 32, 0.3);
+}
+.maktub-photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.cd-letter-label {
+  font-family: var(--serif); font-style: italic; font-size: 1.05rem;
+  color: var(--deep-dim); margin: 0 0 1.1rem;
+}
+.cd-letter-grid { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+.cd-letter-tile {
+  width: 64px; height: 64px; border-radius: 16px;
+  background: var(--paper-dim); border: 1px solid var(--rule);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem;
+}
+.cd-letter-tile .cd-num {
+  font-family: var(--serif); font-weight: 640; font-size: 1.05rem;
+  color: var(--wine); font-variant-numeric: tabular-nums;
+}
+.cd-letter-tile .cd-label { font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--deep-dim); }
+
+.maktub-closing { text-align: center; padding: 3.5rem 1.5rem 1rem; }
+.maktub-closing p {
+  font-family: var(--serif); font-style: italic; color: var(--deep-dim);
+  font-size: 1.05rem; max-width: 36ch; margin: 0 auto 1.6rem;
+}
+
+/* Shared footer/actions are styled for the dark covers used by every other layout;
+   maktub is light throughout, so it needs dark-on-light text here too (mirrors dasturxon). */
+body[data-layout="maktub"] .btn-ghost { color: var(--deep-text); }
+body[data-layout="maktub"] .btn-ghost:hover { border-color: var(--wine); background: rgba(122, 32, 53, 0.08); }
+body[data-layout="maktub"] .monogram-letters { color: var(--deep-text); }
+body[data-layout="maktub"] .foot-line { color: var(--deep-dim); }
+body[data-layout="maktub"] .contact-tg { color: var(--deep-dim); }

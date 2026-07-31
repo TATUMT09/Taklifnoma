@@ -59,7 +59,8 @@
       { id: 'tabrik', name: 'Tabrik', image: '/assets/images/categories/tabrik.webp', desc: 'Har qanday quvonchli voqea uchun chiroyli tabriknoma yarating.' },
       { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.jpg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
       { id: 'sevgi_izhor', name: 'Sevgi izhori', image: '/assets/images/categories/sevgi_izhor.svg', desc: 'Yuragingizdagi gaplarni maxsus raqamli sahifada izhor eting.' },
-      { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." }
+      { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." },
+      { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
     ];
 
     const cards = [];

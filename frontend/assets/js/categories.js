@@ -82,6 +82,18 @@ const EVENT_CATEGORIES = [
     dateLabel: 'Sana',
     msgLabel: 'Qo\'shimcha xabar (ixtiyoriy)',
     msgPlaceholder: ''
+  },
+  {
+    id: 'sevgimga_hat',
+    label: 'Sevgimga hat',
+    pair: true,
+    headline: 'Senga bir hatim bor...',
+    inviteWord: '',
+    tagline: 'Yuragimdagi eng nozik gaplar — senga atalgan',
+    venueEyebrow: '',
+    dateLabel: 'Maxsus kun (ixtiyoriy)',
+    msgLabel: 'Hat matni',
+    msgPlaceholder: 'Yuragingizdagi gaplarni shu yerga yozing...'
   }
 ];
 
@@ -121,6 +133,10 @@ const THEME_META = [
   {
     id: 'bahor', name: 'Bahor', desc: "Yashil-oq zamin, atirgul bezaklar",
     mi: '#16261a', mg: '#3fae6e', categories: ['nahor_oshi']
+  },
+  {
+    id: 'layli', name: 'Layli', desc: "Krem qog'oz zamin, sham-mum va atirgul-tilla bezaklar",
+    mi: '#2a1420', mg: '#c98a6e', categories: ['sevgimga_hat']
   }
 ];
 
@@ -133,7 +149,8 @@ const LAYOUT_META = [
   { id: 'nafis', categories: null },
   { id: 'klassik', categories: null },
   { id: 'zamonaviy', categories: null },
-  { id: 'dasturxon', categories: ['nahor_oshi'] }
+  { id: 'dasturxon', categories: ['nahor_oshi'] },
+  { id: 'maktub', categories: ['sevgimga_hat'] }
 ];
 
 function getLayoutsForCategory(eventTypeId) {

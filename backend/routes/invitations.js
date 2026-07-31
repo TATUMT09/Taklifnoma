@@ -5,10 +5,10 @@ const { generateSlug } = require('../utils/slug');
 
 const router = express.Router();
 
-const THEMES = ['zumrad', 'lavanda', 'shafaq', 'bayram', 'oltin', 'nur', 'muhabbat', 'bahor'];
-const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon'];
-const EVENT_TYPES = ['toy', 'qiz_bazmi', 'tugilgan_kun', 'tabrik', 'haj_safari', 'sevgi_izhor', 'nahor_oshi'];
-const PAIR_TYPES = ['toy', 'qiz_bazmi', 'sevgi_izhor', 'nahor_oshi'];
+const THEMES = ['zumrad', 'lavanda', 'shafaq', 'bayram', 'oltin', 'nur', 'muhabbat', 'bahor', 'layli'];
+const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub'];
+const EVENT_TYPES = ['toy', 'qiz_bazmi', 'tugilgan_kun', 'tabrik', 'haj_safari', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
+const PAIR_TYPES = ['toy', 'qiz_bazmi', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
 
 const FIELDS = [
   'theme', 'layout', 'event_type', 'groom_name', 'bride_name', 'family_name',
