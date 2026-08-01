@@ -58,7 +58,7 @@
       { id: 'tugilgan_kun', name: "Tug'ilgan kun", image: '/assets/images/categories/tugilgan_kun.png', desc: "Yaqinlaringizning tug'ilgan kunini chiroyli raqamli tabrik bilan nishonlang." },
       { id: 'tabrik', name: 'Tabrik', image: '/assets/images/categories/tabrik.webp', desc: 'Har qanday quvonchli voqea uchun chiroyli tabriknoma yarating.' },
       { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.jpg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
-      { id: 'sevgi_izhor', name: 'Sevgi izhori', image: '/assets/images/categories/sevgi_izhor.svg', desc: 'Yuragingizdagi gaplarni maxsus raqamli sahifada izhor eting.' },
+      { id: 'sevgi_izhor', name: 'Sevgi izhori', theme: 'vau', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Yangi: Premium ✨ — kinematik, animatsiyali sevgi izhori sahifasi." },
       { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." },
       { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
     ];
@@ -81,7 +81,7 @@
       });
     });
     OTHER_CATEGORIES.forEach((cat) => {
-      const catTheme = getThemesForCategory(cat.id)[0].id;
+      const catTheme = cat.theme || getThemesForCategory(cat.id)[0].id;
       const catLayout = getDefaultLayoutForCategory(cat.id);
       const catParams = `event_type=${cat.id}&theme=${catTheme}&layout=${catLayout}`;
       cards.push(`

@@ -12,6 +12,7 @@ const publicRoutes = require('./routes/public');
 const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/uploads');
 const geocodeRoutes = require('./routes/geocode');
+const galleryRoutes = require('./routes/gallery');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', googleAuthRoutes);
 app.use('/api/invitations', invitationRoutes);
+app.use('/api/invitations/:id/gallery', galleryRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadRoutes);
@@ -53,16 +55,24 @@ app.get('/i/:slug', (req, res) => {
   const inv = db.prepare('SELECT * FROM invitations WHERE slug = ?').get(req.params.slug);
   if (!inv) return res.send(INVITE_TEMPLATE);
 
-  const names = inv.bride_name ? `${inv.groom_name} & ${inv.bride_name}` : inv.groom_name;
-  const title = `${names} — Taklifnoma`;
-  const description = inv.custom_message
-    || [inv.venue_name, inv.address].filter(Boolean).join(', ')
-    || "Sizni ushbu maxsus kunga taklif qilamiz";
   const origin = `${req.protocol}://${req.get('host')}`;
-  const imageUrl = inv.photo_url
-    ? (inv.photo_url.startsWith('http') ? inv.photo_url : `${origin}${inv.photo_url}`)
-    : `${origin}/assets/images/hero/hero-1.jpg`;
   const pageUrl = `${origin}/i/${inv.slug}`;
+  const resolveImage = (url) => (url && url.startsWith('http') ? url : url ? `${origin}${url}` : '');
+
+  let title, description, imageUrl;
+  if (inv.access_password_hash) {
+    title = 'Senga maxsus bir xat bor 💌 — Taklifnoma';
+    description = "Buni ochish uchun parol kerak.";
+    imageUrl = `${origin}/assets/images/hero/hero-1.jpg`;
+  } else {
+    const names = inv.bride_name ? `${inv.groom_name} & ${inv.bride_name}` : inv.groom_name;
+    title = inv.seo_title || `${names} — Taklifnoma`;
+    description = inv.seo_description
+      || inv.custom_message
+      || [inv.venue_name, inv.address].filter(Boolean).join(', ')
+      || "Sizni ushbu maxsus kunga taklif qilamiz";
+    imageUrl = resolveImage(inv.og_image_url) || resolveImage(inv.photo_url) || `${origin}/assets/images/hero/hero-1.jpg`;
+  }
 
   const ogTags = `<title>${escapeHtmlAttr(title)}</title>
 <meta property="og:type" content="website" />

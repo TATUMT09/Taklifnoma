@@ -29,8 +29,11 @@ const api = (() => {
     deleteInvitation: (id) => request('DELETE', `/api/invitations/${id}`),
 
     getPublicInvitation: (slug) => request('GET', `/api/public/${slug}`),
+    unlockInvitation: (slug, password) => request('POST', `/api/public/${slug}/unlock`, { password }),
     submitRsvp: (slug, payload) => request('POST', `/api/public/${slug}/rsvp`, payload),
     sendContactMessage: (payload) => request('POST', '/api/public/contact', payload),
+
+    checkSlug: (slug, excludeId) => request('GET', `/api/invitations/check-slug?slug=${encodeURIComponent(slug)}${excludeId ? `&excludeId=${excludeId}` : ''}`),
 
     uploadPhoto: async (file) => {
       const formData = new FormData();
@@ -49,6 +52,16 @@ const api = (() => {
       let data = null;
       try { data = await res.json(); } catch (e) { data = null; }
       if (!res.ok) throw new Error((data && data.error) || "Qo'shiqni yuklab bo'lmadi");
+      return data;
+    },
+
+    uploadVideo: async (file) => {
+      const formData = new FormData();
+      formData.append('video', file);
+      const res = await fetch('/api/uploads/video', { method: 'POST', body: formData, credentials: 'same-origin' });
+      let data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
+      if (!res.ok) throw new Error((data && data.error) || "Videoni yuklab bo'lmadi");
       return data;
     },
 

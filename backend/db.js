@@ -45,6 +45,14 @@ db.exec(`
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
+  CREATE TABLE IF NOT EXISTS invitation_gallery (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invitation_id INTEGER NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
+    url TEXT NOT NULL,
+    caption TEXT NOT NULL DEFAULT '',
+    sort_order INTEGER NOT NULL DEFAULT 0
+  );
+
   CREATE TABLE IF NOT EXISTS rsvps (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     invitation_id INTEGER NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
@@ -66,6 +74,7 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_invitations_user ON invitations(user_id);
   CREATE INDEX IF NOT EXISTS idx_rsvps_invitation ON rsvps(invitation_id);
+  CREATE INDEX IF NOT EXISTS idx_gallery_invitation ON invitation_gallery(invitation_id);
 `);
 
 // Migrate older databases created before Google sign-in was added.
@@ -92,6 +101,27 @@ if (!invitationColumns.includes('layout')) {
 }
 if (!invitationColumns.includes('custom_message')) {
   db.exec("ALTER TABLE invitations ADD COLUMN custom_message TEXT NOT NULL DEFAULT ''");
+}
+if (!invitationColumns.includes('video_url')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN video_url TEXT NOT NULL DEFAULT ''");
+}
+if (!invitationColumns.includes('access_password_hash')) {
+  db.exec('ALTER TABLE invitations ADD COLUMN access_password_hash TEXT');
+}
+if (!invitationColumns.includes('expires_at')) {
+  db.exec('ALTER TABLE invitations ADD COLUMN expires_at TEXT');
+}
+if (!invitationColumns.includes('seo_title')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN seo_title TEXT NOT NULL DEFAULT ''");
+}
+if (!invitationColumns.includes('seo_description')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN seo_description TEXT NOT NULL DEFAULT ''");
+}
+if (!invitationColumns.includes('og_image_url')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN og_image_url TEXT NOT NULL DEFAULT ''");
+}
+if (!invitationColumns.includes('premium_style')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN premium_style TEXT NOT NULL DEFAULT ''");
 }
 
 // Seed the admin account on every startup (idempotent), if configured via env.

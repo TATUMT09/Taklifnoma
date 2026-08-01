@@ -21,7 +21,9 @@
     theme: THEME_META.some((t) => t.id === params.get('theme')) ? params.get('theme') : 'zumrad',
     layout: LAYOUT_META.some((l) => l.id === params.get('layout')) ? params.get('layout') : 'nafis',
     photo_url: '',
-    song_url: ''
+    song_url: '',
+    video_url: '',
+    gallery: []
   };
 
   const brideField = document.getElementById('bride-field');
@@ -30,6 +32,9 @@
   const messageLabel = document.getElementById('message-label');
   const messageInput = document.getElementById('custom_message');
   const themeChoicesEl = document.getElementById('theme-choices');
+  const layoutChoicesEl = document.getElementById('layout-choices');
+  const layoutChoicesFieldEl = document.getElementById('layout-choices-field');
+  const premiumFieldsEl = document.getElementById('premium-fields');
 
   function renderThemeChoices(categoryId) {
     const cat = getEventCategory(categoryId);
@@ -57,6 +62,31 @@
     });
   }
 
+  function renderLayoutChoices(categoryId) {
+    const available = getLayoutsForCategory(categoryId);
+    if (available.length <= 1) {
+      layoutChoicesFieldEl.hidden = true;
+      layoutChoicesEl.innerHTML = '';
+      return;
+    }
+    layoutChoicesFieldEl.hidden = false;
+    layoutChoicesEl.innerHTML = available.map((l) => `
+      <button type="button" class="choice-pill${l.id === state.layout ? ' active' : ''}" data-value="${l.id}">${l.label || l.id}</button>
+    `).join('');
+    layoutChoicesEl.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        layoutChoicesEl.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.layout = btn.getAttribute('data-value');
+        togglePremiumFields();
+      });
+    });
+  }
+
+  function togglePremiumFields() {
+    if (premiumFieldsEl) premiumFieldsEl.hidden = state.layout !== 'premium';
+  }
+
   function applyCategory(id) {
     const cat = getEventCategory(id);
     brideField.hidden = !cat.pair;
@@ -67,11 +97,16 @@
     renderThemeChoices(id);
 
     const dedicatedLayout = LAYOUT_META.find((l) => l.categories && l.categories.includes(id));
-    if (dedicatedLayout) {
+    if (dedicatedLayout && cat.exclusiveLayout) {
       state.layout = dedicatedLayout.id;
-    } else if (!LAYOUT_META.some((l) => l.id === state.layout && l.categories === null)) {
-      state.layout = 'nafis';
+    } else {
+      const available = getLayoutsForCategory(id);
+      if (!available.some((l) => l.id === state.layout)) {
+        state.layout = dedicatedLayout ? dedicatedLayout.id : 'nafis';
+      }
     }
+    renderLayoutChoices(id);
+    togglePremiumFields();
   }
   let current = 1;
   const total = steps.length;
@@ -139,6 +174,120 @@
     songPreviewWrap.hidden = true;
     songStatus.textContent = '';
   });
+
+  // ---------- Premium-only fields (gallery, video, password, expiry, slug, style) ----------
+
+  const videoInput = document.getElementById('video_input');
+  const videoStatus = document.getElementById('video-status');
+  const videoPreviewWrap = document.getElementById('video-preview-wrap');
+  const videoPreviewName = document.getElementById('video-preview-name');
+
+  if (videoInput) {
+    videoInput.addEventListener('change', async () => {
+      const file = videoInput.files[0];
+      if (!file) return;
+      videoStatus.textContent = 'Yuklanmoqda...';
+      try {
+        const { url } = await api.uploadVideo(file);
+        state.video_url = url;
+        videoPreviewName.textContent = file.name;
+        videoPreviewWrap.hidden = false;
+        videoStatus.textContent = '';
+      } catch (err) {
+        videoStatus.textContent = err.message;
+        videoInput.value = '';
+      }
+    });
+    document.getElementById('video-remove-btn').addEventListener('click', () => {
+      state.video_url = '';
+      videoInput.value = '';
+      videoPreviewWrap.hidden = true;
+      videoStatus.textContent = '';
+    });
+  }
+
+  const galleryInput = document.getElementById('gallery_input');
+  const galleryStatus = document.getElementById('gallery-status');
+  const galleryListEl = document.getElementById('gallery-list');
+
+  function renderGalleryList() {
+    if (!galleryListEl) return;
+    galleryListEl.innerHTML = state.gallery.map((item, i) => `
+      <div style="display:flex;gap:0.6rem;align-items:center;">
+        <img src="${item.url}" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:6px;flex-shrink:0;" />
+        <input type="text" data-gcap="${i}" placeholder="Izoh (masalan: Eng chiroyli kulganing)" value="${item.caption ? item.caption.replace(/"/g, '&quot;') : ''}" style="flex:1;" />
+        <button type="button" class="btn btn-outline btn-sm" data-gup="${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button type="button" class="btn btn-outline btn-sm" data-gdown="${i}" ${i === state.gallery.length - 1 ? 'disabled' : ''}>↓</button>
+        <button type="button" class="btn btn-danger-ghost btn-sm" data-gdel="${i}">O'chirish</button>
+      </div>
+    `).join('');
+
+    galleryListEl.querySelectorAll('[data-gcap]').forEach((input) => {
+      input.addEventListener('input', () => {
+        state.gallery[Number(input.getAttribute('data-gcap'))].caption = input.value;
+      });
+    });
+    galleryListEl.querySelectorAll('[data-gup]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = Number(btn.getAttribute('data-gup'));
+        [state.gallery[i - 1], state.gallery[i]] = [state.gallery[i], state.gallery[i - 1]];
+        renderGalleryList();
+      });
+    });
+    galleryListEl.querySelectorAll('[data-gdown]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = Number(btn.getAttribute('data-gdown'));
+        [state.gallery[i + 1], state.gallery[i]] = [state.gallery[i], state.gallery[i + 1]];
+        renderGalleryList();
+      });
+    });
+    galleryListEl.querySelectorAll('[data-gdel]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.gallery.splice(Number(btn.getAttribute('data-gdel')), 1);
+        renderGalleryList();
+      });
+    });
+  }
+
+  if (galleryInput) {
+    galleryInput.addEventListener('change', async () => {
+      const file = galleryInput.files[0];
+      if (!file) return;
+      if (state.gallery.length >= 20) {
+        galleryStatus.textContent = "Ko'pi bilan 20 ta rasm qo'sha olasiz";
+        galleryInput.value = '';
+        return;
+      }
+      galleryStatus.textContent = 'Yuklanmoqda...';
+      try {
+        const { url } = await api.uploadPhoto(file);
+        state.gallery.push({ url, caption: '' });
+        renderGalleryList();
+        galleryStatus.textContent = "Har rasmga izoh yozishingiz mumkin";
+      } catch (err) {
+        galleryStatus.textContent = err.message;
+      }
+      galleryInput.value = '';
+    });
+  }
+
+  const slugInput = document.getElementById('custom_slug');
+  const slugStatus = document.getElementById('slug-status');
+  const slugCheckBtn = document.getElementById('slug-check-btn');
+  if (slugCheckBtn) {
+    slugCheckBtn.addEventListener('click', async () => {
+      const value = slugInput.value.trim();
+      if (!value) { slugStatus.textContent = ''; return; }
+      slugStatus.textContent = 'Tekshirilmoqda...';
+      try {
+        const { available } = await api.checkSlug(value, isEdit ? editId : null);
+        slugStatus.textContent = available ? "Bo'sh — foydalanish mumkin" : 'Band — boshqasini tanlang';
+        slugStatus.style.color = available ? 'var(--gold-hi, #2e7d32)' : '#c0392b';
+      } catch (err) {
+        slugStatus.textContent = err.message;
+      }
+    });
+  }
 
   const mapToggleBtn = document.getElementById('map-picker-toggle');
   const mapPickerWrap = document.getElementById('map-picker-wrap');
@@ -255,6 +404,16 @@
     renderStep();
   });
 
+  function collectPremiumStyle() {
+    const val = (id, fallback) => (document.getElementById(id) ? document.getElementById(id).value : fallback);
+    const checked = (id) => (document.getElementById(id) ? document.getElementById(id).checked : true);
+    return JSON.stringify({
+      bgFrom: val('bg_from', '#0F172A'), bgVia: val('bg_via', '#1E293B'), bgTo: val('bg_to', '#312E81'),
+      btnFrom: val('btn_from', '#FF4D6D'), btnTo: val('btn_to', '#FF758F'), accent: val('accent_color', '#FF3B81'),
+      hearts: checked('effect_hearts'), sparkles: checked('effect_sparkles'), confetti: checked('effect_confetti')
+    });
+  }
+
   function collectPayload() {
     return {
       event_type: state.event_type,
@@ -271,8 +430,14 @@
       telegram_group: document.getElementById('telegram_group').value,
       photo_url: state.photo_url,
       song_url: state.song_url,
+      video_url: state.video_url,
+      gallery: state.gallery,
       layout: state.layout,
-      language: 'uz'
+      language: 'uz',
+      access_password: document.getElementById('access_password') ? document.getElementById('access_password').value : '',
+      expires_at: document.getElementById('expires_at') ? document.getElementById('expires_at').value : '',
+      slug: document.getElementById('custom_slug') ? document.getElementById('custom_slug').value : '',
+      premium_style: collectPremiumStyle()
     };
   }
 
@@ -295,6 +460,30 @@
     if (state.photo_url) showPhotoPreview(state.photo_url);
     state.song_url = inv.song_url || '';
     if (state.song_url) showSongPreview(state.song_url.split('/').pop());
+
+    state.video_url = inv.video_url || '';
+    if (state.video_url && document.getElementById('video-preview-wrap')) {
+      document.getElementById('video-preview-name').textContent = state.video_url.split('/').pop();
+      document.getElementById('video-preview-wrap').hidden = false;
+    }
+    state.gallery = Array.isArray(inv.gallery) ? inv.gallery.map((p) => ({ url: p.url, caption: p.caption || '' })) : [];
+    renderGalleryList();
+
+    if (document.getElementById('expires_at')) document.getElementById('expires_at').value = inv.expires_at || '';
+    if (document.getElementById('custom_slug')) document.getElementById('custom_slug').value = inv.slug || '';
+    if (inv.has_password && document.getElementById('password-hint')) {
+      document.getElementById('password-hint').textContent = "Parol allaqachon o'rnatilgan. Yangisini kiritsangiz — almashtiriladi, bo'sh qoldirsangiz — o'zgarmaydi.";
+    }
+    if (inv.premium_style) {
+      try {
+        const s = JSON.parse(inv.premium_style);
+        const map = { bg_from: s.bgFrom, bg_via: s.bgVia, bg_to: s.bgTo, btn_from: s.btnFrom, btn_to: s.btnTo, accent_color: s.accent };
+        Object.keys(map).forEach((id) => { if (map[id] && document.getElementById(id)) document.getElementById(id).value = map[id]; });
+        if (document.getElementById('effect_hearts')) document.getElementById('effect_hearts').checked = s.hearts !== false;
+        if (document.getElementById('effect_sparkles')) document.getElementById('effect_sparkles').checked = s.sparkles !== false;
+        if (document.getElementById('effect_confetti')) document.getElementById('effect_confetti').checked = s.confetti !== false;
+      } catch (e) { /* ignore malformed stored style */ }
+    }
 
     document.querySelectorAll('[data-choice="event_type"] button').forEach((b) => {
       b.classList.toggle('active', b.getAttribute('data-value') === state.event_type);

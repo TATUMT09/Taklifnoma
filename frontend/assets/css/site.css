@@ -668,3 +668,16 @@ footer.site-footer {
   background: var(--gold);
   color: var(--on-accent);
 }
+
+.qr-modal {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(10, 10, 15, 0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+}
+.qr-modal-card { position: relative; width: min(100%, 320px); text-align: center; }
+.qr-modal-close {
+  position: absolute; top: 0.6rem; right: 0.8rem;
+  appearance: none; border: none; background: none; cursor: pointer;
+  font-size: 1.4rem; line-height: 1; color: var(--text-dim);
+}

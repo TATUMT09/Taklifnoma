@@ -51,6 +51,10 @@
             <button type="button" class="choice-pill" data-value="sevgimga_hat">Sevgimga hat</button>
           </div>
         </div>
+        <div class="field" id="layout-choices-field" hidden>
+          <label>Andoza</label>
+          <div class="choice-row" id="layout-choices"></div>
+        </div>
         <div class="grid-2">
           <div class="field">
             <label for="groom_name" id="groom-label">Kuyov / Ism</label>
@@ -136,6 +140,73 @@
       <div class="wizard-form">
         <div class="choice-row" data-choice="theme" id="theme-choices" style="flex-direction:column;gap:0.9rem;"></div>
         <p class="field-hint">"Yaratish" bosilganda, agar hali kirmagan bo'lsangiz, tez ro'yxatdan o'tish so'raladi — kiritgan ma'lumotlaringiz yo'qolmaydi.</p>
+
+        <div id="premium-fields" hidden style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:1.1rem;">
+          <p class="wizard-step-label" style="margin:0;">Premium ✨ sozlamalari</p>
+
+          <div class="field">
+            <label>Foto galereya (ixtiyoriy)</label>
+            <input type="file" id="gallery_input" accept="image/png,image/jpeg,image/webp" />
+            <p class="field-hint" id="gallery-status">Har rasmga izoh yozishingiz mumkin</p>
+            <div id="gallery-list" style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.6rem;"></div>
+          </div>
+
+          <div class="field">
+            <label for="video_input">Video (ixtiyoriy)</label>
+            <input type="file" id="video_input" accept="video/mp4,video/webm" />
+            <p class="field-hint" id="video-status"></p>
+            <div id="video-preview-wrap" class="photo-preview-wrap" hidden>
+              <p class="field-hint" id="video-preview-name" style="margin:0;"></p>
+              <button type="button" class="btn btn-outline btn-sm" id="video-remove-btn">Olib tashlash</button>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="access_password">Parol qo'yish (ixtiyoriy)</label>
+              <input id="access_password" type="password" placeholder="Bo'sh — parolsiz" autocomplete="new-password" />
+              <p class="field-hint" id="password-hint"></p>
+            </div>
+            <div class="field">
+              <label for="expires_at">Amal qilish muddati (ixtiyoriy)</label>
+              <input id="expires_at" type="date" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="custom_slug">Maxsus havola (ixtiyoriy)</label>
+            <div style="display:flex;gap:0.6rem;align-items:center;">
+              <input id="custom_slug" placeholder="masalan: aziz-va-malika" style="flex:1;" />
+              <button type="button" class="btn btn-outline btn-sm" id="slug-check-btn">Tekshirish</button>
+            </div>
+            <p class="field-hint" id="slug-status"></p>
+          </div>
+
+          <div class="field">
+            <label>Fon gradienti</label>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <label class="field-hint">Boshi <input type="color" id="bg_from" value="#0F172A" /></label>
+              <label class="field-hint">O'rtasi <input type="color" id="bg_via" value="#1E293B" /></label>
+              <label class="field-hint">Oxiri <input type="color" id="bg_to" value="#312E81" /></label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Tugma va aksent rangi</label>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <label class="field-hint">Boshi <input type="color" id="btn_from" value="#FF4D6D" /></label>
+              <label class="field-hint">Oxiri <input type="color" id="btn_to" value="#FF758F" /></label>
+              <label class="field-hint">Aksent <input type="color" id="accent_color" value="#FF3B81" /></label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Effektlar</label>
+            <div style="display:flex;gap:1.2rem;flex-wrap:wrap;">
+              <label class="field-hint"><input type="checkbox" id="effect_hearts" checked /> Yuraklar</label>
+              <label class="field-hint"><input type="checkbox" id="effect_sparkles" checked /> Sparkles</label>
+              <label class="field-hint"><input type="checkbox" id="effect_confetti" checked /> Konfetti</label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

@@ -40,6 +40,16 @@
   </div>
 </div>
 
+<div id="qr-modal" class="qr-modal" hidden>
+  <div class="qr-modal-card panel panel-pad">
+    <button type="button" class="qr-modal-close" id="qr-modal-close" aria-label="Yopish">&times;</button>
+    <p class="display" style="font-size:1.1rem;margin-bottom:1rem;">QR kod</p>
+    <div id="qr-modal-canvas"></div>
+    <a href="#" download="taklifnoma-qr.png" class="btn btn-primary btn-sm" id="qr-download-link" style="margin-top:1rem;display:inline-block;">Yuklab olish</a>
+  </div>
+</div>
+
+<script src="/assets/vendor/qrcode/qrcode.js"></script>
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/categories.js"></script>
 <script src="/assets/js/site.js"></script>

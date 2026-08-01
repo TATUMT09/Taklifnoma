@@ -1,15 +1,54 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
 
 const router = express.Router();
+
+function loadGallery(invitationId) {
+  return db
+    .prepare('SELECT id, url, caption FROM invitation_gallery WHERE invitation_id = ? ORDER BY sort_order ASC, id ASC')
+    .all(invitationId);
+}
+
+function buildPublicInvitation(inv) {
+  const { user_id, access_password_hash, ...publicInv } = inv;
+  publicInv.gallery = loadGallery(inv.id);
+  return publicInv;
+}
 
 router.get('/:slug', (req, res) => {
   const inv = db.prepare('SELECT * FROM invitations WHERE slug = ?').get(req.params.slug);
   if (!inv) return res.status(404).json({ error: 'Taklifnoma topilmadi' });
 
-  db.prepare('UPDATE invitations SET views = views + 1 WHERE id = ?').run(inv.id);
+  if (inv.expires_at && new Date(inv.expires_at) < new Date()) {
+    return res.json({ expired: true });
+  }
 
-  const { user_id, ...publicInv } = inv;
+  if (inv.access_password_hash) {
+    return res.json({ locked: true });
+  }
+
+  db.prepare('UPDATE invitations SET views = views + 1 WHERE id = ?').run(inv.id);
+  const publicInv = buildPublicInvitation(inv);
+  publicInv.views = inv.views + 1;
+  res.json({ invitation: publicInv });
+});
+
+router.post('/:slug/unlock', (req, res) => {
+  const inv = db.prepare('SELECT * FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Taklifnoma topilmadi' });
+
+  if (inv.expires_at && new Date(inv.expires_at) < new Date()) {
+    return res.json({ expired: true });
+  }
+
+  const password = (req.body && req.body.password) || '';
+  if (!inv.access_password_hash || !bcrypt.compareSync(password, inv.access_password_hash)) {
+    return res.status(401).json({ error: "Parol noto'g'ri" });
+  }
+
+  db.prepare('UPDATE invitations SET views = views + 1 WHERE id = ?').run(inv.id);
+  const publicInv = buildPublicInvitation(inv);
   publicInv.views = inv.views + 1;
   res.json({ invitation: publicInv });
 });

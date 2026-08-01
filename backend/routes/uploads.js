@@ -71,4 +71,31 @@ router.post('/song', (req, res) => {
   });
 });
 
+const ALLOWED_VIDEO_TYPES = { 'video/mp4': '.mp4', 'video/webm': '.webm' };
+
+const uploadVideo = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
+    filename: (req, file, cb) => {
+      const ext = ALLOWED_VIDEO_TYPES[file.mimetype] || '.mp4';
+      cb(null, crypto.randomBytes(12).toString('hex') + ext);
+    }
+  }),
+  limits: { fileSize: 40 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!ALLOWED_VIDEO_TYPES[file.mimetype]) {
+      return cb(new Error('Faqat MP4 yoki WEBM video yuklash mumkin'));
+    }
+    cb(null, true);
+  }
+});
+
+router.post('/video', (req, res) => {
+  uploadVideo.single('video')(req, res, (err) => {
+    if (err) return res.status(400).json({ error: err.message || "Videoni yuklab bo'lmadi" });
+    if (!req.file) return res.status(400).json({ error: 'Video tanlanmadi' });
+    res.status(201).json({ url: `/uploads/${req.file.filename}` });
+  });
+});
+
 module.exports = router;

@@ -2,13 +2,30 @@
   const app = document.getElementById('app');
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub'];
+  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium'];
   const isPreview = window.location.pathname.replace(/\/$/, '') === '/preview';
 
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str == null ? '' : String(str);
     return div.innerHTML;
+  }
+
+  const PREMIUM_DEFAULT_LETTER = "Har kuni sen bilan uyg'onishni orzu qilaman. Sen mening kulgimsan, tinchligimsan, va yuragimning eng go'zal urishisan. Seni juda-juda yaxshi ko'raman.";
+
+  const PREMIUM_STYLE_DEFAULTS = {
+    bgFrom: '#0F172A', bgVia: '#1E293B', bgTo: '#312E81',
+    btnFrom: '#FF4D6D', btnTo: '#FF758F', accent: '#FF3B81',
+    hearts: true, sparkles: true, confetti: true
+  };
+
+  function parsePremiumStyle(raw) {
+    if (!raw) return { ...PREMIUM_STYLE_DEFAULTS };
+    try {
+      return { ...PREMIUM_STYLE_DEFAULTS, ...JSON.parse(raw) };
+    } catch (e) {
+      return { ...PREMIUM_STYLE_DEFAULTS };
+    }
   }
 
   const SAMPLE_PHOTO_BY_CATEGORY = {
@@ -54,7 +71,11 @@
     render(buildSampleInvitation(new URLSearchParams(window.location.search)));
   } else {
     api.getPublicInvitation(slug)
-      .then(({ invitation }) => render(invitation))
+      .then((data) => {
+        if (data.expired) return renderExpired();
+        if (data.locked) return renderLocked(slug);
+        render(data.invitation);
+      })
       .catch(() => {
         app.innerHTML = `
           <div class="skeleton-loading" style="flex-direction:column;gap:1rem;">
@@ -62,6 +83,52 @@
             <a href="/" class="btn-ghost">Bosh sahifaga qaytish</a>
           </div>`;
       });
+  }
+
+  function renderExpired() {
+    document.body.setAttribute('data-theme', 'vau');
+    document.body.setAttribute('data-layout', 'premium');
+    app.innerHTML = `
+      <div class="premium-gate-shell">
+        <div class="premium-gate-card reveal visible">
+          <p class="premium-gate-icon">⏳</p>
+          <h1 class="premium-gate-title">Bu havolaning amal qilish muddati tugagan</h1>
+          <p class="premium-gate-sub">Havola egasidan yangisini so'rang.</p>
+          <a href="/" class="btn-ghost">Bosh sahifaga qaytish</a>
+        </div>
+      </div>`;
+  }
+
+  function renderLocked(slugValue) {
+    document.body.setAttribute('data-theme', 'vau');
+    document.body.setAttribute('data-layout', 'premium');
+    app.innerHTML = `
+      <div class="premium-gate-shell">
+        <div class="premium-gate-card reveal visible">
+          <p class="premium-gate-icon">🔒</p>
+          <h1 class="premium-gate-title">Bu sahifa parol bilan himoyalangan</h1>
+          <p class="premium-gate-sub">Davom etish uchun parolni kiriting</p>
+          <form id="unlock-form" class="premium-unlock-form">
+            <input type="password" id="unlock-password" placeholder="Parol" autocomplete="off" required />
+            <button type="submit" class="btn-gold">Ochish</button>
+          </form>
+          <p class="premium-unlock-error" id="unlock-error"></p>
+        </div>
+      </div>`;
+
+    document.getElementById('unlock-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('unlock-error');
+      const password = document.getElementById('unlock-password').value;
+      errEl.textContent = '';
+      try {
+        const data = await api.unlockInvitation(slugValue, password);
+        if (data.expired) return renderExpired();
+        render(data.invitation);
+      } catch (err) {
+        errEl.textContent = err.message;
+      }
+    });
   }
 
   function render(inv) {
@@ -78,19 +145,31 @@
     const cat = getEventCategory(inv.event_type);
     const headline = cat.headline;
     const isCouple = !!bride && cat.pair;
-    const ctx = { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat };
+    const premiumStyle = parsePremiumStyle(inv.premium_style);
+    if (layout === 'premium') {
+      document.body.style.setProperty('--pg-bg-from', premiumStyle.bgFrom);
+      document.body.style.setProperty('--pg-bg-via', premiumStyle.bgVia);
+      document.body.style.setProperty('--pg-bg-to', premiumStyle.bgTo);
+      document.body.style.setProperty('--pg-btn-from', premiumStyle.btnFrom);
+      document.body.style.setProperty('--pg-btn-to', premiumStyle.btnTo);
+      document.body.style.setProperty('--pg-accent', premiumStyle.accent);
+    }
+    const ctx = { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat, premiumStyle };
 
     const coverHtml = layout === 'klassik' ? coverKlassik(ctx)
       : layout === 'zamonaviy' ? coverZamonaviy(ctx)
       : layout === 'dasturxon' ? coverDasturxon(ctx)
       : layout === 'maktub' ? coverMaktub(ctx)
+      : layout === 'premium' ? coverPremium(ctx)
       : coverNafis(ctx);
     const sectionsHtml = layout === 'dasturxon' ? dasturxonSectionsHtml(ctx)
       : layout === 'maktub' ? maktubSectionsHtml(ctx)
+      : layout === 'premium' ? premiumSectionsHtml(ctx)
       : sharedSectionsHtml(ctx);
 
+    const noDotnavLayouts = ['dasturxon', 'maktub', 'premium'];
     app.innerHTML = `
-      ${(layout === 'dasturxon' || layout === 'maktub') ? '' : dotnavHtml(inv)}
+      ${noDotnavLayouts.includes(layout) ? '' : dotnavHtml(inv)}
 
       <main>
         ${coverHtml}
@@ -249,6 +328,96 @@
             </button>
             <p class="maktub-hint" id="envelope-hint">Muhrni bosib oching</p>
             <p class="maktub-tagline" id="cover-tagline">${escapeHtml(cat.tagline)}</p>
+          </div>
+          <div class="scroll-hint">
+            <span>Pastga suring</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </div>
+        </section>`;
+  }
+
+  function fireConfetti(colors) {
+    const palette = colors || ['#c9a24a', '#e6c877', '#8a2c3b'];
+    for (let i = 0; i < 26; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.background = palette[i % palette.length];
+      p.style.animationDuration = (2.4 + Math.random() * 1.6) + 's';
+      p.style.animationDelay = (Math.random() * 0.6) + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4600);
+    }
+  }
+
+  function playHeartbeat() {
+    if (reduceMotion) return;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const thump = (t, freq, dur) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.5, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + dur);
+      };
+      const now = ctx.currentTime;
+      thump(now, 60, 0.15);
+      thump(now + 0.22, 50, 0.18);
+    } catch (e) { /* Web Audio unavailable, skip the heartbeat SFX */ }
+  }
+
+  function typewriter(el, text, speed) {
+    if (reduceMotion || !el) { if (el) el.textContent = text; return; }
+    let i = 0;
+    el.textContent = '';
+    const id = setInterval(() => {
+      el.textContent += text[i];
+      i++;
+      if (i >= text.length) clearInterval(id);
+    }, speed);
+  }
+
+  function sparkleSpans(n) {
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      const left = (Math.random() * 100).toFixed(1);
+      const top = (Math.random() * 100).toFixed(1);
+      const delay = (Math.random() * 5).toFixed(2);
+      const dur = (2.4 + Math.random() * 2.6).toFixed(2);
+      out += `<span class="p-sparkle" style="left:${left}%;top:${top}%;animation-delay:${delay}s;animation-duration:${dur}s;"></span>`;
+    }
+    return out;
+  }
+
+  function heartSpans(n) {
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      const left = (Math.random() * 100).toFixed(1);
+      const delay = (Math.random() * 8).toFixed(2);
+      const dur = (7 + Math.random() * 5).toFixed(2);
+      const size = (0.9 + Math.random() * 1.3).toFixed(2);
+      out += `<span class="p-heart" style="left:${left}%;animation-delay:${delay}s;animation-duration:${dur}s;font-size:${size}rem;">♥</span>`;
+    }
+    return out;
+  }
+
+  function coverPremium(ctx) {
+    const { premiumStyle } = ctx;
+    return `
+        <section class="premium-gate" id="cover">
+          ${premiumStyle.sparkles ? `<div class="premium-sparkles" aria-hidden="true">${sparkleSpans(14)}</div>` : ''}
+          <div class="premium-mid">
+            <p class="premium-gate-text">Senga aytadigan juda muhim gapim bor...</p>
+            <button type="button" class="premium-enter-btn" id="envelope-btn">❤️ Davom etish</button>
+            <p class="premium-gate-hint" id="envelope-hint">Bosing va davom eting</p>
           </div>
           <div class="scroll-hint">
             <span>Pastga suring</span>
@@ -523,6 +692,90 @@
         ${siteFootHtml(ctx)}`;
   }
 
+  function premiumSectionsHtml(ctx) {
+    const { inv, groom, bride, isCouple, premiumStyle } = ctx;
+    const recipientName = (isCouple ? bride : groom) || 'Azizam';
+    const galleryPhotos = (inv.gallery && inv.gallery.length)
+      ? inv.gallery
+      : (inv.photo_url ? [{ url: inv.photo_url, caption: '' }] : []);
+
+    return `
+        <section class="premium-hero reveal">
+          ${premiumStyle.hearts ? `<div class="premium-hearts" aria-hidden="true">${heartSpans(9)}</div>` : ''}
+          <div class="premium-hero-photo-wrap">
+            <div class="premium-hero-glow"></div>
+            ${inv.photo_url
+              ? `<img class="premium-hero-photo" src="${escapeHtml(inv.photo_url)}" alt="${escapeHtml(recipientName)}" />`
+              : `<div class="premium-hero-photo premium-hero-photo-empty">${escapeHtml((recipientName[0] || '?').toUpperCase())}</div>`}
+          </div>
+          <p class="premium-hero-name">${escapeHtml(recipientName)}</p>
+          <p class="premium-hero-sub">Bu sahifani faqat sen ko'rishing uchun tayyorladim.</p>
+        </section>
+
+        ${galleryPhotos.length ? `
+        <section class="premium-gallery-section reveal">
+          <p class="premium-section-eyebrow">Bizning lahzalarimiz</p>
+          <div class="premium-carousel">
+            ${galleryPhotos.map((p) => `
+              <div class="premium-slide">
+                <img src="${escapeHtml(p.url)}" alt="" loading="lazy" />
+                ${p.caption ? `<p class="premium-slide-caption">${escapeHtml(p.caption)}</p>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </section>` : ''}
+
+        <section class="premium-letter-section reveal">
+          <p class="premium-section-eyebrow">Sevgi maktubi</p>
+          <div class="premium-glass-card">
+            <p class="premium-letter-text" id="premium-letter-text"></p>
+            <span class="premium-mini-heart" aria-hidden="true">❤</span>
+          </div>
+        </section>
+
+        ${inv.event_date ? `
+        <section class="premium-counter-section reveal">
+          <p class="premium-section-eyebrow">Seni sevishni boshlaganimga</p>
+          <div class="premium-counter-grid">
+            <div class="premium-counter-tile"><span class="cd-num" id="pc-days">0</span><span class="cd-label">kun</span></div>
+            <div class="premium-counter-tile"><span class="cd-num" id="pc-hours">0</span><span class="cd-label">soat</span></div>
+            <div class="premium-counter-tile"><span class="cd-num" id="pc-mins">0</span><span class="cd-label">daqiqa</span></div>
+            <div class="premium-counter-tile"><span class="cd-num" id="pc-secs">0</span><span class="cd-label">soniya</span></div>
+          </div>
+        </section>` : ''}
+
+        ${inv.video_url ? `
+        <section class="premium-video-section reveal">
+          <div class="premium-video-frame">
+            <video src="${escapeHtml(inv.video_url)}" controls preload="none"></video>
+          </div>
+        </section>` : ''}
+
+        <section class="premium-finale reveal">
+          <p class="premium-finale-heart" aria-hidden="true">❤</p>
+          <h2 class="premium-finale-title">Mening sevgilim bo'lasanmi?</h2>
+          <div class="premium-finale-actions">
+            <button type="button" class="premium-enter-btn" id="premium-yes-btn">❤️ Ha</button>
+            <button type="button" class="btn-ghost" id="premium-no-btn">🤍 O'ylab ko'raman</button>
+          </div>
+          <p class="premium-finale-result" id="premium-finale-result"></p>
+
+          <div class="actions-row" style="margin-top:2rem;">
+            <button class="btn-ghost" id="share-btn">Taklifnomani ulashish</button>
+            <a class="btn-ghost" id="telegram-share-btn" target="_blank" rel="noopener">
+              <svg class="tg-icon" viewBox="0 0 240 240" aria-hidden="true">
+                <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                <path fill="#fff" d="M52 118l122-47c5.6-2.2 10.5 1.4 8.7 9.7l-20.8 98c-1.5 6.9-5.6 8.6-11.4 5.3l-31.5-23.2-15.2 14.6c-1.7 1.7-3.1 3.1-6.3 3.1l2.2-31.8 58-52.4c2.5-2.2-.5-3.5-3.9-1.3l-71.7 45.1-30.9-9.6c-6.7-2.1-6.8-6.7 1.8-9.5z"/>
+              </svg>
+              Telegramda ulashish
+            </a>
+            <a class="btn-ghost" id="whatsapp-share-btn" target="_blank" rel="noopener">🟢 WhatsApp'da ulashish</a>
+          </div>
+        </section>
+
+        ${siteFootHtml(ctx)}`;
+  }
+
   function wireInteractions(inv, layout) {
     const coverEl = document.getElementById('cover');
     const envelopeBtn = document.getElementById('envelope-btn');
@@ -554,6 +807,7 @@
         coverEl.classList.add('opened');
         const hint = document.getElementById('envelope-hint');
         if (hint) hint.textContent = '';
+        if (layout === 'premium') playHeartbeat();
         if (bgAudio) bgAudio.play().catch(() => {});
         if (reduceMotion) {
           coverEl.classList.add('revealed');
@@ -569,7 +823,25 @@
     }, { threshold: 0.18 });
     revealEls.forEach((el) => io.observe(el));
 
-    if (inv.event_date) {
+    if (inv.event_date && layout === 'premium') {
+      const start = parseEventDate(inv.event_date, inv.event_time || '00:00').getTime();
+      const els = {
+        d: document.getElementById('pc-days'),
+        h: document.getElementById('pc-hours'),
+        m: document.getElementById('pc-mins'),
+        s: document.getElementById('pc-secs')
+      };
+      function tickUp() {
+        let diff = Date.now() - start;
+        if (diff < 0) diff = 0;
+        els.d.textContent = Math.floor(diff / 86400000);
+        els.h.textContent = Math.floor((diff % 86400000) / 3600000);
+        els.m.textContent = Math.floor((diff % 3600000) / 60000);
+        els.s.textContent = Math.floor((diff % 60000) / 1000);
+      }
+      tickUp();
+      setInterval(tickUp, 1000);
+    } else if (inv.event_date) {
       const target = parseEventDate(inv.event_date, inv.event_time || '00:00').getTime();
       const els = {
         d: document.getElementById('cd-days'),
@@ -588,6 +860,53 @@
       }
       tick();
       setInterval(tick, 1000);
+    }
+
+    if (layout === 'premium') {
+      const letterEl = document.getElementById('premium-letter-text');
+      if (letterEl) {
+        const fullText = inv.custom_message || PREMIUM_DEFAULT_LETTER;
+        const letterIo = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              typewriter(letterEl, fullText, 28);
+              letterIo.disconnect();
+            }
+          });
+        }, { threshold: 0.4 });
+        letterIo.observe(letterEl);
+      }
+
+      const whatsappBtn = document.getElementById('whatsapp-share-btn');
+      if (whatsappBtn) {
+        whatsappBtn.href = `https://wa.me/?text=${encodeURIComponent(document.title + ' — ' + window.location.href)}`;
+      }
+
+      const yesBtn = document.getElementById('premium-yes-btn');
+      const noBtn = document.getElementById('premium-no-btn');
+      const resultEl = document.getElementById('premium-finale-result');
+      if (yesBtn) {
+        yesBtn.addEventListener('click', () => {
+          if (resultEl) resultEl.textContent = "Bugundan boshlab dunyodagi eng baxtli inson menman ❤️";
+          document.querySelector('.premium-finale').classList.add('answered');
+          if (noBtn) noBtn.hidden = true;
+          const style = parsePremiumStyle(inv.premium_style);
+          if (style.confetti) fireConfetti();
+        });
+      }
+      if (noBtn) {
+        let dodges = 0;
+        const dodge = () => {
+          if (dodges >= 12) return;
+          dodges++;
+          const maxX = 90, maxY = 40;
+          const x = (Math.random() - 0.5) * 2 * maxX;
+          const y = (Math.random() - 0.5) * 2 * maxY;
+          noBtn.style.transform = `translate(${x}px, ${y}px)`;
+        };
+        noBtn.addEventListener('mouseenter', dodge);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, { passive: false });
+      }
     }
 
     const sectionIds = Array.from(document.querySelectorAll('main > section[id]')).map((s) => s.id);
@@ -664,21 +983,11 @@
     if (!reduceMotion) {
       let fired = false;
       const mark = document.getElementById('finale-mark');
-      const colors = ['#c9a24a', '#e6c877', '#8a2c3b'];
       const fio = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !fired) {
             fired = true;
-            for (let i = 0; i < 26; i++) {
-              const p = document.createElement('div');
-              p.className = 'confetti-piece';
-              p.style.left = Math.random() * 100 + 'vw';
-              p.style.background = colors[i % colors.length];
-              p.style.animationDuration = (2.4 + Math.random() * 1.6) + 's';
-              p.style.animationDelay = (Math.random() * 0.6) + 's';
-              document.body.appendChild(p);
-              setTimeout(() => p.remove(), 4600);
-            }
+            fireConfetti();
           }
         });
       }, { threshold: 0.6 });

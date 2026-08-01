@@ -81,7 +81,8 @@ const EVENT_CATEGORIES = [
     venueEyebrow: 'Nahor oshi manzili',
     dateLabel: 'Sana',
     msgLabel: 'Qo\'shimcha xabar (ixtiyoriy)',
-    msgPlaceholder: ''
+    msgPlaceholder: '',
+    exclusiveLayout: true
   },
   {
     id: 'sevgimga_hat',
@@ -95,7 +96,8 @@ const EVENT_CATEGORIES = [
     msgLabel: 'Hat matni',
     msgPlaceholder: 'Yuragingizdagi gaplarni shu yerga yozing...',
     hideFamily: true,
-    noVenue: true
+    noVenue: true,
+    exclusiveLayout: true
   }
 ];
 
@@ -139,6 +141,10 @@ const THEME_META = [
   {
     id: 'layli', name: 'Layli', desc: "Krem qog'oz zamin, sham-mum va atirgul-tilla bezaklar",
     mi: '#2a1420', mg: '#c98a6e', categories: ['sevgimga_hat']
+  },
+  {
+    id: 'vau', name: 'Vau ✨', desc: 'Tungi gradient fon, neon-pushti aksentlar',
+    mi: '#0F172A', mg: '#FF4D6D', categories: ['sevgi_izhor']
   }
 ];
 
@@ -148,11 +154,12 @@ function getThemesForCategory(eventTypeId) {
 }
 
 const LAYOUT_META = [
-  { id: 'nafis', categories: null },
-  { id: 'klassik', categories: null },
-  { id: 'zamonaviy', categories: null },
-  { id: 'dasturxon', categories: ['nahor_oshi'] },
-  { id: 'maktub', categories: ['sevgimga_hat'] }
+  { id: 'nafis', label: 'Klassik zarf', categories: null },
+  { id: 'klassik', label: "An'anaviy", categories: null },
+  { id: 'zamonaviy', label: 'Zamonaviy', categories: null },
+  { id: 'dasturxon', label: 'Dasturxon', categories: ['nahor_oshi'] },
+  { id: 'maktub', label: 'Maktub', categories: ['sevgimga_hat'] },
+  { id: 'premium', label: 'Premium ✨ Yangi', categories: ['sevgi_izhor'] }
 ];
 
 function getLayoutsForCategory(eventTypeId) {

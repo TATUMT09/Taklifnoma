@@ -42,6 +42,10 @@
       });
     });
 
+    listEl.querySelectorAll('[data-qr]').forEach((btn) => {
+      btn.addEventListener('click', () => showQrModal(btn.getAttribute('data-qr')));
+    });
+
     listEl.querySelectorAll('[data-delete]').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const id = btn.getAttribute('data-delete');
@@ -83,11 +87,30 @@
           <a href="/i/${inv.slug}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Ko'rish</a>
           <button class="btn btn-outline btn-sm" data-copy="${inv.slug}">Havolani nusxalash</button>
           <a href="/edit?id=${inv.id}" class="btn btn-outline btn-sm">Tahrirlash</a>
+          <button class="btn btn-outline btn-sm" data-qr="${inv.slug}">QR kod</button>
           <button class="btn btn-danger-ghost btn-sm" data-delete="${inv.id}">O'chirish</button>
         </div>
       </div>
     `;
   }
+
+  const qrModal = document.getElementById('qr-modal');
+  const qrCanvasWrap = document.getElementById('qr-modal-canvas');
+  const qrDownloadLink = document.getElementById('qr-download-link');
+
+  function showQrModal(slug) {
+    const url = `${window.location.origin}/i/${slug}`;
+    const qr = qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+    const dataUrl = qr.createDataURL(8, 8);
+    qrCanvasWrap.innerHTML = `<img src="${dataUrl}" alt="QR kod" style="width:220px;height:220px;display:block;margin:0 auto;border-radius:8px;" />`;
+    qrDownloadLink.href = dataUrl;
+    qrModal.hidden = false;
+  }
+
+  document.getElementById('qr-modal-close').addEventListener('click', () => { qrModal.hidden = true; });
+  qrModal.addEventListener('click', (e) => { if (e.target === qrModal) qrModal.hidden = true; });
 
   load();
 })();
