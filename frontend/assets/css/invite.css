@@ -950,7 +950,10 @@ body[data-layout="maktub"] .contact-tg { color: var(--deep-dim); }
    premium_style JSON); fallbacks below match the design spec.
    ============================================================ */
 body[data-layout="premium"] {
-  background: linear-gradient(180deg, var(--pg-bg-from, #0F172A), var(--pg-bg-via, #1E293B) 50%, var(--pg-bg-to, #312E81));
+  background:
+    linear-gradient(180deg, var(--pg-bg-from, #0F172A), var(--pg-bg-via, #1E293B) 50%, var(--pg-bg-to, #312E81)),
+    url('/assets/images/categories/sevgi_izhor_premium.png') center/cover no-repeat;
+  background-blend-mode: soft-light;
   background-attachment: fixed;
   color: #fff;
 }
