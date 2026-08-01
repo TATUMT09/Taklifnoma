@@ -50,7 +50,7 @@
       return `
         <div class="tpl-mock tpl-mock-nafis" style="--mi:${theme.ink};--mg:${theme.gold}">
           <span class="tm-eyebrow">Taklifnoma</span>
-          <span class="tm-name">Aziz &amp; Malika</span>
+          <span class="tm-name">Aziz va Malika</span>
         </div>`;
     }
 

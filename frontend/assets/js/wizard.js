@@ -41,7 +41,7 @@
         <span class="tpl-pick-preview">
           <span class="tpl-mock tpl-mock-nafis" style="--mi:${t.mi};--mg:${t.mg};">
             <span class="tm-eyebrow">Taklifnoma</span>
-            <span class="tm-name">Aziz${cat.pair ? ' &amp; Malika' : ''}</span>
+            <span class="tm-name">Aziz${cat.pair ? ' va Malika' : ''}</span>
           </span>
         </span>
         <span class="tpl-pick-text"><b>${t.name}</b><br/><small>${t.desc}</small></span>

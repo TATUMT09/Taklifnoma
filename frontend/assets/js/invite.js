@@ -149,7 +149,10 @@
               <span class="envelope-card">
                 <span class="envelope-card-text">
                   <span class="envelope-card-invite">${escapeHtml(cat.inviteWord)}</span>
-                  <span class="envelope-card-names">${escapeHtml(groom)}${isCouple ? ` &amp; ${escapeHtml(bride)}` : ''}</span>
+                  <span class="envelope-card-names">
+                    <span class="ecn-name">${escapeHtml(groom)}</span>
+                    ${isCouple ? `<span class="ecn-va">va</span><span class="ecn-name">${escapeHtml(bride)}</span>` : ''}
+                  </span>
                 </span>
               </span>
             </div>
@@ -286,7 +289,7 @@
         <section class="section" id="surat">
           <div class="section-inner reveal">
             <div class="photo-frame">
-              <img src="${escapeHtml(inv.photo_url)}" alt="${escapeHtml(groom)}${isCouple ? ' & ' + escapeHtml(bride) : ''}" />
+              <img src="${escapeHtml(inv.photo_url)}" alt="${escapeHtml(groom)}${isCouple ? ' va ' + escapeHtml(bride) : ''}" />
             </div>
           </div>
         </section>` : ''}
@@ -394,7 +397,7 @@
           <div class="monogram" style="width:88px;height:88px;">
             <div class="monogram-letters" style="font-size:1.1rem;">
               <span>${escapeHtml((groom[0] || '?').toUpperCase())}</span>
-              ${isCouple ? `<span class="amp" style="font-size:0.7rem;">&amp;</span><span>${escapeHtml((bride[0] || '?').toUpperCase())}</span>` : ''}
+              ${isCouple ? `<span class="amp" style="font-size:0.6rem;">va</span><span>${escapeHtml((bride[0] || '?').toUpperCase())}</span>` : ''}
             </div>
           </div>
           <p class="foot-line">${inv.event_date ? escapeHtml(dateLabel.split(' · ')[0]) : ''}</p>

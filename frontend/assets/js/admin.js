@@ -33,7 +33,7 @@
       invBody.innerHTML = invitations.map((inv) => `
         <tr>
           <td><div class="cell-primary">${escapeHtml(inv.owner_name)}</div><div class="cell-sub">${escapeHtml(inv.owner_email)}</div></td>
-          <td class="cell-primary">${escapeHtml(inv.groom_name)}${inv.bride_name ? ' &amp; ' + escapeHtml(inv.bride_name) : ''}</td>
+          <td class="cell-primary">${escapeHtml(inv.groom_name)}${inv.bride_name ? ' va ' + escapeHtml(inv.bride_name) : ''}</td>
           <td>${escapeHtml(EVENT_TYPE_LABELS[inv.event_type] || inv.event_type)}</td>
           <td>${inv.event_date ? escapeHtml(formatUzDateLong(inv.event_date).split(' · ')[0]) : '—'}</td>
           <td>${escapeHtml(THEME_LABELS[inv.theme] || inv.theme)}</td>

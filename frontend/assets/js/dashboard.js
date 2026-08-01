@@ -61,7 +61,7 @@
 
   function cardHtml(inv) {
     const names = inv.bride_name
-      ? `${escapeHtml(inv.groom_name || '—')} &amp; ${escapeHtml(inv.bride_name)}`
+      ? `${escapeHtml(inv.groom_name || '—')} va ${escapeHtml(inv.bride_name)}`
       : escapeHtml(inv.groom_name || '—');
     const dateLabel = inv.event_date ? formatUzDateLong(inv.event_date) : "Sana kiritilmagan";
     return `
