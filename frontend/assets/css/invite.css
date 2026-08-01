@@ -1066,6 +1066,7 @@ body[data-layout="premium"] .chevron { border-color: #FF758F; }
 /* ---- Carousel ---- */
 .premium-carousel {
   display: flex; gap: 1.1rem; overflow-x: auto; scroll-snap-type: x mandatory;
+  justify-content: center;
   width: 100%; max-width: 720px; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch;
 }
 .premium-slide {
@@ -1113,10 +1114,10 @@ body[data-layout="premium"] .chevron { border-color: #FF758F; }
 
 /* ---- Video ---- */
 .premium-video-frame {
-  width: min(100%, 560px); border-radius: 20px; overflow: hidden;
+  width: min(100%, 720px); border-radius: 20px; overflow: hidden;
   border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 20px 60px rgba(0,0,0,0.35);
 }
-.premium-video-frame video { width: 100%; display: block; background: #000; }
+.premium-video-frame video { width: 100%; aspect-ratio: 16 / 9; display: block; background: #000; object-fit: cover; }
 
 /* ---- Finale ---- */
 .premium-finale-heart { font-size: 3rem; color: #FF4D6D; margin: 0; animation: pgMiniPulse 1.6s ease-in-out infinite; }
