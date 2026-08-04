@@ -145,12 +145,16 @@ const THEME_META = [
   {
     id: 'vau', name: 'Vau ✨', desc: 'Tungi gradient fon, neon-pushti aksentlar',
     mi: '#0F172A', mg: '#FF4D6D', categories: ['sevgi_izhor']
+  },
+  {
+    id: 'zar', name: 'Zar ✨', desc: "To'q ko'k-tillarang, hashamatli oltin bezaklar",
+    mi: '#0B1020', mg: '#D4AF37', categories: null
   }
 ];
 
 function getThemesForCategory(eventTypeId) {
-  const themes = THEME_META.filter((t) => t.categories.includes(eventTypeId));
-  return themes.length ? themes : THEME_META.filter((t) => t.categories.includes('toy'));
+  const themes = THEME_META.filter((t) => t.categories === null || t.categories.includes(eventTypeId));
+  return themes.length ? themes : THEME_META.filter((t) => t.categories && t.categories.includes('toy'));
 }
 
 const LAYOUT_META = [
@@ -159,7 +163,8 @@ const LAYOUT_META = [
   { id: 'zamonaviy', label: 'Zamonaviy', categories: null },
   { id: 'dasturxon', label: 'Dasturxon', categories: ['nahor_oshi'] },
   { id: 'maktub', label: 'Maktub', categories: ['sevgimga_hat'] },
-  { id: 'premium', label: 'Premium ✨ Yangi', categories: ['sevgi_izhor'] }
+  { id: 'premium', label: 'Premium ✨ Yangi', categories: ['sevgi_izhor'] },
+  { id: 'shohona', label: 'Shohona ✨ Yangi', categories: null }
 ];
 
 function getLayoutsForCategory(eventTypeId) {

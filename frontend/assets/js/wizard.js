@@ -63,8 +63,9 @@
   }
 
   function renderLayoutChoices(categoryId) {
+    const cat = getEventCategory(categoryId);
     const available = getLayoutsForCategory(categoryId);
-    if (available.length <= 1) {
+    if (cat.exclusiveLayout || available.length <= 1) {
       layoutChoicesFieldEl.hidden = true;
       layoutChoicesEl.innerHTML = '';
       return;
@@ -84,7 +85,7 @@
   }
 
   function togglePremiumFields() {
-    if (premiumFieldsEl) premiumFieldsEl.hidden = state.layout !== 'premium';
+    if (premiumFieldsEl) premiumFieldsEl.hidden = !['premium', 'shohona'].includes(state.layout);
   }
 
   function applyCategory(id) {
@@ -437,7 +438,10 @@
       access_password: document.getElementById('access_password') ? document.getElementById('access_password').value : '',
       expires_at: document.getElementById('expires_at') ? document.getElementById('expires_at').value : '',
       slug: document.getElementById('custom_slug') ? document.getElementById('custom_slug').value : '',
-      premium_style: collectPremiumStyle()
+      premium_style: collectPremiumStyle(),
+      rsvp_enabled: document.getElementById('rsvp_enabled') ? document.getElementById('rsvp_enabled').checked : false,
+      gift_card_number: document.getElementById('gift_card_number') ? document.getElementById('gift_card_number').value : '',
+      gift_note: document.getElementById('gift_note') ? document.getElementById('gift_note').value : ''
     };
   }
 
@@ -471,6 +475,9 @@
 
     if (document.getElementById('expires_at')) document.getElementById('expires_at').value = inv.expires_at || '';
     if (document.getElementById('custom_slug')) document.getElementById('custom_slug').value = inv.slug || '';
+    if (document.getElementById('rsvp_enabled')) document.getElementById('rsvp_enabled').checked = !!inv.rsvp_enabled;
+    if (document.getElementById('gift_card_number')) document.getElementById('gift_card_number').value = inv.gift_card_number || '';
+    if (document.getElementById('gift_note')) document.getElementById('gift_note').value = inv.gift_note || '';
     if (inv.has_password && document.getElementById('password-hint')) {
       document.getElementById('password-hint').textContent = "Parol allaqachon o'rnatilgan. Yangisini kiritsangiz — almashtiriladi, bo'sh qoldirsangiz — o'zgarmaydi.";
     }

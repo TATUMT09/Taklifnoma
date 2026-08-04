@@ -144,6 +144,23 @@ body[data-theme="vau"] {
 body[data-theme="vau"] .cover {
   background: linear-gradient(160deg, #0F172A, #1E293B 55%, #312E81 100%);
 }
+body[data-theme="zar"] {
+  --ink: #0B1020;
+  --panel: #111827;
+  --paper: #111827;
+  --paper-dim: #0B1020;
+  --gold: #D4AF37;
+  --gold-hi: #e6c866;
+  --wine: #E6B8A2;
+  --ivory-text: #F8FAFC;
+  --ivory-dim: #cbd0da;
+  --deep-text: #F8FAFC;
+  --deep-dim: #cbd0da;
+  --rule: rgba(212, 175, 55, 0.35);
+}
+body[data-theme="zar"] .cover {
+  background: linear-gradient(160deg, #0B1020, #111827 55%, #1E1B4B 100%);
+}
 
 :root {
   --serif: 'Fraunces', ui-serif, Georgia, serif;
@@ -1159,3 +1176,161 @@ body[data-layout="premium"] .chevron { border-color: #FF758F; }
 .premium-unlock-form input:focus { outline: 2px solid var(--pg-accent, #FF3B81); outline-offset: 2px; }
 .premium-unlock-form button { flex-shrink: 0; }
 .premium-unlock-error { color: #FF758F; font-size: 0.9rem; min-height: 1.3em; margin: 0; }
+
+/* ============================================================
+   Layout: Shohona — a universal luxury gold/navy template,
+   available for every category (like nafis/klassik/zamonaviy).
+   Restrained: glass cards + a gold hairline, no particle
+   effects (this brief is "minimal luxury", not "romantic film").
+   ============================================================ */
+body[data-layout="shohona"] {
+  background: linear-gradient(180deg, #0B1020, #111827 55%, #1E1B4B);
+  background-attachment: fixed;
+  color: #F8FAFC;
+}
+
+.shohona-cover {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  padding: 3rem 1.5rem 0; text-align: center; position: relative;
+}
+.shohona-mid { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6rem; max-width: 30ch; }
+.shohona-monogram {
+  width: 92px; height: 92px; border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-style: italic; font-size: 1.6rem; color: #D4AF37;
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.08);
+}
+.shohona-gate-text { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: #F8FAFC; }
+.shohona-enter-btn {
+  appearance: none; border: 1px solid #D4AF37; cursor: pointer; background: transparent;
+  font-family: var(--sans); font-weight: 600; font-size: 0.92rem; letter-spacing: 0.04em;
+  color: #D4AF37; padding: 0.9rem 2rem; border-radius: 999px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+.shohona-enter-btn:hover { background: #D4AF37; color: #0B1020; transform: translateY(-1px); }
+.shohona-enter-btn:focus-visible { outline: 2px solid #D4AF37; outline-offset: 4px; }
+.shohona-cover.opened .shohona-enter-btn, .shohona-cover.opened .shohona-gate-text, .shohona-cover.opened .shohona-monogram {
+  opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+}
+.shohona-gate-hint { min-height: 1px; }
+body[data-layout="shohona"] .scroll-hint { opacity: 0; transition: opacity 0.6s ease; color: #cbd0da; }
+.shohona-cover.revealed .scroll-hint { opacity: 0.85; }
+body[data-layout="shohona"] .chevron { border-color: #D4AF37; }
+
+.shohona-hero {
+  min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.9rem; padding: 4rem 1.5rem; text-align: center; position: relative; overflow: hidden;
+}
+.shohona-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.shohona-hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,16,32,0.55), rgba(11,16,32,0.85)); z-index: 0; }
+.shohona-eyebrow {
+  position: relative; z-index: 1; font-family: var(--sans); font-weight: 700; font-size: 0.7rem;
+  letter-spacing: 0.22em; text-transform: uppercase; color: #D4AF37;
+}
+.shohona-hero-name {
+  position: relative; z-index: 1;
+  font-family: var(--serif); font-style: italic; font-weight: 640;
+  font-size: clamp(2rem, 7vw, 3.4rem); color: #F8FAFC; margin: 0;
+  max-width: 100%; overflow-wrap: break-word; word-break: break-word;
+}
+.shohona-hero-tagline { position: relative; z-index: 1; color: #cbd0da; font-size: 0.98rem; max-width: 34ch; }
+
+.shohona-section { padding: clamp(2.5rem, 7vw, 4rem) 1.5rem; display: flex; flex-direction: column; align-items: center; }
+.shohona-section-eyebrow {
+  font-family: var(--sans); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #D4AF37; text-align: center; margin: 0 0 1.6rem;
+}
+
+.shohona-card {
+  width: min(100%, 480px); background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 4px;
+  padding: clamp(2.2rem, 6vw, 3rem); text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+.shohona-card-line { width: 48px; height: 1px; background: #D4AF37; margin: 0 auto 1.2rem; }
+.shohona-card-line:last-child { margin: 1.2rem auto 0; }
+.shohona-card-eyebrow { font-family: var(--sans); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: #cbd0da; margin: 0 0 0.6rem; }
+.shohona-card-names { font-family: var(--serif); font-style: italic; font-size: clamp(1.6rem, 6vw, 2.2rem); color: #F8FAFC; margin: 0 0 0.6rem; }
+.shohona-card-tagline { color: #cbd0da; font-size: 0.92rem; margin: 0; }
+
+.shohona-infogrid { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; max-width: 640px; }
+.shohona-infocard {
+  width: 130px; padding: 1.4rem 1rem; border-radius: 4px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+}
+.shohona-info-icon { font-size: 1.3rem; }
+.shohona-info-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: #cbd0da; }
+.shohona-info-value { font-family: var(--serif); font-size: 0.95rem; color: #F8FAFC; text-align: center; }
+
+.shohona-countdown-grid { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; }
+.shohona-countdown-tile {
+  width: 76px; height: 76px; border-radius: 4px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.35);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem;
+}
+.shohona-countdown-tile .cd-num { font-family: var(--serif); font-weight: 700; font-size: 1.35rem; color: #D4AF37; font-variant-numeric: tabular-nums; }
+.shohona-countdown-tile .cd-label { font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: #cbd0da; }
+
+.shohona-carousel {
+  display: flex; gap: 1.1rem; overflow-x: auto; scroll-snap-type: x mandatory; justify-content: center;
+  width: 100%; max-width: 720px; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch;
+}
+.shohona-slide { flex: 0 0 auto; width: clamp(200px, 65vw, 300px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 0.6rem; }
+.shohona-slide img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; display: block; box-shadow: 0 24px 50px -20px rgba(0,0,0,0.5); }
+.shohona-slide-caption { font-family: var(--serif); font-style: italic; color: #cbd0da; text-align: center; font-size: 0.88rem; }
+
+.shohona-rsvp-form { width: min(100%, 420px); display: flex; flex-direction: column; gap: 0.9rem; }
+.shohona-rsvp-form input, .shohona-rsvp-form textarea {
+  padding: 0.85rem 1rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05); color: #F8FAFC; font-family: var(--sans); font-size: 0.92rem;
+}
+.shohona-rsvp-form textarea { min-height: 80px; resize: vertical; }
+.shohona-rsvp-form input::placeholder, .shohona-rsvp-form textarea::placeholder { color: #8b93a7; }
+.shohona-rsvp-form input:focus, .shohona-rsvp-form textarea:focus { outline: 2px solid #D4AF37; outline-offset: 2px; }
+.shohona-rsvp-choice { display: flex; gap: 0.7rem; }
+.shohona-rsvp-btn {
+  flex: 1; appearance: none; cursor: pointer; padding: 0.7rem; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #cbd0da; font-family: var(--sans); font-size: 0.88rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.shohona-rsvp-btn.active { border-color: #D4AF37; color: #D4AF37; }
+.shohona-rsvp-success { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+.shohona-rsvp-check {
+  width: 56px; height: 56px; border-radius: 50%; border: 1px solid #D4AF37; color: #D4AF37;
+  display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+}
+.shohona-rsvp-success p { color: #cbd0da; }
+
+.shohona-wishes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; max-width: 700px; }
+.shohona-wish-card {
+  padding: 1.3rem; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  text-align: left;
+}
+.shohona-wish-text { font-family: var(--serif); font-style: italic; color: #F8FAFC; font-size: 0.95rem; margin: 0 0 0.5rem; white-space: pre-wrap; }
+.shohona-wish-name { font-size: 0.78rem; color: #D4AF37; margin: 0; }
+.shohona-wishes-empty { color: #cbd0da; font-size: 0.9rem; grid-column: 1 / -1; text-align: center; }
+
+.shohona-gift-card {
+  width: min(100%, 380px); text-align: center; padding: 2rem;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 4px;
+}
+.shohona-gift-number { font-family: var(--sans); font-weight: 600; font-size: 1.15rem; letter-spacing: 0.08em; color: #D4AF37; margin: 0 0 1rem; }
+.shohona-gift-note { color: #cbd0da; font-size: 0.85rem; margin: 1rem 0 0; }
+
+.shohona-finale { padding: clamp(3rem, 8vw, 4.5rem) 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; }
+.shohona-footer-line { font-family: var(--serif); font-style: italic; color: #cbd0da; font-size: 0.95rem; margin-top: 1.4rem; text-align: center; }
+
+body[data-layout="shohona"] .btn-ghost { color: #F8FAFC; border-color: rgba(212,175,55,0.35); }
+body[data-layout="shohona"] .btn-ghost:hover { border-color: #D4AF37; background: rgba(212,175,55,0.08); }
+body[data-layout="shohona"] .btn-gold { background: #D4AF37; color: #0B1020; }
+body[data-layout="shohona"] .monogram-letters { color: #F8FAFC; }
+body[data-layout="shohona"] .foot-line { color: #cbd0da; }
+body[data-layout="shohona"] .contact-tg { color: #cbd0da; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shohona-enter-btn, .shohona-gate-text, .shohona-monogram, .scroll-hint { transition: none; }
+}

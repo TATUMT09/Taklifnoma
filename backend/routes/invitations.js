@@ -6,8 +6,8 @@ const { generateSlug } = require('../utils/slug');
 
 const router = express.Router();
 
-const THEMES = ['zumrad', 'lavanda', 'shafaq', 'bayram', 'oltin', 'nur', 'muhabbat', 'bahor', 'layli', 'vau'];
-const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium'];
+const THEMES = ['zumrad', 'lavanda', 'shafaq', 'bayram', 'oltin', 'nur', 'muhabbat', 'bahor', 'layli', 'vau', 'zar'];
+const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona'];
 const EVENT_TYPES = ['toy', 'qiz_bazmi', 'tugilgan_kun', 'tabrik', 'haj_safari', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
 const PAIR_TYPES = ['toy', 'qiz_bazmi', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
 const SLUG_RE = /^[a-z0-9-]{3,40}$/;
@@ -16,7 +16,7 @@ const FIELDS = [
   'theme', 'layout', 'event_type', 'groom_name', 'bride_name', 'family_name',
   'event_date', 'event_time', 'venue_name', 'address', 'map_link',
   'telegram_group', 'language', 'photo_url', 'song_url', 'video_url', 'custom_message',
-  'seo_title', 'seo_description', 'og_image_url'
+  'seo_title', 'seo_description', 'og_image_url', 'gift_card_number', 'gift_note'
 ];
 
 function sanitize(body) {
@@ -28,6 +28,7 @@ function sanitize(body) {
   if (!out.language) out.language = 'uz';
 
   out.expires_at = /^\d{4}-\d{2}-\d{2}$/.test(body.expires_at) ? body.expires_at : null;
+  out.rsvp_enabled = body.rsvp_enabled ? 1 : 0;
 
   out.premium_style = '';
   if (typeof body.premium_style === 'string' && body.premium_style.trim()) {
@@ -156,11 +157,11 @@ router.post('/', requireAuth, (req, res) => {
        (user_id, slug, theme, layout, event_type, groom_name, bride_name, family_name,
         event_date, event_time, venue_name, address, map_link, telegram_group, photo_url, song_url,
         video_url, custom_message, language, expires_at, seo_title, seo_description, og_image_url,
-        premium_style, access_password_hash)
+        premium_style, access_password_hash, rsvp_enabled, gift_card_number, gift_note)
        VALUES (@user_id, @slug, @theme, @layout, @event_type, @groom_name, @bride_name, @family_name,
         @event_date, @event_time, @venue_name, @address, @map_link, @telegram_group, @photo_url, @song_url,
         @video_url, @custom_message, @language, @expires_at, @seo_title, @seo_description, @og_image_url,
-        @premium_style, @access_password_hash)`
+        @premium_style, @access_password_hash, @rsvp_enabled, @gift_card_number, @gift_note)`
     )
     .run({ user_id: req.user.id, slug, ...data, access_password_hash });
 
@@ -207,7 +208,9 @@ router.put('/:id', requireAuth, loadOwned, (req, res) => {
        telegram_group=@telegram_group, photo_url=@photo_url, song_url=@song_url, video_url=@video_url,
        custom_message=@custom_message, language=@language, expires_at=@expires_at,
        seo_title=@seo_title, seo_description=@seo_description, og_image_url=@og_image_url,
-       premium_style=@premium_style, access_password_hash=@access_password_hash, updated_at=datetime('now')
+       premium_style=@premium_style, access_password_hash=@access_password_hash,
+       rsvp_enabled=@rsvp_enabled, gift_card_number=@gift_card_number, gift_note=@gift_note,
+       updated_at=datetime('now')
      WHERE id=@id`
   ).run({ id: req.invitation.id, slug, ...data, access_password_hash });
 

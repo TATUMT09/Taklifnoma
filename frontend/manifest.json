@@ -1,0 +1,12 @@
+{
+  "name": "Taklifnoma",
+  "short_name": "Taklifnoma",
+  "description": "Raqamli to'y va tadbir taklifnomalari",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7C3AED",
+  "icons": [
+    { "src": "/assets/images/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

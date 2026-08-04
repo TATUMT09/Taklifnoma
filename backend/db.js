@@ -123,6 +123,15 @@ if (!invitationColumns.includes('og_image_url')) {
 if (!invitationColumns.includes('premium_style')) {
   db.exec("ALTER TABLE invitations ADD COLUMN premium_style TEXT NOT NULL DEFAULT ''");
 }
+if (!invitationColumns.includes('rsvp_enabled')) {
+  db.exec('ALTER TABLE invitations ADD COLUMN rsvp_enabled INTEGER NOT NULL DEFAULT 0');
+}
+if (!invitationColumns.includes('gift_card_number')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN gift_card_number TEXT NOT NULL DEFAULT ''");
+}
+if (!invitationColumns.includes('gift_note')) {
+  db.exec("ALTER TABLE invitations ADD COLUMN gift_note TEXT NOT NULL DEFAULT ''");
+}
 
 // Seed the admin account on every startup (idempotent), if configured via env.
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;

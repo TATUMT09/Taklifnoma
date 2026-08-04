@@ -30,6 +30,7 @@ const api = (() => {
 
     getPublicInvitation: (slug) => request('GET', `/api/public/${slug}`),
     unlockInvitation: (slug, password) => request('POST', `/api/public/${slug}/unlock`, { password }),
+    getWishes: (slug) => request('GET', `/api/public/${slug}/wishes`),
     submitRsvp: (slug, payload) => request('POST', `/api/public/${slug}/rsvp`, payload),
     sendContactMessage: (payload) => request('POST', '/api/public/contact', payload),
 

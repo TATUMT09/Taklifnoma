@@ -85,4 +85,18 @@ router.post('/:slug/rsvp', (req, res) => {
   res.status(201).json({ ok: true });
 });
 
+router.get('/:slug/wishes', (req, res) => {
+  const inv = db.prepare('SELECT id FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Taklifnoma topilmadi' });
+
+  const wishes = db
+    .prepare(
+      `SELECT guest_name, wish FROM rsvps
+       WHERE invitation_id = ? AND wish != ''
+       ORDER BY created_at DESC LIMIT 50`
+    )
+    .all(inv.id);
+  res.json({ wishes });
+});
+
 module.exports = router;

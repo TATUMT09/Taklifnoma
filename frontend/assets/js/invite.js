@@ -2,7 +2,7 @@
   const app = document.getElementById('app');
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium'];
+  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona'];
   const isPreview = window.location.pathname.replace(/\/$/, '') === '/preview';
 
   function escapeHtml(str) {
@@ -161,13 +161,15 @@
       : layout === 'dasturxon' ? coverDasturxon(ctx)
       : layout === 'maktub' ? coverMaktub(ctx)
       : layout === 'premium' ? coverPremium(ctx)
+      : layout === 'shohona' ? coverShohona(ctx)
       : coverNafis(ctx);
     const sectionsHtml = layout === 'dasturxon' ? dasturxonSectionsHtml(ctx)
       : layout === 'maktub' ? maktubSectionsHtml(ctx)
       : layout === 'premium' ? premiumSectionsHtml(ctx)
+      : layout === 'shohona' ? shohonaSectionsHtml(ctx)
       : sharedSectionsHtml(ctx);
 
-    const noDotnavLayouts = ['dasturxon', 'maktub', 'premium'];
+    const noDotnavLayouts = ['dasturxon', 'maktub', 'premium', 'shohona'];
     app.innerHTML = `
       ${noDotnavLayouts.includes(layout) ? '' : dotnavHtml(inv)}
 
@@ -776,6 +778,143 @@
         ${siteFootHtml(ctx)}`;
   }
 
+  function coverShohona(ctx) {
+    const { groom, bride, isCouple } = ctx;
+    const initial = (groom[0] || '?').toUpperCase();
+    const monogram = isCouple ? `${initial} & ${(bride[0] || '?').toUpperCase()}` : initial;
+    return `
+        <section class="shohona-cover" id="cover">
+          <div class="shohona-mid">
+            <div class="shohona-monogram">${escapeHtml(monogram)}</div>
+            <p class="shohona-gate-text">Siz maxsus mehmon sifatida taklif etildingiz.</p>
+            <button type="button" class="shohona-enter-btn" id="envelope-btn">✨ Taklifnomani ochish</button>
+            <p class="shohona-gate-hint" id="envelope-hint"></p>
+          </div>
+          <div class="scroll-hint">
+            <span>Pastga suring</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </div>
+        </section>`;
+  }
+
+  function shohonaSectionsHtml(ctx) {
+    const { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat } = ctx;
+    const names = isCouple ? `${escapeHtml(groom)} & ${escapeHtml(bride)}` : escapeHtml(groom);
+    const galleryPhotos = (inv.gallery && inv.gallery.length)
+      ? inv.gallery
+      : (inv.photo_url ? [{ url: inv.photo_url, caption: '' }] : []);
+
+    return `
+        <section class="shohona-hero reveal">
+          ${inv.video_url ? `<video class="shohona-hero-video" src="${escapeHtml(inv.video_url)}" autoplay muted loop playsinline></video><div class="shohona-hero-scrim"></div>` : ''}
+          <p class="shohona-eyebrow">${escapeHtml(headline)}</p>
+          <h1 class="shohona-hero-name">${names}</h1>
+          <p class="shohona-hero-tagline">${escapeHtml(cat.tagline)}</p>
+        </section>
+
+        <section class="shohona-section reveal">
+          <div class="shohona-card">
+            <div class="shohona-card-line"></div>
+            <p class="shohona-card-eyebrow">${escapeHtml(cat.inviteWord || 'Taklifnoma')}</p>
+            <p class="shohona-card-names">${names}</p>
+            <p class="shohona-card-tagline">${escapeHtml(cat.tagline)}</p>
+            <div class="shohona-card-line"></div>
+          </div>
+        </section>
+
+        <section class="shohona-section reveal">
+          <div class="shohona-infogrid">
+            ${inv.event_date ? `<div class="shohona-infocard"><span class="shohona-info-icon">📅</span><span class="shohona-info-label">Sana</span><span class="shohona-info-value">${escapeHtml(dateLabel.split(' · ')[0])}</span></div>` : ''}
+            ${inv.event_time ? `<div class="shohona-infocard"><span class="shohona-info-icon">🕐</span><span class="shohona-info-label">Vaqt</span><span class="shohona-info-value">${escapeHtml(inv.event_time)}</span></div>` : ''}
+            ${(inv.venue_name || inv.address) ? `<div class="shohona-infocard"><span class="shohona-info-icon">📍</span><span class="shohona-info-label">Manzil</span><span class="shohona-info-value">${escapeHtml(inv.venue_name || inv.address)}</span></div>` : ''}
+            ${inv.family_name ? `<div class="shohona-infocard"><span class="shohona-info-icon">👨‍👩‍👧</span><span class="shohona-info-label">Mezbon</span><span class="shohona-info-value">${escapeHtml(inv.family_name)}</span></div>` : ''}
+            ${inv.telegram_group ? `<div class="shohona-infocard"><span class="shohona-info-icon">📞</span><span class="shohona-info-label">Bog'lanish</span><span class="shohona-info-value">${escapeHtml(inv.telegram_group)}</span></div>` : ''}
+          </div>
+        </section>
+
+        ${inv.event_date ? `
+        <section class="shohona-section reveal">
+          <p class="shohona-section-eyebrow">Tadbirga qadar</p>
+          <div class="shohona-countdown-grid">
+            <div class="shohona-countdown-tile"><span class="cd-num" id="cd-days">00</span><span class="cd-label">Kun</span></div>
+            <div class="shohona-countdown-tile"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Soat</span></div>
+            <div class="shohona-countdown-tile"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">Daqiqa</span></div>
+            <div class="shohona-countdown-tile"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">Soniya</span></div>
+          </div>
+        </section>` : ''}
+
+        ${galleryPhotos.length ? `
+        <section class="shohona-section reveal">
+          <p class="shohona-section-eyebrow">Rasmlar</p>
+          <div class="shohona-carousel">
+            ${galleryPhotos.map((p) => `
+              <div class="shohona-slide">
+                <img src="${escapeHtml(p.url)}" alt="" loading="lazy" />
+                ${p.caption ? `<p class="shohona-slide-caption">${escapeHtml(p.caption)}</p>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </section>` : ''}
+
+        ${inv.map_link ? `
+        <section class="shohona-section reveal">
+          <a class="btn-gold" href="${escapeHtml(inv.map_link)}" target="_blank" rel="noopener">📍 Marshrutni boshlash</a>
+        </section>` : ''}
+
+        ${inv.rsvp_enabled ? `
+        <section class="shohona-section reveal" id="rsvp">
+          <p class="shohona-section-eyebrow">Mehmon tasdiqlash</p>
+          <form class="shohona-rsvp-form" id="shohona-rsvp-form">
+            <input type="text" id="rsvp-name" placeholder="Ismingiz" required />
+            <input type="number" id="rsvp-count" placeholder="Necha kishi" min="1" max="20" value="1" />
+            <div class="shohona-rsvp-choice">
+              <button type="button" class="shohona-rsvp-btn active" data-attending="yes">Kelaman</button>
+              <button type="button" class="shohona-rsvp-btn" data-attending="no">Kela olmayman</button>
+            </div>
+            <textarea id="rsvp-wish" placeholder="Tilagingiz (ixtiyoriy)"></textarea>
+            <button type="submit" class="shohona-enter-btn">Yuborish</button>
+          </form>
+          <div class="shohona-rsvp-success" id="shohona-rsvp-success" hidden>
+            <span class="shohona-rsvp-check">✓</span>
+            <p>Rahmat! Javobingiz qabul qilindi.</p>
+          </div>
+        </section>
+
+        <section class="shohona-section reveal">
+          <p class="shohona-section-eyebrow">Tilaklar devori</p>
+          <div class="shohona-wishes-grid" id="shohona-wishes-grid">
+            <p class="shohona-wishes-empty">Hali tilaklar yo'q — birinchi bo'ling!</p>
+          </div>
+        </section>` : ''}
+
+        ${inv.gift_card_number ? `
+        <section class="shohona-section reveal">
+          <p class="shohona-section-eyebrow">Sovg'a</p>
+          <div class="shohona-gift-card">
+            <p class="shohona-gift-number" id="shohona-gift-number">${escapeHtml(inv.gift_card_number)}</p>
+            <button type="button" class="btn-ghost" id="shohona-gift-copy">Nusxalash</button>
+            <p class="shohona-gift-note">${escapeHtml(inv.gift_note) || "Niyatning o'zi biz uchun katta sovg'a."}</p>
+          </div>
+        </section>` : ''}
+
+        <section class="shohona-finale reveal">
+          <div class="actions-row">
+            <button class="btn-ghost" id="share-btn">Taklifnomani ulashish</button>
+            <a class="btn-ghost" id="telegram-share-btn" target="_blank" rel="noopener">
+              <svg class="tg-icon" viewBox="0 0 240 240" aria-hidden="true">
+                <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                <path fill="#fff" d="M52 118l122-47c5.6-2.2 10.5 1.4 8.7 9.7l-20.8 98c-1.5 6.9-5.6 8.6-11.4 5.3l-31.5-23.2-15.2 14.6c-1.7 1.7-3.1 3.1-6.3 3.1l2.2-31.8 58-52.4c2.5-2.2-.5-3.5-3.9-1.3l-71.7 45.1-30.9-9.6c-6.7-2.1-6.8-6.7 1.8-9.5z"/>
+              </svg>
+              Telegramda ulashish
+            </a>
+          </div>
+          <div class="rule" id="finale-mark" style="margin:1.6rem auto 0;"></div>
+          <p class="shohona-footer-line">Ushbu taklifnoma siz uchun mehr bilan tayyorlandi.</p>
+        </section>
+
+        ${siteFootHtml(ctx)}`;
+  }
+
   function wireInteractions(inv, layout) {
     const coverEl = document.getElementById('cover');
     const envelopeBtn = document.getElementById('envelope-btn');
@@ -906,6 +1045,73 @@
         };
         noBtn.addEventListener('mouseenter', dodge);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, { passive: false });
+      }
+    }
+
+    if (layout === 'shohona') {
+      const giftCopyBtn = document.getElementById('shohona-gift-copy');
+      if (giftCopyBtn) {
+        giftCopyBtn.addEventListener('click', () => {
+          const number = document.getElementById('shohona-gift-number').textContent.trim();
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(number).then(() => showToast('Nusxalandi'), () => fallbackCopy(number));
+          } else {
+            fallbackCopy(number);
+          }
+        });
+      }
+
+      const wishesGrid = document.getElementById('shohona-wishes-grid');
+      function renderWishes(wishes) {
+        if (!wishesGrid) return;
+        if (!wishes.length) {
+          wishesGrid.innerHTML = '<p class="shohona-wishes-empty">Hali tilaklar yo\'q — birinchi bo\'ling!</p>';
+          return;
+        }
+        wishesGrid.innerHTML = wishes.map((w) => `
+          <div class="shohona-wish-card reveal visible">
+            <p class="shohona-wish-text">${escapeHtml(w.wish)}</p>
+            <p class="shohona-wish-name">— ${escapeHtml(w.guest_name || 'Mehmon')}</p>
+          </div>
+        `).join('');
+      }
+      function loadWishes() {
+        if (!wishesGrid) return;
+        api.getWishes(inv.slug).then(({ wishes }) => renderWishes(wishes)).catch(() => {});
+      }
+      loadWishes();
+
+      const rsvpForm = document.getElementById('shohona-rsvp-form');
+      if (rsvpForm) {
+        let attending = 'yes';
+        rsvpForm.querySelectorAll('.shohona-rsvp-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            rsvpForm.querySelectorAll('.shohona-rsvp-btn').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            attending = btn.getAttribute('data-attending');
+          });
+        });
+        rsvpForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const submitBtn = rsvpForm.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          try {
+            await api.submitRsvp(inv.slug, {
+              guest_name: document.getElementById('rsvp-name').value,
+              attending,
+              guests_count: document.getElementById('rsvp-count').value,
+              wish: document.getElementById('rsvp-wish').value
+            });
+            rsvpForm.hidden = true;
+            const successEl = document.getElementById('shohona-rsvp-success');
+            if (successEl) successEl.hidden = false;
+            fireConfetti(['#D4AF37', '#F8FAFC', '#E6B8A2']);
+            loadWishes();
+          } catch (err) {
+            showToast(err.message, true);
+            submitBtn.disabled = false;
+          }
+        });
       }
     }
 

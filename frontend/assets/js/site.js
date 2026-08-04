@@ -2,6 +2,12 @@
   const stored = localStorage.getItem('tn_theme');
   if (stored) document.documentElement.setAttribute('data-theme', stored);
 
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.querySelector('[data-theme-toggle]');
     if (toggle) {
