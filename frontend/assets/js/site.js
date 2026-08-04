@@ -20,7 +20,60 @@
     }
     renderAuthNav();
     renderTemplateGallery();
+    wireDropdown('notif-btn', 'notif-dropdown');
+    initScrollReveal();
+    initButtonRipple();
   });
+
+  function wireDropdown(btnId, dropdownId) {
+    const btn = document.getElementById(btnId);
+    const dropdown = document.getElementById(dropdownId);
+    if (!btn || !dropdown) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.nav-dropdown.open').forEach((d) => { if (d !== dropdown) d.classList.remove('open'); });
+      dropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target) && e.target !== btn) dropdown.classList.remove('open');
+    });
+  }
+
+  function initButtonRipple() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-primary');
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const ripple = document.createElement('span');
+      ripple.className = 'btn-ripple';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  }
+
+  function initScrollReveal() {
+    const els = document.querySelectorAll('.landing-section, .tpl-card, .feature-card');
+    if (!els.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach((el) => el.classList.add('reveal-visible'));
+      return;
+    }
+    els.forEach((el) => el.classList.add('reveal'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach((el) => io.observe(el));
+  }
 
   function renderTemplateGallery() {
     const grid = document.getElementById('template-grid');
@@ -61,10 +114,11 @@
     }
 
     const OTHER_CATEGORIES = [
-      { id: 'tugilgan_kun', name: "Tug'ilgan kun", image: '/assets/images/categories/tugilgan_kun.png', desc: "Yaqinlaringizning tug'ilgan kunini chiroyli raqamli tabrik bilan nishonlang." },
-      { id: 'tabrik', name: 'Tabrik', image: '/assets/images/categories/tabrik.webp', desc: 'Har qanday quvonchli voqea uchun chiroyli tabriknoma yarating.' },
-      { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.jpg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
-      { id: 'sevgi_izhor', name: 'Sevgi izhori', theme: 'vau', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Yangi: Premium ✨ — kinematik, animatsiyali sevgi izhori sahifasi." },
+      { id: 'toy', name: "To'y", badge: "Tavsiya etilgan", image: '/assets/images/categories/toy_featured.svg', desc: "Marmar va oltin bezaklar bilan bezatilgan, tantanali to'y taklifnomasi." },
+      { id: 'tugilgan_kun', name: "Tug'ilgan kun", image: '/assets/images/categories/tugilgan_kun.svg', desc: "Yaqinlaringizning tug'ilgan kunini chiroyli raqamli tabrik bilan nishonlang." },
+      { id: 'tabrik', name: 'Tabrik', image: '/assets/images/categories/tabrik.svg', desc: 'Har qanday quvonchli voqea uchun chiroyli tabriknoma yarating.' },
+      { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.svg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
+      { id: 'sevgi_izhor', name: 'Sevgi izhori', theme: 'vau', badge: 'Premium', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Yangi: Premium ✨ — kinematik, animatsiyali sevgi izhori sahifasi." },
       { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." },
       { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
     ];
@@ -73,7 +127,7 @@
     LAYOUTS.forEach((layout) => {
       THEMES.forEach((theme) => {
         cards.push(`
-          <div class="tpl-card" data-layout="${layout.id}" data-category="toy">
+          <div class="tpl-card" data-layout="${layout.id}" data-category="toy" data-name="to'y ${layout.name.toLowerCase()} ${theme.name.toLowerCase()}">
             <a class="tpl-preview" href="/preview?layout=${layout.id}&theme=${theme.id}&event_type=toy" target="_blank" rel="noopener" aria-label="Namunani ko'rish" style="display:flex;">${mock(layout.id, theme)}</a>
             <div class="tpl-body">
               <span class="tpl-name">${layout.name} <small>· ${theme.name}</small></span>
@@ -91,7 +145,8 @@
       const catLayout = getDefaultLayoutForCategory(cat.id);
       const catParams = `event_type=${cat.id}&theme=${catTheme}&layout=${catLayout}`;
       cards.push(`
-        <div class="tpl-card" data-category="${cat.id}">
+        <div class="tpl-card" data-category="${cat.id}" data-name="${cat.name.toLowerCase()}">
+          ${cat.badge ? `<span class="tpl-badge">${cat.badge}</span>` : ''}
           <a class="tpl-preview" href="/preview?${catParams}" target="_blank" rel="noopener" aria-label="Namunani ko'rish" style="background-image:url('${cat.image}');background-size:cover;background-position:center;">
             <span class="tpl-cat-badge">${cat.name}</span>
           </a>
@@ -125,17 +180,31 @@
       const categoryBtn = document.querySelector('#category-filter .tpl-filter-btn.active');
       const styleFilter = styleBtn ? styleBtn.getAttribute('data-filter') : 'all';
       const categoryFilter = categoryBtn ? categoryBtn.getAttribute('data-category') : 'all';
+      const query = (document.getElementById('hero-search-input') || {}).value;
+      const q = (query || '').trim().toLowerCase();
       grid.querySelectorAll('.tpl-card').forEach((card) => {
         const layout = card.getAttribute('data-layout');
         const category = card.getAttribute('data-category');
+        const name = card.getAttribute('data-name') || '';
         const styleOk = !layout || styleFilter === 'all' || layout === styleFilter;
         const categoryOk = categoryFilter === 'all' || category === categoryFilter;
-        card.style.display = (styleOk && categoryOk) ? '' : 'none';
+        const queryOk = !q || name.includes(q);
+        card.style.display = (styleOk && categoryOk && queryOk) ? '' : 'none';
       });
     }
 
     wireFilterGroup('style-filter');
     wireFilterGroup('category-filter');
+
+    const heroSearchForm = document.getElementById('hero-search-form');
+    if (heroSearchForm) {
+      heroSearchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        applyFilters();
+        const target = document.getElementById('templates');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
   }
 
   async function renderAuthNav() {
@@ -143,11 +212,18 @@
     if (!slot) return;
     try {
       const { user } = await api.me();
+      const initial = (user.name[0] || '?').toUpperCase();
       slot.innerHTML = `
-        ${user.isAdmin ? '<a href="/admin" class="btn btn-outline btn-sm">Admin</a>' : ''}
-        <a href="/dashboard" class="nav-name">${escapeHtml(user.name)}</a>
-        <button class="btn btn-outline btn-sm" data-logout>Chiqish</button>
+        <div class="nav-dropdown-wrap">
+          <button class="nav-avatar-btn" id="user-avatar-btn" aria-label="Profil menyusi">${escapeHtml(initial)}</button>
+          <div class="nav-dropdown" id="user-dropdown">
+            <a href="/dashboard">Boshqaruv paneli</a>
+            ${user.isAdmin ? '<a href="/admin">Admin</a>' : ''}
+            <button type="button" data-logout>Chiqish</button>
+          </div>
+        </div>
       `;
+      wireDropdown('user-avatar-btn', 'user-dropdown');
       const logoutBtn = slot.querySelector('[data-logout]');
       logoutBtn.addEventListener('click', async () => {
         await api.logout();

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="hajBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f2036"/>
+      <stop offset="100%" stop-color="#1c3a5e"/>
+    </linearGradient>
+    <linearGradient id="hajGold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8a6a26"/>
+      <stop offset="50%" stop-color="#e6c877"/>
+      <stop offset="100%" stop-color="#8a6a26"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#hajBg)"/>
+  <g fill="#ffffff" opacity="0.8">
+    <circle cx="60" cy="50" r="1.6"/>
+    <circle cx="110" cy="30" r="1.2"/>
+    <circle cx="160" cy="60" r="1.8"/>
+    <circle cx="300" cy="40" r="1.4"/>
+    <circle cx="340" cy="70" r="1.6"/>
+    <circle cx="250" cy="35" r="1.2"/>
+    <circle cx="370" cy="30" r="1.4"/>
+  </g>
+  <path d="M300 40 a26 26 0 1 0 6 30 a20 20 0 1 1 -6 -30Z" fill="#e6c877" opacity="0.92"/>
+  <g transform="translate(120,150)">
+    <rect x="0" y="0" width="160" height="110" fill="#161d2b"/>
+    <rect x="0" y="0" width="160" height="110" fill="none" stroke="url(#hajGold)" stroke-width="2"/>
+    <rect x="0" y="18" width="160" height="4" fill="url(#hajGold)"/>
+    <path d="M0 0 L160 0 L140 -22 L20 -22 Z" fill="#10141e"/>
+    <path d="M0 0 L160 0 L140 -22 L20 -22 Z" fill="none" stroke="url(#hajGold)" stroke-width="1.5"/>
+    <rect x="70" y="40" width="20" height="70" fill="#0c0f17"/>
+    <rect x="70" y="40" width="20" height="70" fill="none" stroke="url(#hajGold)" stroke-width="1.2"/>
+  </g>
+  <ellipse cx="200" cy="268" rx="150" ry="14" fill="#000000" opacity="0.25"/>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="tabBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#FDF2F8"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#tabBg)"/>
+  <circle cx="200" cy="150" r="70" fill="none" stroke="#7C3AED" stroke-width="1.4" opacity="0.5"/>
+  <circle cx="200" cy="150" r="46" fill="none" stroke="#EC4899" stroke-width="1.4" opacity="0.5"/>
+  <circle cx="200" cy="150" r="14" fill="#7C3AED" opacity="0.85"/>
+  <line x1="60" y1="60" x2="120" y2="60" stroke="#D4AF37" stroke-width="2" opacity="0.7"/>
+  <line x1="280" y1="240" x2="340" y2="240" stroke="#D4AF37" stroke-width="2" opacity="0.7"/>
+  <circle cx="330" cy="70" r="5" fill="#EC4899" opacity="0.8"/>
+  <circle cx="70" cy="230" r="5" fill="#7C3AED" opacity="0.8"/>
+  <rect x="300" y="180" width="10" height="10" fill="#D4AF37" opacity="0.7" transform="rotate(20 305 185)"/>
+</svg>

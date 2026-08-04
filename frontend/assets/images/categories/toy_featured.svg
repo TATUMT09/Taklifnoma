@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="toyBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F3E9D2"/>
+    </linearGradient>
+    <linearGradient id="toyGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E8C871"/>
+      <stop offset="100%" stop-color="#B8863A"/>
+    </linearGradient>
+    <radialGradient id="toyPetal" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FBF6E9"/>
+      <stop offset="100%" stop-color="#E8C871"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#toyBg)"/>
+  <rect x="14" y="14" width="372" height="272" fill="none" stroke="url(#toyGold)" stroke-width="1.5" opacity="0.7"/>
+  <g opacity="0.9">
+    <circle cx="70" cy="70" r="30" fill="url(#toyPetal)"/>
+    <circle cx="40" cy="90" r="22" fill="url(#toyPetal)" opacity="0.85"/>
+    <circle cx="95" cy="105" r="18" fill="url(#toyPetal)" opacity="0.75"/>
+  </g>
+  <g opacity="0.9">
+    <circle cx="330" cy="220" r="34" fill="url(#toyPetal)"/>
+    <circle cx="362" cy="195" r="20" fill="url(#toyPetal)" opacity="0.85"/>
+    <circle cx="300" cy="245" r="18" fill="url(#toyPetal)" opacity="0.75"/>
+  </g>
+  <g stroke="url(#toyGold)" stroke-width="1.2" fill="none" opacity="0.8">
+    <path d="M200 60 C 210 90, 210 110, 200 140"/>
+    <path d="M200 100 C 185 108, 175 120, 170 135"/>
+    <path d="M200 100 C 215 108, 225 120, 230 135"/>
+  </g>
+  <circle cx="200" cy="150" r="46" fill="none" stroke="url(#toyGold)" stroke-width="1.4" opacity="0.85"/>
+  <circle cx="200" cy="150" r="38" fill="none" stroke="url(#toyGold)" stroke-width="0.8" opacity="0.6"/>
+  <path d="M180 150c0-14 9-24 20-24s20 10 20 24c0 16-20 30-20 30s-20-14-20-30Z" fill="url(#toyGold)" opacity="0.9"/>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bkBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFE9F3"/>
+      <stop offset="100%" stop-color="#FFF3D6"/>
+    </linearGradient>
+    <linearGradient id="balloon1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF9EC6"/>
+      <stop offset="100%" stop-color="#F0629A"/>
+    </linearGradient>
+    <linearGradient id="balloon2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A8D8FF"/>
+      <stop offset="100%" stop-color="#5FA8E0"/>
+    </linearGradient>
+    <linearGradient id="balloon3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE08A"/>
+      <stop offset="100%" stop-color="#F0B93E"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bkBg)"/>
+  <g opacity="0.95">
+    <ellipse cx="120" cy="90" rx="34" ry="42" fill="url(#balloon1)"/>
+    <path d="M120 132 L120 175" stroke="#D14B82" stroke-width="1.5" fill="none"/>
+    <ellipse cx="210" cy="65" rx="28" ry="36" fill="url(#balloon2)"/>
+    <path d="M210 101 L210 170" stroke="#3E7FB5" stroke-width="1.5" fill="none"/>
+    <ellipse cx="290" cy="100" rx="30" ry="38" fill="url(#balloon3)"/>
+    <path d="M290 138 L290 175" stroke="#C98E1F" stroke-width="1.5" fill="none"/>
+  </g>
+  <g opacity="0.9">
+    <rect x="140" y="210" width="120" height="60" rx="6" fill="#FFFFFF"/>
+    <rect x="140" y="210" width="120" height="16" fill="#FF9EC6"/>
+    <rect x="140" y="238" width="120" height="10" fill="#A8D8FF"/>
+    <path d="M195 195 v15 M205 195 v15" stroke="#F0B93E" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="195" cy="192" r="3" fill="#F0629A"/>
+    <circle cx="205" cy="192" r="3" fill="#5FA8E0"/>
+  </g>
+  <g fill="#F0B93E" opacity="0.9">
+    <circle cx="70" cy="200" r="4"/>
+    <circle cx="330" cy="60" r="4"/>
+    <circle cx="350" cy="220" r="3.5"/>
+  </g>
+  <g fill="#F0629A" opacity="0.9">
+    <rect x="55" y="150" width="7" height="7" transform="rotate(20 58 153)"/>
+    <rect x="320" y="180" width="7" height="7" transform="rotate(-15 323 183)"/>
+  </g>
+  <g fill="#5FA8E0" opacity="0.9">
+    <rect x="330" y="140" width="6" height="6" transform="rotate(35 333 143)"/>
+    <circle cx="60" cy="240" r="3"/>
+  </g>
+</svg>

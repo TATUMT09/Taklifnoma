@@ -33,3 +33,10 @@
   font-display: swap;
   src: url('../fonts/quicksand-bold.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/inter-variable.woff2') format('woff2');
+}
