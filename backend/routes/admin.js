@@ -91,4 +91,29 @@ router.delete('/invitations/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+router.get('/gallery', (req, res) => {
+  const rows = db.prepare('SELECT * FROM site_gallery ORDER BY sort_order ASC, id DESC').all();
+  res.json({ photos: rows });
+});
+
+router.post('/gallery', (req, res) => {
+  const url = typeof req.body.url === 'string' ? req.body.url.trim() : '';
+  const caption = typeof req.body.caption === 'string' ? req.body.caption.trim().slice(0, 200) : '';
+  if (!url) return res.status(400).json({ error: 'Rasm havolasi kiritilmagan' });
+
+  const maxOrder = db.prepare('SELECT COALESCE(MAX(sort_order), -1) AS m FROM site_gallery').get().m;
+  const info = db
+    .prepare('INSERT INTO site_gallery (url, caption, sort_order) VALUES (?, ?, ?)')
+    .run(url, caption, maxOrder + 1);
+  const row = db.prepare('SELECT * FROM site_gallery WHERE id = ?').get(info.lastInsertRowid);
+  res.status(201).json({ photo: row });
+});
+
+router.delete('/gallery/:id', (req, res) => {
+  const row = db.prepare('SELECT id FROM site_gallery WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Rasm topilmadi' });
+  db.prepare('DELETE FROM site_gallery WHERE id = ?').run(row.id);
+  res.json({ ok: true });
+});
+
 module.exports = router;

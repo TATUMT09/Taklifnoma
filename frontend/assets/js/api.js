@@ -33,6 +33,7 @@ const api = (() => {
     getWishes: (slug) => request('GET', `/api/public/${slug}/wishes`),
     submitRsvp: (slug, payload) => request('POST', `/api/public/${slug}/rsvp`, payload),
     sendContactMessage: (payload) => request('POST', '/api/public/contact', payload),
+    getGallery: () => request('GET', '/api/public/gallery'),
 
     checkSlug: (slug, excludeId) => request('GET', `/api/invitations/check-slug?slug=${encodeURIComponent(slug)}${excludeId ? `&excludeId=${excludeId}` : ''}`),
 
@@ -75,6 +76,10 @@ const api = (() => {
 
     adminMessages: () => request('GET', '/api/admin/messages'),
     adminMarkMessageRead: (id) => request('POST', `/api/admin/messages/${id}/read`),
-    adminDeleteMessage: (id) => request('DELETE', `/api/admin/messages/${id}`)
+    adminDeleteMessage: (id) => request('DELETE', `/api/admin/messages/${id}`),
+
+    adminGallery: () => request('GET', '/api/admin/gallery'),
+    adminAddGalleryPhoto: (payload) => request('POST', '/api/admin/gallery', payload),
+    adminDeleteGalleryPhoto: (id) => request('DELETE', `/api/admin/gallery/${id}`)
   };
 })();

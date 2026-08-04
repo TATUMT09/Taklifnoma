@@ -40,6 +40,7 @@
     <button class="choice-pill active" data-tab="invitations">Barcha taklifnomalar</button>
     <button class="choice-pill" data-tab="users">Foydalanuvchilar</button>
     <button class="choice-pill" data-tab="messages">Xabarlar</button>
+    <button class="choice-pill" data-tab="gallery">Galereya</button>
   </div>
 
   <div class="panel" id="tab-invitations">
@@ -101,6 +102,15 @@
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="panel panel-pad" id="tab-gallery" hidden>
+    <div class="field" style="max-width:420px;margin-bottom:1.6rem;">
+      <label for="gallery_input">Rasm qo'shish</label>
+      <input type="file" id="gallery_input" accept="image/png,image/jpeg,image/webp" />
+      <p class="field-hint" id="gallery-upload-status"></p>
+    </div>
+    <div class="gallery-admin-grid" id="gallery-admin-grid"></div>
   </div>
 </div>
 

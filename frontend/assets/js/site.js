@@ -20,10 +20,34 @@
     }
     renderAuthNav();
     renderTemplateGallery();
+    renderGallery();
     wireDropdown('notif-btn', 'notif-dropdown');
     initScrollReveal();
     initButtonRipple();
   });
+
+  async function renderGallery() {
+    const grid = document.getElementById('gallery-grid');
+    if (!grid) return;
+    try {
+      const { photos } = await api.getGallery();
+      if (!photos.length) {
+        grid.innerHTML = `<p class="gallery-empty">Hozircha rasm qo'shilmagan</p>`;
+        return;
+      }
+      grid.innerHTML = photos.map((p) => `
+        <div class="gallery-item">
+          <img src="${p.url}" alt="${escapeHtml(p.caption || '')}" loading="lazy" />
+          <a class="gallery-item-dl" href="${p.url}" download aria-label="Yuklab olish" title="Yuklab olish">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+          </a>
+        </div>
+      `).join('');
+      initScrollReveal();
+    } catch (e) {
+      grid.innerHTML = `<p class="gallery-empty">${escapeHtml(e.message)}</p>`;
+    }
+  }
 
   function wireDropdown(btnId, dropdownId) {
     const btn = document.getElementById(btnId);
@@ -57,7 +81,7 @@
   }
 
   function initScrollReveal() {
-    const els = document.querySelectorAll('.landing-section, .tpl-card, .feature-card');
+    const els = document.querySelectorAll('.landing-section, .tpl-card, .feature-card, .gallery-item');
     if (!els.length) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       els.forEach((el) => el.classList.add('reveal-visible'));

@@ -178,11 +178,66 @@
       document.getElementById('tab-invitations').hidden = tab !== 'invitations';
       document.getElementById('tab-users').hidden = tab !== 'users';
       document.getElementById('tab-messages').hidden = tab !== 'messages';
+      document.getElementById('tab-gallery').hidden = tab !== 'gallery';
     });
   });
+
+  const galleryGrid = document.getElementById('gallery-admin-grid');
+  const galleryInput = document.getElementById('gallery_input');
+  const galleryStatus = document.getElementById('gallery-upload-status');
+
+  async function loadGallery() {
+    if (!galleryGrid) return;
+    galleryGrid.innerHTML = `<p class="skeleton-loading">Yuklanmoqda...</p>`;
+    try {
+      const { photos } = await api.adminGallery();
+      if (!photos.length) {
+        galleryGrid.innerHTML = `<p class="skeleton-loading">Hali rasm yo'q</p>`;
+        return;
+      }
+      galleryGrid.innerHTML = photos.map((p) => `
+        <div class="gallery-admin-item">
+          <img src="${p.url}" alt="" />
+          <button type="button" class="btn btn-danger-ghost btn-sm" data-del-photo="${p.id}">O'chirish</button>
+        </div>
+      `).join('');
+      galleryGrid.querySelectorAll('[data-del-photo]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          if (!window.confirm("Bu rasmni o'chirmoqchimisiz?")) return;
+          try {
+            await api.adminDeleteGalleryPhoto(btn.getAttribute('data-del-photo'));
+            showToast("Rasm o'chirildi");
+            loadGallery();
+          } catch (e) {
+            showToast(e.message, true);
+          }
+        });
+      });
+    } catch (e) {
+      galleryGrid.innerHTML = `<p class="field-error">${escapeHtml(e.message)}</p>`;
+    }
+  }
+
+  if (galleryInput) {
+    galleryInput.addEventListener('change', async () => {
+      const file = galleryInput.files[0];
+      if (!file) return;
+      galleryStatus.textContent = 'Yuklanmoqda...';
+      try {
+        const { url } = await api.uploadPhoto(file);
+        await api.adminAddGalleryPhoto({ url });
+        galleryStatus.textContent = '';
+        galleryInput.value = '';
+        loadGallery();
+      } catch (e) {
+        galleryStatus.textContent = e.message;
+      }
+    });
+  }
 
   loadStats();
   loadInvitations();
   loadUsers();
   loadMessages();
+  loadGallery();
 })();

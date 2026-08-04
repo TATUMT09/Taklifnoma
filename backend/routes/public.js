@@ -16,6 +16,27 @@ function buildPublicInvitation(inv) {
   return publicInv;
 }
 
+router.get('/gallery', (req, res) => {
+  const rows = db
+    .prepare('SELECT id, url, caption FROM site_gallery ORDER BY sort_order ASC, id DESC')
+    .all();
+  res.json({ photos: rows });
+});
+
+router.post('/contact', (req, res) => {
+  const { name, contact, message } = req.body || {};
+  const messageText = (message || '').trim().slice(0, 2000);
+  if (!messageText) return res.status(400).json({ error: 'Xabar matni kiritilmagan' });
+  const nameText = (name || '').trim().slice(0, 120);
+  const contactText = (contact || '').trim().slice(0, 120);
+
+  db.prepare(
+    `INSERT INTO contact_messages (name, contact, message) VALUES (?, ?, ?)`
+  ).run(nameText, contactText, messageText);
+
+  res.status(201).json({ ok: true });
+});
+
 router.get('/:slug', (req, res) => {
   const inv = db.prepare('SELECT * FROM invitations WHERE slug = ?').get(req.params.slug);
   if (!inv) return res.status(404).json({ error: 'Taklifnoma topilmadi' });
@@ -51,20 +72,6 @@ router.post('/:slug/unlock', (req, res) => {
   const publicInv = buildPublicInvitation(inv);
   publicInv.views = inv.views + 1;
   res.json({ invitation: publicInv });
-});
-
-router.post('/contact', (req, res) => {
-  const { name, contact, message } = req.body || {};
-  const messageText = (message || '').trim().slice(0, 2000);
-  if (!messageText) return res.status(400).json({ error: 'Xabar matni kiritilmagan' });
-  const nameText = (name || '').trim().slice(0, 120);
-  const contactText = (contact || '').trim().slice(0, 120);
-
-  db.prepare(
-    `INSERT INTO contact_messages (name, contact, message) VALUES (?, ?, ?)`
-  ).run(nameText, contactText, messageText);
-
-  res.status(201).json({ ok: true });
 });
 
 router.post('/:slug/rsvp', (req, res) => {
