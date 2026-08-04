@@ -96,15 +96,18 @@ router.get('/gallery', (req, res) => {
   res.json({ photos: rows });
 });
 
+const GALLERY_CATEGORIES = ['toy', 'juftlik', 'oila'];
+
 router.post('/gallery', (req, res) => {
   const url = typeof req.body.url === 'string' ? req.body.url.trim() : '';
   const caption = typeof req.body.caption === 'string' ? req.body.caption.trim().slice(0, 200) : '';
+  const category = GALLERY_CATEGORIES.includes(req.body.category) ? req.body.category : 'toy';
   if (!url) return res.status(400).json({ error: 'Rasm havolasi kiritilmagan' });
 
   const maxOrder = db.prepare('SELECT COALESCE(MAX(sort_order), -1) AS m FROM site_gallery').get().m;
   const info = db
-    .prepare('INSERT INTO site_gallery (url, caption, sort_order) VALUES (?, ?, ?)')
-    .run(url, caption, maxOrder + 1);
+    .prepare('INSERT INTO site_gallery (url, caption, category, sort_order) VALUES (?, ?, ?, ?)')
+    .run(url, caption, category, maxOrder + 1);
   const row = db.prepare('SELECT * FROM site_gallery WHERE id = ?').get(info.lastInsertRowid);
   res.status(201).json({ photo: row });
 });

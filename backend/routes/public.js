@@ -18,7 +18,7 @@ function buildPublicInvitation(inv) {
 
 router.get('/gallery', (req, res) => {
   const rows = db
-    .prepare('SELECT id, url, caption FROM site_gallery ORDER BY sort_order ASC, id DESC')
+    .prepare('SELECT id, url, caption, category FROM site_gallery ORDER BY sort_order ASC, id DESC')
     .all();
   res.json({ photos: rows });
 });

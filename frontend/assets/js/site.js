@@ -26,26 +26,32 @@
     initButtonRipple();
   });
 
+  function galleryItemHtml(p) {
+    return `
+      <div class="gallery-item">
+        <img src="${p.url}" alt="${escapeHtml(p.caption || '')}" loading="lazy" />
+        <a class="gallery-item-dl" href="${p.url}" download aria-label="Yuklab olish" title="Yuklab olish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        </a>
+      </div>`;
+  }
+
   async function renderGallery() {
-    const grid = document.getElementById('gallery-grid');
-    if (!grid) return;
+    const GALLERY_CATEGORIES = ['toy', 'juftlik', 'oila'];
+    const grids = {};
+    GALLERY_CATEGORIES.forEach((cat) => { grids[cat] = document.getElementById(`gallery-grid-${cat}`); });
+    if (!grids.toy) return;
     try {
       const { photos } = await api.getGallery();
-      if (!photos.length) {
-        grid.innerHTML = `<p class="gallery-empty">Hozircha rasm qo'shilmagan</p>`;
-        return;
-      }
-      grid.innerHTML = photos.map((p) => `
-        <div class="gallery-item">
-          <img src="${p.url}" alt="${escapeHtml(p.caption || '')}" loading="lazy" />
-          <a class="gallery-item-dl" href="${p.url}" download aria-label="Yuklab olish" title="Yuklab olish">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-          </a>
-        </div>
-      `).join('');
+      GALLERY_CATEGORIES.forEach((cat) => {
+        const catPhotos = photos.filter((p) => (p.category || 'toy') === cat);
+        grids[cat].innerHTML = catPhotos.length
+          ? catPhotos.map(galleryItemHtml).join('')
+          : `<p class="gallery-empty">Hozircha rasm qo'shilmagan</p>`;
+      });
       initScrollReveal();
     } catch (e) {
-      grid.innerHTML = `<p class="gallery-empty">${escapeHtml(e.message)}</p>`;
+      grids.toy.innerHTML = `<p class="gallery-empty">${escapeHtml(e.message)}</p>`;
     }
   }
 

@@ -57,6 +57,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     url TEXT NOT NULL,
     caption TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT 'toy',
     sort_order INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
@@ -139,6 +140,11 @@ if (!invitationColumns.includes('gift_card_number')) {
 }
 if (!invitationColumns.includes('gift_note')) {
   db.exec("ALTER TABLE invitations ADD COLUMN gift_note TEXT NOT NULL DEFAULT ''");
+}
+
+const galleryColumns = db.prepare("PRAGMA table_info(site_gallery)").all().map((c) => c.name);
+if (!galleryColumns.includes('category')) {
+  db.exec("ALTER TABLE site_gallery ADD COLUMN category TEXT NOT NULL DEFAULT 'toy'");
 }
 
 // Seed the admin account on every startup (idempotent), if configured via env.

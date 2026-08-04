@@ -182,26 +182,33 @@
     });
   });
 
-  const galleryGrid = document.getElementById('gallery-admin-grid');
+  const GALLERY_CATEGORIES = ['toy', 'juftlik', 'oila'];
   const galleryInput = document.getElementById('gallery_input');
+  const galleryCategorySelect = document.getElementById('gallery_category');
   const galleryStatus = document.getElementById('gallery-upload-status');
 
+  function galleryItemHtml(p) {
+    return `
+      <div class="gallery-admin-item">
+        <img src="${p.url}" alt="" />
+        <button type="button" class="btn btn-danger-ghost btn-sm" data-del-photo="${p.id}">O'chirish</button>
+      </div>`;
+  }
+
   async function loadGallery() {
-    if (!galleryGrid) return;
-    galleryGrid.innerHTML = `<p class="skeleton-loading">Yuklanmoqda...</p>`;
+    const grids = {};
+    GALLERY_CATEGORIES.forEach((cat) => { grids[cat] = document.getElementById(`gallery-admin-grid-${cat}`); });
+    if (!grids.toy) return;
+    GALLERY_CATEGORIES.forEach((cat) => { grids[cat].innerHTML = `<p class="skeleton-loading">Yuklanmoqda...</p>`; });
     try {
       const { photos } = await api.adminGallery();
-      if (!photos.length) {
-        galleryGrid.innerHTML = `<p class="skeleton-loading">Hali rasm yo'q</p>`;
-        return;
-      }
-      galleryGrid.innerHTML = photos.map((p) => `
-        <div class="gallery-admin-item">
-          <img src="${p.url}" alt="" />
-          <button type="button" class="btn btn-danger-ghost btn-sm" data-del-photo="${p.id}">O'chirish</button>
-        </div>
-      `).join('');
-      galleryGrid.querySelectorAll('[data-del-photo]').forEach((btn) => {
+      GALLERY_CATEGORIES.forEach((cat) => {
+        const catPhotos = photos.filter((p) => (p.category || 'toy') === cat);
+        grids[cat].innerHTML = catPhotos.length
+          ? catPhotos.map(galleryItemHtml).join('')
+          : `<p class="skeleton-loading">Hali rasm yo'q</p>`;
+      });
+      document.querySelectorAll('[data-del-photo]').forEach((btn) => {
         btn.addEventListener('click', async () => {
           if (!window.confirm("Bu rasmni o'chirmoqchimisiz?")) return;
           try {
@@ -214,7 +221,7 @@
         });
       });
     } catch (e) {
-      galleryGrid.innerHTML = `<p class="field-error">${escapeHtml(e.message)}</p>`;
+      grids.toy.innerHTML = `<p class="field-error">${escapeHtml(e.message)}</p>`;
     }
   }
 
@@ -222,10 +229,11 @@
     galleryInput.addEventListener('change', async () => {
       const file = galleryInput.files[0];
       if (!file) return;
+      const category = galleryCategorySelect ? galleryCategorySelect.value : 'toy';
       galleryStatus.textContent = 'Yuklanmoqda...';
       try {
         const { url } = await api.uploadPhoto(file);
-        await api.adminAddGalleryPhoto({ url });
+        await api.adminAddGalleryPhoto({ url, category });
         galleryStatus.textContent = '';
         galleryInput.value = '';
         loadGallery();
