@@ -210,19 +210,17 @@ body.has-top-gradient {
   .nav-links { display: none; }
 }
 @media (max-width: 640px) {
-  .nav-right { gap: 0.4rem; }
-}
-@media (max-width: 480px) {
-  #notif-btn { display: none; }
-}
-@media (max-width: 400px) {
-  .brand { font-size: 1.2rem; }
-  [data-theme-toggle] { display: none; }
-  .nav-right { gap: 0.3rem; }
-  .btn-sm { padding: 0.5rem 0.8rem; font-size: 0.76rem; }
+  .topnav-inner { padding: 0 16px; gap: 0.6rem; }
+  .nav-right { gap: 0.35rem; }
+  .theme-toggle, .nav-icon-btn { width: 32px; height: 32px; }
+  .theme-toggle svg, .nav-icon-btn svg { width: 15px; height: 15px; }
+  [data-nav-auth] .btn { padding: 0.55rem 0.9rem; font-size: 0.8rem; }
 }
 @media (max-width: 400px) {
-  .brand { font-size: 1.2rem; }
+  .brand-text { display: none; }
+  .brand-mark { width: 26px; height: 26px; }
+  .nav-right { gap: 0.25rem; }
+  [data-nav-auth] .btn { padding: 0.5rem 0.7rem; font-size: 0.76rem; }
 }
 
 /* ---------- Buttons ---------- */
@@ -502,8 +500,8 @@ body.has-top-gradient {
 
 .hero-phone {
   position: absolute; z-index: 2;
-  width: 44%; aspect-ratio: 9 / 17.5;
-  top: 12%; left: 30%;
+  width: 40%; aspect-ratio: 9 / 17.5;
+  top: 15%; left: 30%;
   border-radius: var(--radius-hero-img);
   border: 6px solid #ffffff;
   background: #fff;
@@ -520,7 +518,10 @@ body.has-top-gradient {
 
 .photo-card {
   position: absolute;
+  width: 30%;
+  height: 36%;
   border-radius: var(--radius-hero-img);
+  border: 4px solid #ffffff;
   box-shadow: var(--shadow-md);
   overflow: hidden;
   display: grid;
@@ -529,23 +530,20 @@ body.has-top-gradient {
 }
 .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .photo-card.pc-1 {
-  width: 32%; height: 40%;
-  top: 4%; left: 2%;
-  transform: rotate(-9deg);
+  top: 6%; left: 6%;
+  transform: rotate(-8deg);
   z-index: 3;
   animation-delay: -1s;
 }
 .photo-card.pc-2 {
-  width: 30%; height: 38%;
-  top: 58%; left: 66%;
-  transform: rotate(10deg);
+  top: 54%; left: 62%;
+  transform: rotate(9deg);
   z-index: 3;
   animation-delay: -3s;
 }
 .photo-card.pc-3 {
-  width: 26%; height: 32%;
-  top: 66%; left: 6%;
-  transform: rotate(-7deg);
+  top: 58%; left: 8%;
+  transform: rotate(-6deg);
   z-index: 1;
   animation-delay: -5s;
 }
@@ -553,11 +551,15 @@ body.has-top-gradient {
 @keyframes heroFloat { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-14px) rotate(var(--r, 0deg)); } }
 
 .hero-deco { position: absolute; z-index: 4; pointer-events: none; }
-.hero-deco.flowers { top: -2%; right: 8%; width: 76px; height: 76px; animation: heroFloat 9s ease-in-out infinite; animation-delay: -2s; }
-.hero-deco.sparkle-a { top: 20%; left: -2%; width: 22px; height: 22px; animation: heroFloat 5s ease-in-out infinite; }
-.hero-deco.sparkle-b { bottom: 16%; right: -3%; width: 18px; height: 18px; animation: heroFloat 6.5s ease-in-out infinite; animation-delay: -2.5s; }
-.hero-deco.gift { bottom: 2%; left: 20%; width: 46px; height: 46px; animation: heroFloat 7.5s ease-in-out infinite; animation-delay: -1.5s; }
-.hero-deco.confetti { top: 46%; right: 2%; width: 60px; height: 60px; animation: heroFloat 6s ease-in-out infinite; animation-delay: -3.5s; }
+.hero-deco.flowers { top: 2%; right: 14%; width: 60px; height: 60px; animation: heroFloat 9s ease-in-out infinite; animation-delay: -2s; }
+.hero-deco.sparkle-a { top: 26%; left: 2%; width: 20px; height: 20px; animation: heroFloat 5s ease-in-out infinite; }
+.hero-deco.sparkle-b { bottom: 22%; right: 4%; width: 16px; height: 16px; animation: heroFloat 6.5s ease-in-out infinite; animation-delay: -2.5s; }
+.hero-deco.gift { bottom: 6%; left: 26%; width: 38px; height: 38px; animation: heroFloat 7.5s ease-in-out infinite; animation-delay: -1.5s; }
+.hero-deco.confetti { top: 42%; right: 10%; width: 48px; height: 48px; animation: heroFloat 6s ease-in-out infinite; animation-delay: -3.5s; }
+
+@media (max-width: 640px) {
+  .hero-deco.sparkle-a, .hero-deco.sparkle-b, .hero-deco.confetti { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-blob, .hero-phone, .photo-card, .hero-deco { animation: none; }
