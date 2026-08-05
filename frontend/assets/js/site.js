@@ -193,23 +193,16 @@
     grid.innerHTML = cards.join('');
 
     function wireFilterGroup(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const btns = container.querySelectorAll('.tpl-filter-btn');
-      btns.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          btns.forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
-          applyFilters();
-        });
-      });
+      const select = document.getElementById(containerId);
+      if (!select) return;
+      select.addEventListener('change', applyFilters);
     }
 
     function applyFilters() {
-      const styleBtn = document.querySelector('#style-filter .tpl-filter-btn.active');
-      const categoryBtn = document.querySelector('#category-filter .tpl-filter-btn.active');
-      const styleFilter = styleBtn ? styleBtn.getAttribute('data-filter') : 'all';
-      const categoryFilter = categoryBtn ? categoryBtn.getAttribute('data-category') : 'all';
+      const styleSelect = document.getElementById('style-filter');
+      const categorySelect = document.getElementById('category-filter');
+      const styleFilter = styleSelect ? styleSelect.value : 'all';
+      const categoryFilter = categorySelect ? categorySelect.value : 'all';
       const query = (document.getElementById('hero-search-input') || {}).value;
       const q = (query || '').trim().toLowerCase();
       grid.querySelectorAll('.tpl-card').forEach((card) => {

@@ -598,23 +598,25 @@ body.has-top-gradient {
 @media (prefers-reduced-motion: reduce) { .reveal { transition: none; opacity: 1; transform: none; } }
 
 /* Template gallery */
-.tpl-filter {
+.tpl-filter-selects {
   max-width: 1280px;
-  margin: 0 auto 1.2rem;
+  margin: 0 auto 1.6rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 1rem;
 }
-.tpl-filter-btn {
-  appearance: none; cursor: pointer;
+.tpl-filter-selects .field { width: 220px; max-width: 100%; }
+.tpl-filter-selects select {
   height: 48px;
-  background: #ffffff; border: 1px solid var(--line); border-radius: 999px;
-  color: var(--text-dim); font-family: var(--sans); font-size: 0.86rem; font-weight: 600;
-  padding: 0 28px;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--sans); font-size: 0.86rem; font-weight: 600;
+  padding: 0 20px;
+  cursor: pointer;
 }
-.tpl-filter-btn:hover { background: var(--violet-50); border-color: var(--violet-50); color: var(--gold-hi); }
-.tpl-filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--on-accent); }
+.tpl-filter-selects select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--violet-50); }
 
 .template-grid {
   max-width: 1280px;

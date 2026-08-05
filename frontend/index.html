@@ -112,21 +112,29 @@
     <h2 class="section-title">Har biri o'z ohangiga ega</h2>
     <p class="section-sub">Andozani tanlang, keyin ism va sanani kiriting — qolganini biz bezaymiz.</p>
   </div>
-  <div class="tpl-filter" id="category-filter">
-    <button type="button" class="tpl-filter-btn active" data-category="all">Barchasi</button>
-    <button type="button" class="tpl-filter-btn" data-category="toy">To'y</button>
-    <button type="button" class="tpl-filter-btn" data-category="tugilgan_kun">Tug'ilgan kun</button>
-    <button type="button" class="tpl-filter-btn" data-category="tabrik">Tabrik</button>
-    <button type="button" class="tpl-filter-btn" data-category="haj_safari">Haj safari</button>
-    <button type="button" class="tpl-filter-btn" data-category="sevgi_izhor">Sevgi izhori</button>
-    <button type="button" class="tpl-filter-btn" data-category="nahor_oshi">Nahor oshi</button>
-    <button type="button" class="tpl-filter-btn" data-category="sevgimga_hat">Sevgimga hat</button>
-  </div>
-  <div class="tpl-filter" id="style-filter">
-    <button type="button" class="tpl-filter-btn active" data-filter="all">Barchasi</button>
-    <button type="button" class="tpl-filter-btn" data-filter="nafis">Nafis</button>
-    <button type="button" class="tpl-filter-btn" data-filter="klassik">Klassik</button>
-    <button type="button" class="tpl-filter-btn" data-filter="zamonaviy">Zamonaviy</button>
+  <div class="tpl-filter-selects">
+    <div class="field">
+      <label for="category-filter">Tadbir turi</label>
+      <select id="category-filter">
+        <option value="all">Barchasi</option>
+        <option value="toy">To'y</option>
+        <option value="tugilgan_kun">Tug'ilgan kun</option>
+        <option value="tabrik">Tabrik</option>
+        <option value="haj_safari">Haj safari</option>
+        <option value="sevgi_izhor">Sevgi izhori</option>
+        <option value="nahor_oshi">Nahor oshi</option>
+        <option value="sevgimga_hat">Sevgimga hat</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="style-filter">Andoza</label>
+      <select id="style-filter">
+        <option value="all">Barchasi</option>
+        <option value="nafis">Nafis</option>
+        <option value="klassik">Klassik</option>
+        <option value="zamonaviy">Zamonaviy</option>
+      </select>
+    </div>
   </div>
   <div class="template-grid" id="template-grid"></div>
 </section>
