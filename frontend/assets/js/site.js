@@ -141,18 +141,18 @@
       el.classList.add('reveal');
       if (!revealIfVisible(el)) io.observe(el);
     });
-    // Backup for engines where IntersectionObserver misses a fast/instant scroll.
-    if (!window.__tnRevealScrollBound) {
-      window.__tnRevealScrollBound = true;
-      let ticking = false;
-      window.addEventListener('scroll', () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.reveal:not(.reveal-visible)').forEach(revealIfVisible);
-          ticking = false;
-        });
-      }, { passive: true });
+    // Backup poll: IntersectionObserver/scroll events can miss elements on some
+    // engines (e.g. instant/momentum scrolling). This guarantees nothing stays
+    // permanently invisible.
+    if (!window.__tnRevealPollBound) {
+      window.__tnRevealPollBound = true;
+      let checks = 0;
+      const pollId = setInterval(() => {
+        const remaining = document.querySelectorAll('.reveal:not(.reveal-visible)');
+        remaining.forEach(revealIfVisible);
+        checks += 1;
+        if (remaining.length === 0 || checks > 150) clearInterval(pollId);
+      }, 200);
     }
   }
 
