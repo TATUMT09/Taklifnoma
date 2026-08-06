@@ -3,8 +3,27 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rasm/Video uchun QR kod — Taklifnoma</title>
+<title>Xotira QR kodi yaratish — Taklifnoma</title>
 <link rel="stylesheet" href="/assets/css/site.css" />
+<style>
+  .qr-steps { max-width: 560px; margin: 0 auto; }
+  .qr-mode-switch { display: flex; gap: 0.6rem; margin: 0.8rem 0 1.2rem; }
+  .qr-mode-btn {
+    flex: 1; height: 48px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--text); font-family: var(--sans); font-weight: 600; font-size: 0.86rem;
+    cursor: pointer; transition: 0.2s ease;
+  }
+  .qr-mode-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+  .qr-photos-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.7rem; }
+  .qr-photo-thumb { position: relative; width: 72px; height: 72px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+  .qr-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .qr-photo-thumb button {
+    position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(0,0,0,0.6); color: #fff; border: none; font-size: 0.7rem; cursor: pointer; line-height: 1;
+  }
+  #qr-canvas-final { max-width: 100%; border-radius: 16px; box-shadow: var(--shadow-card); }
+  .qr-count-hint { font-size: 0.76rem; color: var(--text-faint); margin-top: 0.3rem; }
+</style>
 </head>
 <body>
 
@@ -24,22 +43,51 @@
 </nav>
 
 <div class="auth-shell">
-  <div class="auth-card panel panel-pad" id="qr-tool-card" style="max-width:440px;">
-    <h1 class="auth-title">Rasm yoki videoni QR kodga aylantiring</h1>
-    <p class="auth-sub">Faylni yuklang — QR kodni skanerlagan kishi to'g'ridan-to'g'ri o'sha rasm yoki videoni ko'radi.</p>
+  <div class="auth-card panel panel-pad qr-steps" id="qr-tool-card" style="max-width:560px;">
+    <h1 class="auth-title">Xotira uchun QR kod yarating</h1>
+    <p class="auth-sub">Kelin-kuyov suratini qo'ying, keyin video yoki 10 tagacha rasm (va xohlasangiz qo'shiq) yuklang — chiroyli QR kod tayyor bo'ladi. Uni skanerlagan kishi xotiralaringizni ko'radi.</p>
 
     <div class="field">
-      <label for="qr-file-input">Rasm yoki video tanlang</label>
-      <input type="file" id="qr-file-input" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm" />
-      <p class="field-hint" id="qr-status"></p>
+      <label for="qr-cover-input">Kelin-kuyov surati (asosiy)</label>
+      <input type="file" id="qr-cover-input" accept="image/png,image/jpeg,image/webp" />
+      <p class="field-hint" id="qr-cover-status"></p>
     </div>
 
+    <div class="qr-mode-switch">
+      <button type="button" class="qr-mode-btn active" data-mode="photos">Rasmlar (10 tagacha)</button>
+      <button type="button" class="qr-mode-btn" data-mode="video">Video</button>
+    </div>
+
+    <div id="qr-mode-photos">
+      <div class="field">
+        <label for="qr-photos-input">Rasmlar</label>
+        <input type="file" id="qr-photos-input" accept="image/png,image/jpeg,image/webp" multiple />
+        <p class="qr-count-hint" id="qr-photos-count">0 / 10 rasm tanlandi</p>
+        <div class="qr-photos-list" id="qr-photos-list"></div>
+      </div>
+      <div class="field">
+        <label for="qr-song-input">Qo'shiq (ixtiyoriy)</label>
+        <input type="file" id="qr-song-input" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/mp4,audio/x-m4a,audio/aac" />
+        <p class="field-hint" id="qr-song-status"></p>
+      </div>
+    </div>
+
+    <div id="qr-mode-video" hidden>
+      <div class="field">
+        <label for="qr-video-input">Video</label>
+        <input type="file" id="qr-video-input" accept="video/mp4,video/webm" />
+        <p class="field-hint" id="qr-video-status"></p>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="qr-generate-btn" style="width:100%;margin-top:0.6rem;">Xotira QR kodini yaratish</button>
+    <p class="field-hint" id="qr-generate-status" style="text-align:center;margin-top:0.6rem;"></p>
+
     <div id="qr-result" hidden style="margin-top:1.6rem;text-align:center;">
-      <div id="qr-preview-wrap" style="margin-bottom:1.2rem;"></div>
-      <div id="qr-canvas-wrap"></div>
+      <canvas id="qr-canvas-final"></canvas>
       <p class="field-hint" id="qr-link" style="word-break:break-all;margin-top:0.8rem;"></p>
       <div style="display:flex;gap:0.6rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
-        <a href="#" download="qr-kod.png" class="btn btn-primary btn-sm" id="qr-download-btn">QR kodni yuklab olish</a>
+        <a href="#" download="xotira-qr.png" class="btn btn-primary btn-sm" id="qr-download-btn">QR kodni yuklab olish</a>
         <button type="button" class="btn btn-outline btn-sm" id="qr-copy-link-btn">Havolani nusxalash</button>
       </div>
     </div>
@@ -50,14 +98,32 @@
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/site.js"></script>
 <script>
-  const fileInput = document.getElementById('qr-file-input');
-  const statusEl = document.getElementById('qr-status');
+(function () {
+  const coverInput = document.getElementById('qr-cover-input');
+  const coverStatus = document.getElementById('qr-cover-status');
+  const modeBtns = document.querySelectorAll('.qr-mode-btn');
+  const modePhotos = document.getElementById('qr-mode-photos');
+  const modeVideo = document.getElementById('qr-mode-video');
+  const photosInput = document.getElementById('qr-photos-input');
+  const photosCount = document.getElementById('qr-photos-count');
+  const photosList = document.getElementById('qr-photos-list');
+  const songInput = document.getElementById('qr-song-input');
+  const songStatus = document.getElementById('qr-song-status');
+  const videoInput = document.getElementById('qr-video-input');
+  const videoStatus = document.getElementById('qr-video-status');
+  const generateBtn = document.getElementById('qr-generate-btn');
+  const generateStatus = document.getElementById('qr-generate-status');
   const resultEl = document.getElementById('qr-result');
-  const previewWrap = document.getElementById('qr-preview-wrap');
-  const canvasWrap = document.getElementById('qr-canvas-wrap');
   const linkEl = document.getElementById('qr-link');
   const downloadBtn = document.getElementById('qr-download-btn');
   const copyBtn = document.getElementById('qr-copy-link-btn');
+
+  let mode = 'photos';
+  let coverFile = null;
+  let coverPreviewUrl = null;
+  let photoFiles = [];
+  let songFile = null;
+  let videoFile = null;
 
   function fallbackCopy(text) {
     const ta = document.createElement('textarea');
@@ -72,29 +138,266 @@
     document.body.removeChild(ta);
   }
 
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files[0];
-    if (!file) return;
+  modeBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      mode = btn.dataset.mode;
+      modeBtns.forEach((b) => b.classList.toggle('active', b === btn));
+      modePhotos.hidden = mode !== 'photos';
+      modeVideo.hidden = mode !== 'video';
+    });
+  });
+
+  coverInput.addEventListener('change', () => {
+    coverFile = coverInput.files[0] || null;
+    coverStatus.textContent = coverFile ? coverFile.name : '';
+    if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+    coverPreviewUrl = coverFile ? URL.createObjectURL(coverFile) : null;
+  });
+
+  function renderPhotoThumbs() {
+    photosCount.textContent = `${photoFiles.length} / 10 rasm tanlandi`;
+    photosList.innerHTML = photoFiles.map((f, i) => `
+      <div class="qr-photo-thumb" data-i="${i}">
+        <img src="${URL.createObjectURL(f)}" alt="" />
+        <button type="button" aria-label="O'chirish">&times;</button>
+      </div>`).join('');
+    photosList.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = Number(btn.closest('.qr-photo-thumb').dataset.i);
+        photoFiles.splice(i, 1);
+        renderPhotoThumbs();
+      });
+    });
+  }
+
+  photosInput.addEventListener('change', () => {
+    const incoming = Array.from(photosInput.files || []);
+    photoFiles = [...photoFiles, ...incoming].slice(0, 10);
+    photosInput.value = '';
+    renderPhotoThumbs();
+  });
+
+  songInput.addEventListener('change', () => {
+    songFile = songInput.files[0] || null;
+    songStatus.textContent = songFile ? songFile.name : '';
+  });
+
+  videoInput.addEventListener('change', () => {
+    videoFile = videoInput.files[0] || null;
+    videoStatus.textContent = videoFile ? videoFile.name : '';
+  });
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  function heartPath(ctx, cx, topY, width, height) {
+    const w = width / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, topY + height * 0.32);
+    ctx.bezierCurveTo(cx, topY, cx - w, topY, cx - w, topY + height * 0.32);
+    ctx.bezierCurveTo(cx - w, topY + height * 0.66, cx, topY + height * 0.8, cx, topY + height);
+    ctx.bezierCurveTo(cx, topY + height * 0.8, cx + w, topY + height * 0.66, cx + w, topY + height * 0.32);
+    ctx.bezierCurveTo(cx + w, topY, cx, topY, cx, topY + height * 0.32);
+    ctx.closePath();
+  }
+
+  function drawPetalCluster(ctx, cx, cy, scale, palette) {
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2;
+      const px = cx + Math.cos(angle) * 15 * scale;
+      const py = cy + Math.sin(angle) * 15 * scale;
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 17 * scale, 10 * scale, 0, 0, Math.PI * 2);
+      ctx.fillStyle = palette[i % palette.length];
+      ctx.globalAlpha = 0.9;
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, 7 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#F3C969';
+    ctx.globalAlpha = 1;
+    ctx.fill();
+  }
+
+  function drawSparkle(ctx, x, y, size, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.moveTo(0, -size);
+    ctx.quadraticCurveTo(size * 0.15, -size * 0.15, size, 0);
+    ctx.quadraticCurveTo(size * 0.15, size * 0.15, 0, size);
+    ctx.quadraticCurveTo(-size * 0.15, size * 0.15, -size, 0);
+    ctx.quadraticCurveTo(-size * 0.15, -size * 0.15, 0, -size);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.85;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawImageCover(ctx, img, x, y, w, h, radius) {
+    const imgRatio = img.width / img.height;
+    const boxRatio = w / h;
+    let sx, sy, sw, sh;
+    if (imgRatio > boxRatio) {
+      sh = img.height; sw = sh * boxRatio; sx = (img.width - sw) / 2; sy = 0;
+    } else {
+      sw = img.width; sh = sw / boxRatio; sx = 0; sy = (img.height - sh) / 2;
+    }
+    ctx.save();
+    if (radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + w, y, x + w, y + h, radius);
+      ctx.arcTo(x + w, y + h, x, y + h, radius);
+      ctx.arcTo(x, y + h, x, y, radius);
+      ctx.arcTo(x, y, x + w, y, radius);
+      ctx.closePath();
+      ctx.clip();
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+    ctx.restore();
+  }
+
+  async function drawMemoryCard(fullUrl, coverImg) {
+    const canvas = document.getElementById('qr-canvas-final');
+    const W = 800, H = 1160;
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#FFF7F9');
+    bgGrad.addColorStop(1, '#FDEDF3');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    const pinkPalette = ['#F6C9DC', '#F2A6C4', '#FBE3EC', '#E8B4CB'];
+    const corners = [[70, 70], [W - 70, 70], [70, H - 70], [W - 70, H - 70]];
+    corners.forEach(([cx, cy], i) => drawPetalCluster(ctx, cx, cy, 1.3, pinkPalette));
+    for (let i = 0; i < 14; i++) {
+      const x = Math.random() * W, y = Math.random() * H;
+      drawSparkle(ctx, x, y, 4 + Math.random() * 5, Math.random() > 0.5 ? '#F3C969' : '#F6D9E4');
+    }
+
+    const heartW = 560, heartH = 620, heartTopY = 70, heartCx = W / 2;
+    heartPath(ctx, heartCx, heartTopY, heartW, heartH);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = 'rgba(210,150,170,0.35)';
+    ctx.shadowBlur = 30;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#E8B84F';
+    ctx.stroke();
+
+    const qr = qrcode(0, 'H');
+    qr.addData(fullUrl);
+    qr.make();
+    const count = qr.getModuleCount();
+    const qrSize = 340;
+    const qrX = heartCx - qrSize / 2;
+    const qrY = heartTopY + heartH * 0.5 - qrSize / 2 + 20;
+    const cell = qrSize / count;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20);
+    ctx.fillStyle = '#1F2430';
+    for (let r = 0; r < count; r++) {
+      for (let c = 0; c < count; c++) {
+        if (qr.isDark(r, c)) ctx.fillRect(qrX + c * cell, qrY + r * cell, cell + 0.6, cell + 0.6);
+      }
+    }
+
+    const photoW = 420, photoH = 300;
+    const photoX = W / 2 - photoW / 2;
+    const photoY = heartTopY + heartH + 30;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.18)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 8;
+    drawImageCover(ctx, coverImg, photoX, photoY, photoW, photoH, 18);
+    ctx.restore();
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#F3C969';
+    ctx.beginPath();
+    ctx.moveTo(photoX + 18, photoY);
+    ctx.arcTo(photoX + photoW, photoY, photoX + photoW, photoY + photoH, 18);
+    ctx.arcTo(photoX + photoW, photoY + photoH, photoX, photoY + photoH, 18);
+    ctx.arcTo(photoX, photoY + photoH, photoX, photoY, 18);
+    ctx.arcTo(photoX, photoY, photoX + photoW, photoY, 18);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = '#B9829A';
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('X O T I R A M I Z', W / 2, photoY + photoH + 46);
+
+    return canvas;
+  }
+
+  generateBtn.addEventListener('click', async () => {
+    if (!coverFile) { generateStatus.textContent = 'Kelin-kuyov suratini tanlang'; return; }
+    if (mode === 'video' && !videoFile) { generateStatus.textContent = 'Video tanlang'; return; }
+    if (mode === 'photos' && photoFiles.length === 0) { generateStatus.textContent = 'Kamida bitta rasm tanlang'; return; }
+
+    generateBtn.disabled = true;
     resultEl.hidden = true;
-    statusEl.textContent = 'Yuklanmoqda...';
     try {
-      const isVideo = file.type.startsWith('video/');
-      const { url } = isVideo ? await api.uploadVideo(file) : await api.uploadPhoto(file);
-      const fullUrl = window.location.origin + url;
+      generateStatus.textContent = 'Kelin-kuyov surati yuklanmoqda...';
+      const { url: coverUrl } = await api.uploadPhoto(coverFile);
 
-      previewWrap.innerHTML = isVideo
-        ? `<video src="${url}" controls style="max-width:100%;max-height:220px;border-radius:12px;"></video>`
-        : `<img src="${url}" alt="" style="max-width:100%;max-height:220px;border-radius:12px;object-fit:contain;" />`;
+      let videoUrl = '';
+      let photoUrls = [];
+      let songUrl = '';
 
-      const qr = qrcode(0, 'M');
-      qr.addData(fullUrl);
-      qr.make();
-      const dataUrl = qr.createDataURL(8, 8);
-      canvasWrap.innerHTML = `<img src="${dataUrl}" alt="QR kod" style="width:220px;height:220px;" />`;
+      if (mode === 'video') {
+        generateStatus.textContent = 'Video yuklanmoqda...';
+        const r = await api.uploadVideo(videoFile);
+        videoUrl = r.url;
+      } else {
+        for (let i = 0; i < photoFiles.length; i++) {
+          generateStatus.textContent = `Rasmlar yuklanmoqda... (${i + 1}/${photoFiles.length})`;
+          const r = await api.uploadPhoto(photoFiles[i]);
+          photoUrls.push(r.url);
+        }
+        if (songFile) {
+          generateStatus.textContent = "Qo'shiq yuklanmoqda...";
+          const r = await api.uploadSong(songFile);
+          songUrl = r.url;
+        }
+      }
+
+      generateStatus.textContent = 'Xotira yaratilmoqda...';
+      const { token } = await api.createQrMemory({
+        cover_url: coverUrl,
+        video_url: videoUrl,
+        photos: photoUrls,
+        song_url: songUrl
+      });
+
+      const fullUrl = `${window.location.origin}/xotira/${token}`;
+      generateStatus.textContent = 'QR kod chizilmoqda...';
+      const coverImg = await loadImage(coverUrl);
+      await drawMemoryCard(fullUrl, coverImg);
+
+      const canvas = document.getElementById('qr-canvas-final');
+      const dataUrl = canvas.toDataURL('image/png');
       downloadBtn.href = dataUrl;
       linkEl.textContent = fullUrl;
-
-      statusEl.textContent = '';
+      generateStatus.textContent = '';
       resultEl.hidden = false;
 
       copyBtn.onclick = () => {
@@ -105,9 +408,12 @@
         }
       };
     } catch (err) {
-      statusEl.textContent = err.message;
+      generateStatus.textContent = err.message;
+    } finally {
+      generateBtn.disabled = false;
     }
   });
+})();
 </script>
 </body>
 </html>

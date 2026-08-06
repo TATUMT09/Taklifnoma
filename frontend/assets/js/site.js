@@ -56,6 +56,9 @@
     const draw = () => {
       const visible = catPhotos.slice(0, shown);
       grid.innerHTML = visible.map(galleryItemHtml).join('');
+      grid.querySelectorAll('.gallery-item').forEach((item, i) => {
+        item.querySelector('img').addEventListener('click', () => openLightbox(catPhotos, i));
+      });
       const remaining = catPhotos.length - visible.length;
       moreWrap.innerHTML = remaining > 0
         ? `<button type="button" class="btn btn-outline gallery-more-btn">Yana ko'rsatish (+${Math.min(GALLERY_PAGE_SIZE, remaining)})</button>`
@@ -64,6 +67,59 @@
       if (btn) btn.addEventListener('click', () => { shown += GALLERY_PAGE_SIZE; draw(); });
     };
     draw();
+  }
+
+  let lightboxPhotos = [];
+  let lightboxIndex = 0;
+
+  function ensureLightbox() {
+    let lb = document.getElementById('site-lightbox');
+    if (lb) return lb;
+    lb = document.createElement('div');
+    lb.id = 'site-lightbox';
+    lb.innerHTML = `
+      <button type="button" class="lightbox-close" aria-label="Yopish">&times;</button>
+      <button type="button" class="lightbox-zone lightbox-prev" aria-label="Oldingi rasm"><span>&#8249;</span></button>
+      <img class="lightbox-img" src="" alt="" />
+      <button type="button" class="lightbox-zone lightbox-next" aria-label="Keyingi rasm"><span>&#8250;</span></button>
+    `;
+    document.body.appendChild(lb);
+    lb.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    lb.querySelector('.lightbox-prev').addEventListener('click', () => navLightbox(-1));
+    lb.querySelector('.lightbox-next').addEventListener('click', () => navLightbox(1));
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navLightbox(-1);
+      if (e.key === 'ArrowRight') navLightbox(1);
+    });
+    return lb;
+  }
+
+  function updateLightboxImg() {
+    const lb = document.getElementById('site-lightbox');
+    lb.querySelector('.lightbox-img').src = lightboxPhotos[lightboxIndex].url;
+  }
+
+  function openLightbox(photos, index) {
+    lightboxPhotos = photos;
+    lightboxIndex = index;
+    const lb = ensureLightbox();
+    updateLightboxImg();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function navLightbox(dir) {
+    if (!lightboxPhotos.length) return;
+    lightboxIndex = (lightboxIndex + dir + lightboxPhotos.length) % lightboxPhotos.length;
+    updateLightboxImg();
+  }
+
+  function closeLightbox() {
+    const lb = document.getElementById('site-lightbox');
+    if (lb) lb.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
   async function renderGallery() {

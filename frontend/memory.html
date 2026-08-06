@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Xotira — Taklifnoma</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #0B0B10; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; }
+  #mem-root { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+
+  #mem-video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+  #mem-slideshow { position: absolute; inset: 0; }
+  .mem-slide {
+    position: absolute; inset: 0; opacity: 0; transition: opacity 1.1s ease;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .mem-slide.active { opacity: 1; z-index: 2; }
+  .mem-slide img {
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    animation: memKenBurns 4.5s ease-in-out forwards;
+  }
+  @keyframes memKenBurns { from { transform: scale(1.02); } to { transform: scale(1.12); } }
+  @media (prefers-reduced-motion: reduce) { .mem-slide img { animation: none; } }
+
+  #mem-dots { position: absolute; bottom: 22px; left: 0; right: 0; display: flex; gap: 6px; justify-content: center; z-index: 5; }
+  .mem-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: 0.25s; }
+  .mem-dot.active { background: #fff; width: 18px; border-radius: 4px; }
+
+  #mem-start {
+    position: fixed; inset: 0; z-index: 10; background: rgba(10,10,14,0.92);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; color: #fff; text-align: center; padding: 2rem;
+  }
+  #mem-start img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.5); }
+  #mem-start h1 { font-size: 1.15rem; font-weight: 600; margin: 0; }
+  #mem-start button {
+    padding: 0.9rem 2rem; border-radius: 999px; border: none; background: linear-gradient(135deg,#7C3AED,#EC4899);
+    color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer;
+  }
+  #mem-error { color: #fff; text-align: center; padding: 2rem; font-size: 0.95rem; }
+</style>
+</head>
+<body>
+
+<div id="mem-root">
+  <div id="mem-start" hidden>
+    <img id="mem-start-cover" src="" alt="" />
+    <h1>Sizga maxsus bir xotira yuborishdi 💌</h1>
+    <button id="mem-start-btn" type="button">Ko'rish uchun bosing</button>
+  </div>
+
+  <video id="mem-video" hidden playsinline controls></video>
+
+  <div id="mem-slideshow" hidden>
+    <div id="mem-dots"></div>
+  </div>
+
+  <audio id="mem-audio" loop hidden></audio>
+
+  <p id="mem-error" hidden>Bu xotira topilmadi yoki muddati o'tgan.</p>
+</div>
+
+<script>
+(function () {
+  const token = window.location.pathname.split('/').filter(Boolean).pop();
+  const root = document.getElementById('mem-root');
+  const startEl = document.getElementById('mem-start');
+  const startCover = document.getElementById('mem-start-cover');
+  const startBtn = document.getElementById('mem-start-btn');
+  const videoEl = document.getElementById('mem-video');
+  const slideshowEl = document.getElementById('mem-slideshow');
+  const dotsEl = document.getElementById('mem-dots');
+  const audioEl = document.getElementById('mem-audio');
+  const errorEl = document.getElementById('mem-error');
+
+  let slideIndex = 0;
+  let slideTimer = null;
+
+  function showSlide(slides, i) {
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    document.querySelectorAll('.mem-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+    const img = slides[i].querySelector('img');
+    img.style.animation = 'none';
+    void img.offsetWidth;
+    img.style.animation = '';
+  }
+
+  function startSlideshow(photos) {
+    slideshowEl.hidden = false;
+    slideshowEl.innerHTML = photos.map((url, i) => `
+      <div class="mem-slide${i === 0 ? ' active' : ''}"><img src="${url}" alt="" /></div>
+    `).join('') + '<div id="mem-dots"></div>';
+    const dots = document.getElementById('mem-dots');
+    dots.innerHTML = photos.map((_, i) => `<span class="mem-dot${i === 0 ? ' active' : ''}"></span>`).join('');
+    const slides = Array.from(slideshowEl.querySelectorAll('.mem-slide'));
+    if (slides.length <= 1) return;
+    slideIndex = 0;
+    slideTimer = setInterval(() => {
+      slideIndex = (slideIndex + 1) % slides.length;
+      showSlide(slides, slideIndex);
+    }, 4200);
+  }
+
+  fetch(`/api/qr-memory/${token}`)
+    .then((res) => { if (!res.ok) throw new Error('not found'); return res.json(); })
+    .then((data) => {
+      startCover.src = data.cover_url;
+
+      if (data.video_url) {
+        startEl.hidden = false;
+        startBtn.addEventListener('click', () => {
+          startEl.hidden = true;
+          videoEl.src = data.video_url;
+          videoEl.hidden = false;
+          videoEl.play().catch(() => {});
+        }, { once: true });
+        return;
+      }
+
+      startEl.hidden = false;
+      startBtn.addEventListener('click', () => {
+        startEl.hidden = true;
+        startSlideshow(data.photos || []);
+        if (data.song_url) {
+          audioEl.src = data.song_url;
+          audioEl.play().catch(() => {});
+        }
+      }, { once: true });
+    })
+    .catch(() => {
+      errorEl.hidden = false;
+    });
+})();
+</script>
+</body>
+</html>

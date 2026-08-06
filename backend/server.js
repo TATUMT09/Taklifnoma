@@ -13,6 +13,7 @@ const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/uploads');
 const geocodeRoutes = require('./routes/geocode');
 const galleryRoutes = require('./routes/gallery');
+const qrMemoryRoutes = require('./routes/qrMemory');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,6 +31,7 @@ app.use('/api/public', publicRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/geocode', geocodeRoutes);
+app.use('/api/qr-memory', qrMemoryRoutes);
 
 app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(express.static(FRONTEND_DIR));
@@ -86,6 +88,10 @@ app.get('/i/:slug', (req, res) => {
 <meta name="twitter:image" content="${escapeHtmlAttr(imageUrl)}" />`;
 
   res.send(INVITE_TEMPLATE.replace('<title>Taklifnoma</title>', ogTags));
+});
+
+app.get('/xotira/:token', (req, res) => {
+  res.sendFile(path.join(FRONTEND_DIR, 'memory.html'));
 });
 
 app.use((req, res) => {

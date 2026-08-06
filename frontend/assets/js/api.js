@@ -78,6 +78,9 @@ const api = (() => {
     adminMarkMessageRead: (id) => request('POST', `/api/admin/messages/${id}/read`),
     adminDeleteMessage: (id) => request('DELETE', `/api/admin/messages/${id}`),
 
+    createQrMemory: (payload) => request('POST', '/api/qr-memory', payload),
+    getQrMemory: (token) => request('GET', `/api/qr-memory/${token}`),
+
     adminGallery: () => request('GET', '/api/admin/gallery'),
     adminAddGalleryPhoto: (payload) => request('POST', '/api/admin/gallery', payload),
     adminDeleteGalleryPhoto: (id) => request('DELETE', `/api/admin/gallery/${id}`)
