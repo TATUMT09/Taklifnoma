@@ -36,6 +36,36 @@
       </div>`;
   }
 
+  const GALLERY_PAGE_SIZE = 8;
+
+  function renderGalleryCategory(cat, grid, catPhotos) {
+    const moreId = `gallery-more-${cat}`;
+    let moreWrap = document.getElementById(moreId);
+    if (!moreWrap) {
+      moreWrap = document.createElement('div');
+      moreWrap.id = moreId;
+      moreWrap.className = 'gallery-more-wrap';
+      grid.insertAdjacentElement('afterend', moreWrap);
+    }
+    if (!catPhotos.length) {
+      grid.innerHTML = `<p class="gallery-empty">Hozircha rasm qo'shilmagan</p>`;
+      moreWrap.innerHTML = '';
+      return;
+    }
+    let shown = GALLERY_PAGE_SIZE;
+    const draw = () => {
+      const visible = catPhotos.slice(0, shown);
+      grid.innerHTML = visible.map(galleryItemHtml).join('');
+      const remaining = catPhotos.length - visible.length;
+      moreWrap.innerHTML = remaining > 0
+        ? `<button type="button" class="btn btn-outline gallery-more-btn">Yana ko'rsatish (+${Math.min(GALLERY_PAGE_SIZE, remaining)})</button>`
+        : '';
+      const btn = moreWrap.querySelector('button');
+      if (btn) btn.addEventListener('click', () => { shown += GALLERY_PAGE_SIZE; draw(); });
+    };
+    draw();
+  }
+
   async function renderGallery() {
     const GALLERY_CATEGORIES = ['toy', 'juftlik', 'oila'];
     const grids = {};
@@ -45,9 +75,7 @@
       const { photos } = await api.getGallery();
       GALLERY_CATEGORIES.forEach((cat) => {
         const catPhotos = photos.filter((p) => (p.category || 'toy') === cat);
-        grids[cat].innerHTML = catPhotos.length
-          ? catPhotos.map(galleryItemHtml).join('')
-          : `<p class="gallery-empty">Hozircha rasm qo'shilmagan</p>`;
+        renderGalleryCategory(cat, grids[cat], catPhotos);
       });
       initScrollReveal();
     } catch (e) {

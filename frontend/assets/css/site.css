@@ -931,6 +931,7 @@ footer.site-footer {
 }
 .gallery-item:hover .gallery-item-dl { opacity: 1; transform: translateY(0); }
 .gallery-item-dl svg { width: 18px; height: 18px; }
+.gallery-more-wrap { text-align: center; margin-top: 1.6rem; }
 .gallery-empty { text-align: center; color: var(--text-faint); padding: 2rem; grid-column: 1 / -1; }
 .gallery-subsection { max-width: 1280px; margin: 0 auto 2.6rem; }
 .gallery-subsection:last-child { margin-bottom: 0; }
