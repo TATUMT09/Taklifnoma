@@ -121,7 +121,6 @@
       els.forEach((el) => el.classList.add('reveal-visible'));
       return;
     }
-    els.forEach((el) => el.classList.add('reveal'));
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -130,7 +129,13 @@
         }
       });
     }, { threshold: 0 });
-    els.forEach((el) => io.observe(el));
+    els.forEach((el) => {
+      el.classList.add('reveal');
+      const rect = el.getBoundingClientRect();
+      const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (alreadyInView) el.classList.add('reveal-visible');
+      else io.observe(el);
+    });
   }
 
   function renderTemplateGallery() {
