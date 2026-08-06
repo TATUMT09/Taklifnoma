@@ -129,7 +129,7 @@
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0 });
     els.forEach((el) => io.observe(el));
   }
 
