@@ -121,6 +121,14 @@
       els.forEach((el) => el.classList.add('reveal-visible'));
       return;
     }
+    const revealIfVisible = (el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('reveal-visible');
+        return true;
+      }
+      return false;
+    };
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -131,11 +139,21 @@
     }, { threshold: 0 });
     els.forEach((el) => {
       el.classList.add('reveal');
-      const rect = el.getBoundingClientRect();
-      const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
-      if (alreadyInView) el.classList.add('reveal-visible');
-      else io.observe(el);
+      if (!revealIfVisible(el)) io.observe(el);
     });
+    // Backup for engines where IntersectionObserver misses a fast/instant scroll.
+    if (!window.__tnRevealScrollBound) {
+      window.__tnRevealScrollBound = true;
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.reveal:not(.reveal-visible)').forEach(revealIfVisible);
+          ticking = false;
+        });
+      }, { passive: true });
+    }
   }
 
   function renderTemplateGallery() {
