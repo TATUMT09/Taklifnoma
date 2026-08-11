@@ -6,17 +6,22 @@
 <title>Taklifnoma — Raqamli to'y taklifnomasi</title>
 <link rel="manifest" href="/manifest.json" />
 <link rel="stylesheet" href="/assets/css/site.css" />
+<link rel="stylesheet" href="/assets/css/home.css" />
 </head>
-<body class="has-top-gradient">
+<body class="home-premium">
 
 <nav class="topnav">
   <div class="topnav-inner">
     <a href="/" class="brand">
-      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 3 7v5c0 5.2 3.8 8.7 9 10 5.2-1.3 9-4.8 9-10V7l-9-5Z" fill="var(--gold)"/><path d="M8 12.5l2.7 2.7L16.5 9" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <defs><clipPath id="brandHeartL"><rect x="0" y="0" width="12" height="24"/></clipPath><clipPath id="brandHeartR"><rect x="12" y="0" width="12" height="24"/></clipPath></defs>
+        <path clip-path="url(#brandHeartL)" d="M12 20.25c-.2 0-.39-.06-.55-.18C7.3 17.1 3 13.28 3 9.06 3 6.27 5.11 4 7.72 4c1.68 0 3.2.86 4.28 2.24C13.08 4.86 14.6 4 16.28 4 18.89 4 21 6.27 21 9.06c0 4.22-4.3 8.04-8.45 11.01-.16.12-.35.18-.55.18z" fill="#0D1B3D"/>
+        <path clip-path="url(#brandHeartR)" d="M12 20.25c-.2 0-.39-.06-.55-.18C7.3 17.1 3 13.28 3 9.06 3 6.27 5.11 4 7.72 4c1.68 0 3.2.86 4.28 2.24C13.08 4.86 14.6 4 16.28 4 18.89 4 21 6.27 21 9.06c0 4.22-4.3 8.04-8.45 11.01-.16.12-.35.18-.55.18z" fill="#D4AF37"/>
+      </svg>
       <span class="brand-text">Taklifnoma</span>
     </a>
     <div class="nav-links">
-      <a href="/#templates">Andazalar</a>
+      <a href="/#templates" class="active">Andazalar</a>
       <a href="/#gallery">Galereya</a>
       <a href="/qr-tool">QR kod</a>
       <a href="/#how">Qanday ishlaydi</a>
@@ -43,43 +48,53 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow">Raqamli taklifnoma platformasi</p>
-      <h1 class="hero-title">Har bir taklifnoma <span class="grad-text">o'ziga xos</span> bo'lsin.</h1>
-      <p class="hero-sub">Ism, sana va manzilni kiriting — bir necha daqiqada shaxsiy taklifnoma havolasi tayyor bo'ladi. Mehmonlaringiz javobi va tilaklarini shu yerning o'zida kuzatib boring.</p>
-      <form class="hero-search" id="hero-search-form">
+      <div class="hp-eyebrow-wrap hp-fade-up d1">
+        <p class="eyebrow">Raqamli taklifnoma platformasi</p>
+        <img class="hp-flourish" src="/assets/images/deco/flourish-divider.svg" alt="" aria-hidden="true" />
+      </div>
+      <h1 class="hero-title hp-fade-up d2">Har bir taklifnoma<br /><span class="grad-text">o'ziga xos</span> bo'lsin.</h1>
+      <div class="hp-heart-divider hp-fade-up d2" aria-hidden="true">
+        <span class="hp-line"></span>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.25c-.2 0-.39-.06-.55-.18C7.3 17.1 3 13.28 3 9.06 3 6.27 5.11 4 7.72 4c1.68 0 3.2.86 4.28 2.24C13.08 4.86 14.6 4 16.28 4 18.89 4 21 6.27 21 9.06c0 4.22-4.3 8.04-8.45 11.01-.16.12-.35.18-.55.18z"/></svg>
+        <span class="hp-line"></span>
+      </div>
+      <p class="hero-sub hp-fade-up d3">Ism, sana va manzilni kiriting — bir necha daqiqada shaxsiy taklifnoma havolasi tayyor bo'ladi. Mehmonlaringiz javobi va tilaklarini shu yerning o'zida kuzatib boring.</p>
+      <form class="hero-search hp-fade-up d4" id="hero-search-form">
+        <span class="hp-search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        </span>
         <input type="text" id="hero-search-input" placeholder="Andoza qidiring: to'y, tug'ilgan kun..." />
-        <button type="submit">Qidirish</button>
+        <button type="submit">Qidirish <span aria-hidden="true">→</span></button>
       </form>
-      <div class="hero-cta">
-        <a href="/create" class="btn btn-primary">Bepul boshlash
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a href="/#templates" class="btn btn-outline">Andazalarni ko'rish</a>
+      <div class="hero-cta hp-fade-up d5">
+        <a href="/create" class="btn hp-btn-secondary">🎁 Bepul boshlash <span aria-hidden="true">→</span></a>
+        <a href="/#how" class="btn hp-btn-secondary">▶ Qanday ishlaydi?</a>
+      </div>
+      <div class="hp-trust hp-fade-up d5">
+        <div class="hp-avatars" aria-hidden="true">
+          <img src="/assets/images/hero/hero-2.jpg" alt="" />
+          <img src="/assets/images/hero/hero-3.jpg" alt="" />
+          <img src="/assets/images/hero/hero-4.jpg" alt="" />
+          <span class="hp-avatar-badge">+12k</span>
+        </div>
+        <p class="hp-trust-text">12.000+ foydalanuvchi<br />bizga ishonadi <span aria-hidden="true">🧡</span></p>
       </div>
     </div>
-    <div class="hero-visual">
-      <div class="hero-blob b1" aria-hidden="true"></div>
-      <div class="hero-blob b2" aria-hidden="true"></div>
+    <div class="hero-visual hp-collage-fade">
+      <div class="hp-collage">
+        <img class="hp-floral hp-floral-a" src="/assets/images/deco/floral-cluster-a.svg" alt="" aria-hidden="true" />
+        <img class="hp-floral hp-floral-b" src="/assets/images/deco/floral-cluster-b.svg" alt="" aria-hidden="true" />
 
-      <div class="hero-phone" aria-hidden="true">
-        <img src="/assets/images/hero/hero-1.jpg" alt="" />
-        <span class="glass-reflect"></span>
-      </div>
-      <div class="photo-card pc-1" aria-hidden="true" style="--r:-9deg;">
-        <img src="/assets/images/hero/hero-3.jpg" alt="" />
-      </div>
-      <div class="photo-card pc-2" aria-hidden="true" style="--r:10deg;">
-        <img src="/assets/images/hero/hero-2.jpg" alt="" />
-      </div>
-      <div class="photo-card pc-3" aria-hidden="true" style="--r:-7deg;">
-        <img src="/assets/images/hero/hero-4.jpg" alt="" />
-      </div>
+        <div class="hp-photo hp-photo-1"><img src="/assets/images/hero/hero-3.jpg" alt="Juftlik suratlari" /></div>
+        <div class="hp-photo hp-photo-2"><img src="/assets/images/hero/hero-1.jpg" alt="Taklifnoma namunasi" /></div>
+        <div class="hp-photo hp-photo-3"><img src="/assets/images/hero/hero-2.jpg" alt="Juftlik suratlari" /></div>
+        <div class="hp-photo hp-photo-4"><img src="/assets/images/hero/hero-4.jpg" alt="Juftlik suratlari" /></div>
 
-      <img class="hero-deco flowers" src="/assets/images/deco/flowers.svg" alt="" aria-hidden="true" />
-      <img class="hero-deco sparkle-a" src="/assets/images/deco/sparkle.svg" alt="" aria-hidden="true" />
-      <img class="hero-deco sparkle-b" src="/assets/images/deco/sparkle.svg" alt="" aria-hidden="true" />
-      <img class="hero-deco gift" src="/assets/images/deco/gift.svg" alt="" aria-hidden="true" />
-      <img class="hero-deco confetti" src="/assets/images/deco/confetti.svg" alt="" aria-hidden="true" />
+        <div class="hp-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
+          <span>Sevgi bilan yaratilgan onlarni<br />abadiy saqlang <span class="hp-badge-heart">♥</span></span>
+        </div>
+      </div>
     </div>
   </div>
 </header>

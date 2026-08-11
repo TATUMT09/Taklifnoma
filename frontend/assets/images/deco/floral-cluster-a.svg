@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none">
+  <path d="M40 260 C 80 220, 120 180, 150 120" stroke="#C8A75E" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+  <path d="M150 120 C 165 95, 190 80, 220 70" stroke="#C8A75E" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+
+  <g transform="translate(230,64)">
+    <ellipse cx="-18" cy="4" rx="20" ry="9" fill="#D4AF37" transform="rotate(-28 -18 4)"/>
+    <ellipse cx="16" cy="8" rx="20" ry="9" fill="#C8A75E" transform="rotate(22 16 8)"/>
+    <ellipse cx="0" cy="-14" rx="18" ry="8" fill="#D4AF37" transform="rotate(-2 0 -14)"/>
+  </g>
+  <g transform="translate(126,132)">
+    <ellipse cx="-14" cy="6" rx="16" ry="7" fill="#C8A75E" transform="rotate(-20 -14 6)"/>
+    <ellipse cx="12" cy="10" rx="16" ry="7" fill="#D4AF37" transform="rotate(24 12 10)"/>
+  </g>
+
+  <g transform="translate(60,250)">
+    <circle r="34" fill="#FFFFFF"/>
+    <g opacity="0.9">
+      <ellipse cx="0" cy="-22" rx="16" ry="20" fill="#F7F3EE" transform="rotate(0)"/>
+      <ellipse cx="19" cy="-11" rx="16" ry="20" fill="#FDFBF8" transform="rotate(72 19 -11)"/>
+      <ellipse cx="12" cy="16" rx="16" ry="20" fill="#F2ECE1" transform="rotate(144 12 16)"/>
+      <ellipse cx="-12" cy="16" rx="16" ry="20" fill="#FDFBF8" transform="rotate(216 -12 16)"/>
+      <ellipse cx="-19" cy="-11" rx="16" ry="20" fill="#F2ECE1" transform="rotate(288 -19 -11)"/>
+    </g>
+    <circle r="9" fill="#D4AF37"/>
+    <circle r="4" fill="#F7E6B1"/>
+  </g>
+
+  <g transform="translate(120,80) scale(0.62)">
+    <g opacity="0.95">
+      <ellipse cx="0" cy="-22" rx="15" ry="19" fill="#0D1B3D"/>
+      <ellipse cx="18" cy="-10" rx="15" ry="19" fill="#122252" transform="rotate(72 18 -10)"/>
+      <ellipse cx="11" cy="16" rx="15" ry="19" fill="#0D1B3D" transform="rotate(144 11 16)"/>
+      <ellipse cx="-11" cy="16" rx="15" ry="19" fill="#122252" transform="rotate(216 -11 16)"/>
+      <ellipse cx="-18" cy="-10" rx="15" ry="19" fill="#0D1B3D" transform="rotate(288 -18 -10)"/>
+    </g>
+    <circle r="7" fill="#D4AF37"/>
+  </g>
+
+  <circle cx="150" cy="200" r="3.5" fill="#D4AF37"/>
+  <circle cx="176" cy="212" r="2.4" fill="#C8A75E"/>
+  <circle cx="96" cy="176" r="2.6" fill="#D4AF37"/>
+  <circle cx="252" cy="96" r="2.2" fill="#C8A75E"/>
+</svg>
