@@ -6,6 +6,7 @@ const EVENT_CATEGORIES = [
     headline: "Nikoh to'yi tantanasi",
     inviteWord: 'Taklif etamiz',
     tagline: 'Ikki qalbning birikishi — eng buyuk baxt',
+    taglineSolo: "Bu tantanali kunda yoningizda bo'lishni istaymiz",
     venueEyebrow: 'Tantanali marosim',
     dateLabel: 'Sana',
     msgLabel: 'Qo\'shimcha xabar (ixtiyoriy)',
@@ -164,7 +165,8 @@ const LAYOUT_META = [
   { id: 'dasturxon', label: 'Dasturxon', categories: ['nahor_oshi'] },
   { id: 'maktub', label: 'Maktub', categories: ['sevgimga_hat'] },
   { id: 'premium', label: 'Premium ✨ Yangi', categories: ['sevgi_izhor'] },
-  { id: 'shohona', label: 'Shohona ✨ Yangi', categories: null }
+  { id: 'shohona', label: 'Shohona ✨ Yangi', categories: null },
+  { id: 'nikoh', label: "Nikoh to'yi (kuyov) ✨ Yangi", categories: ['toy'], requiresBrideName: false, notDefault: true }
 ];
 
 function getLayoutsForCategory(eventTypeId) {
@@ -172,6 +174,11 @@ function getLayoutsForCategory(eventTypeId) {
 }
 
 function getDefaultLayoutForCategory(eventTypeId) {
-  const dedicated = LAYOUT_META.find((l) => l.categories && l.categories.includes(eventTypeId));
+  const dedicated = LAYOUT_META.find((l) => l.categories && l.categories.includes(eventTypeId) && !l.notDefault);
   return dedicated ? dedicated.id : 'nafis';
+}
+
+function layoutRequiresBrideName(layoutId) {
+  const l = LAYOUT_META.find((x) => x.id === layoutId);
+  return !l || l.requiresBrideName !== false;
 }

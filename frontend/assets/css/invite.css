@@ -1255,6 +1255,10 @@ body[data-layout="shohona"] .chevron { border-color: #D4AF37; }
 .shohona-card-eyebrow { font-family: var(--sans); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: #cbd0da; margin: 0 0 0.6rem; }
 .shohona-card-names { font-family: var(--serif); font-style: italic; font-size: clamp(1.6rem, 6vw, 2.2rem); color: #F8FAFC; margin: 0 0 0.6rem; }
 .shohona-card-tagline { color: #cbd0da; font-size: 0.92rem; margin: 0; }
+.shohona-message-text {
+  font-family: var(--serif); font-size: clamp(1rem, 2.4vw, 1.15rem); line-height: 1.9;
+  color: #E8EAF0; text-align: center; margin: 0; white-space: pre-line;
+}
 
 .shohona-infogrid { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; max-width: 640px; }
 .shohona-infocard {

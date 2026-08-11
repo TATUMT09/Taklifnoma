@@ -79,6 +79,7 @@
         layoutChoicesEl.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         state.layout = btn.getAttribute('data-value');
+        updateBrideFieldVisibility(cat);
         togglePremiumFields();
       });
     });
@@ -88,9 +89,12 @@
     if (premiumFieldsEl) premiumFieldsEl.hidden = !['premium', 'shohona'].includes(state.layout);
   }
 
+  function updateBrideFieldVisibility(cat) {
+    brideField.hidden = !cat.pair || !layoutRequiresBrideName(state.layout);
+  }
+
   function applyCategory(id) {
     const cat = getEventCategory(id);
-    brideField.hidden = !cat.pair;
     familyField.hidden = !!cat.hideFamily;
     dateLabel.textContent = cat.dateLabel;
     messageLabel.textContent = cat.msgLabel;
@@ -107,6 +111,7 @@
       }
     }
     renderLayoutChoices(id);
+    updateBrideFieldVisibility(cat);
     togglePremiumFields();
   }
   let current = 1;
@@ -420,7 +425,7 @@
       event_type: state.event_type,
       theme: state.theme,
       groom_name: document.getElementById('groom_name').value,
-      bride_name: document.getElementById('bride_name').value,
+      bride_name: brideField.hidden ? '' : document.getElementById('bride_name').value,
       family_name: document.getElementById('family_name').value,
       custom_message: document.getElementById('custom_message').value,
       event_date: document.getElementById('event_date').value,

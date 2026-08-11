@@ -2,7 +2,7 @@
   const app = document.getElementById('app');
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona'];
+  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona', 'nikoh'];
   const isPreview = window.location.pathname.replace(/\/$/, '') === '/preview';
 
   function escapeHtml(str) {
@@ -161,15 +161,15 @@
       : layout === 'dasturxon' ? coverDasturxon(ctx)
       : layout === 'maktub' ? coverMaktub(ctx)
       : layout === 'premium' ? coverPremium(ctx)
-      : layout === 'shohona' ? coverShohona(ctx)
+      : (layout === 'shohona' || layout === 'nikoh') ? coverShohona(ctx)
       : coverNafis(ctx);
     const sectionsHtml = layout === 'dasturxon' ? dasturxonSectionsHtml(ctx)
       : layout === 'maktub' ? maktubSectionsHtml(ctx)
       : layout === 'premium' ? premiumSectionsHtml(ctx)
-      : layout === 'shohona' ? shohonaSectionsHtml(ctx)
+      : (layout === 'shohona' || layout === 'nikoh') ? shohonaSectionsHtml(ctx)
       : sharedSectionsHtml(ctx);
 
-    const noDotnavLayouts = ['dasturxon', 'maktub', 'premium', 'shohona'];
+    const noDotnavLayouts = ['dasturxon', 'maktub', 'premium', 'shohona', 'nikoh'];
     app.innerHTML = `
       ${noDotnavLayouts.includes(layout) ? '' : dotnavHtml(inv)}
 
@@ -800,6 +800,7 @@
   function shohonaSectionsHtml(ctx) {
     const { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat } = ctx;
     const names = isCouple ? `${escapeHtml(groom)} & ${escapeHtml(bride)}` : escapeHtml(groom);
+    const tagline = isCouple ? cat.tagline : (cat.taglineSolo || cat.tagline);
     const galleryPhotos = (inv.gallery && inv.gallery.length)
       ? inv.gallery
       : (inv.photo_url ? [{ url: inv.photo_url, caption: '' }] : []);
@@ -809,7 +810,7 @@
           ${inv.video_url ? `<video class="shohona-hero-video" src="${escapeHtml(inv.video_url)}" autoplay muted loop playsinline></video><div class="shohona-hero-scrim"></div>` : ''}
           <p class="shohona-eyebrow">${escapeHtml(headline)}</p>
           <h1 class="shohona-hero-name">${names}</h1>
-          <p class="shohona-hero-tagline">${escapeHtml(cat.tagline)}</p>
+          <p class="shohona-hero-tagline">${escapeHtml(tagline)}</p>
         </section>
 
         <section class="shohona-section reveal">
@@ -817,10 +818,18 @@
             <div class="shohona-card-line"></div>
             <p class="shohona-card-eyebrow">${escapeHtml(cat.inviteWord || 'Taklifnoma')}</p>
             <p class="shohona-card-names">${names}</p>
-            <p class="shohona-card-tagline">${escapeHtml(cat.tagline)}</p>
+            <p class="shohona-card-tagline">${escapeHtml(tagline)}</p>
             <div class="shohona-card-line"></div>
           </div>
         </section>
+
+        ${inv.custom_message ? `
+        <section class="shohona-section reveal">
+          <p class="shohona-section-eyebrow">Taklifnoma matni</p>
+          <div class="shohona-card">
+            <p class="shohona-message-text">${escapeHtml(inv.custom_message)}</p>
+          </div>
+        </section>` : ''}
 
         <section class="shohona-section reveal">
           <div class="shohona-infogrid">
@@ -957,10 +966,28 @@
     }
 
     const revealEls = document.querySelectorAll('.reveal');
+    const revealIfVisible = (el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('visible');
+        return true;
+      }
+      return false;
+    };
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.18 });
-    revealEls.forEach((el) => io.observe(el));
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0 });
+    revealEls.forEach((el) => { if (!revealIfVisible(el)) io.observe(el); });
+    // Backup poll: guarantees nothing stays permanently invisible even if the
+    // observer misses a section (e.g. a very tall section, or an instant/
+    // programmatic scroll that skips intersection callbacks on some engines).
+    let revealChecks = 0;
+    const revealPoll = setInterval(() => {
+      const remaining = document.querySelectorAll('.reveal:not(.visible)');
+      remaining.forEach(revealIfVisible);
+      revealChecks += 1;
+      if (remaining.length === 0 || revealChecks > 150) clearInterval(revealPoll);
+    }, 200);
 
     if (inv.event_date && layout === 'premium') {
       const start = parseEventDate(inv.event_date, inv.event_time || '00:00').getTime();
@@ -1048,7 +1075,7 @@
       }
     }
 
-    if (layout === 'shohona') {
+    if (layout === 'shohona' || layout === 'nikoh') {
       const giftCopyBtn = document.getElementById('shohona-gift-copy');
       if (giftCopyBtn) {
         giftCopyBtn.addEventListener('click', () => {

@@ -7,9 +7,11 @@ const { generateSlug } = require('../utils/slug');
 const router = express.Router();
 
 const THEMES = ['zumrad', 'lavanda', 'shafaq', 'bayram', 'oltin', 'nur', 'muhabbat', 'bahor', 'layli', 'vau', 'zar'];
-const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona'];
+const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona', 'nikoh'];
 const EVENT_TYPES = ['toy', 'qiz_bazmi', 'tugilgan_kun', 'tabrik', 'haj_safari', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
 const PAIR_TYPES = ['toy', 'qiz_bazmi', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
+// Layouts that never require a second (bride) name, regardless of event type.
+const SOLO_NAME_LAYOUTS = ['nikoh'];
 const SLUG_RE = /^[a-z0-9-]{3,40}$/;
 
 const FIELDS = [
@@ -126,7 +128,7 @@ router.post('/', requireAuth, (req, res) => {
   if (!data.groom_name) {
     return res.status(400).json({ error: 'Ismni kiriting' });
   }
-  if (PAIR_TYPES.includes(data.event_type) && !data.bride_name) {
+  if (PAIR_TYPES.includes(data.event_type) && !SOLO_NAME_LAYOUTS.includes(data.layout) && !data.bride_name) {
     return res.status(400).json({ error: 'Kuyov va kelin ismini kiriting' });
   }
 
