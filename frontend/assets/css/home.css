@@ -323,7 +323,7 @@ body.home-premium[data-theme="dark"] { background-color: var(--hp-navy-dark); co
 
 @media (max-width: 640px) {
   body.home-premium .hero-visual { aspect-ratio: 1 / 1; max-width: 420px; }
-  body.home-premium .hp-collage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  body.home-premium .hp-collage { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 12px; }
   body.home-premium .hp-photo {
     position: static; width: 100% !important; height: auto !important;
     aspect-ratio: 4 / 5; transform: none !important; animation: none !important;
@@ -331,7 +331,7 @@ body.home-premium[data-theme="dark"] { background-color: var(--hp-navy-dark); co
   }
   body.home-premium .hp-photo:hover { transform: none !important; }
   body.home-premium .hp-floral { display: none; }
-  body.home-premium .hp-badge { position: static; margin-top: 14px; max-width: 100%; justify-content: center; text-align: left; }
+  body.home-premium .hp-badge { position: static; grid-column: 1 / -1; margin-top: 6px; max-width: 100%; justify-content: center; text-align: left; }
   body.home-premium .hp-heart-divider { margin: 0.9rem 0 1.1rem; }
   body.home-premium .hero-search button { width: 100%; }
   body.home-premium .hero-search input { width: 100%; }
