@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 780" fill="none">
+  <defs>
+    <filter id="sbShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2.6" flood-color="#0D1B3D" flood-opacity="0.22"/>
+    </filter>
+    <radialGradient id="petalWhite" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EDE5D6"/>
+    </radialGradient>
+    <radialGradient id="petalNavyLight" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#2C4179"/>
+      <stop offset="100%" stop-color="#0B1730"/>
+    </radialGradient>
+    <radialGradient id="petalNavyDark" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#18285A"/>
+      <stop offset="100%" stop-color="#081027"/>
+    </radialGradient>
+
+    <g id="fWhite">
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#petalWhite)" transform="scale(24) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#petalWhite)" transform="rotate(72) scale(24) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#petalWhite)" transform="rotate(144) scale(24) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#petalWhite)" transform="rotate(216) scale(24) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#petalWhite)" transform="rotate(288) scale(24) translate(0,-0.85)"/>
+      <circle r="8" fill="#E8B84F"/>
+      <circle r="4.5" fill="#F7E6B1"/>
+    </g>
+    <g id="fNavy">
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#petalNavyLight)" transform="scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#petalNavyDark)" transform="rotate(72) scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#petalNavyLight)" transform="rotate(144) scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#petalNavyDark)" transform="rotate(216) scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#petalNavyLight)" transform="rotate(288) scale(20) translate(0,-0.85)"/>
+      <circle r="6.5" fill="#D4AF37"/>
+      <circle r="3.4" fill="#F7E6B1"/>
+    </g>
+    <g id="leafGreen">
+      <path d="M0 0 C -16 -8, -26 2, -32 16 C -20 15, -8 9, 0 0 Z" fill="#7C8F5E"/>
+      <path d="M0 0 C -16 -8, -26 2, -32 16" stroke="#5F7247" stroke-width="0.8" fill="none"/>
+    </g>
+    <g id="leafGold">
+      <path d="M0 0 C 14 -8, 22 2, 28 14 C 18 13, 8 8, 0 0 Z" fill="#C8A75E"/>
+    </g>
+    <g id="bud">
+      <circle r="3.4" fill="#D4AF37"/>
+      <circle cx="-1" cy="-1" r="1.1" fill="#F7E6B1"/>
+    </g>
+  </defs>
+
+  <!-- thin gold branch lines threading the whole cluster -->
+  <path d="M150 20 C 110 90, 150 160, 100 240 C 70 300, 120 360, 90 430 C 65 490, 110 560, 85 630 C 65 690, 100 740, 80 770"
+        stroke="#C8A75E" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
+
+  <g filter="url(#sbShadow)">
+    <!-- top anchor: large white -->
+    <use href="#fWhite" transform="translate(120,60) scale(1.05)"/>
+    <use href="#leafGreen" transform="translate(160,92) rotate(18) scale(0.9)"/>
+    <use href="#leafGold" transform="translate(78,40) rotate(-30) scale(0.8)"/>
+
+    <!-- medium navy -->
+    <use href="#fNavy" transform="translate(66,130) scale(0.8)"/>
+    <use href="#leafGreen" transform="translate(40,170) rotate(-20) scale(0.75)"/>
+    <use href="#bud" transform="translate(140,150)"/>
+
+    <!-- small white -->
+    <use href="#fWhite" transform="translate(128,210) scale(0.55)"/>
+    <use href="#leafGold" transform="translate(90,240) rotate(24) scale(0.7)"/>
+
+    <!-- medium white, mid-upper -->
+    <use href="#fWhite" transform="translate(70,290) scale(0.85)"/>
+    <use href="#leafGreen" transform="translate(110,320) rotate(-14) scale(0.95)"/>
+    <use href="#bud" transform="translate(38,250)"/>
+
+    <!-- large navy, centerpiece -->
+    <use href="#fNavy" transform="translate(130,370) scale(1.05)"/>
+    <use href="#leafGreen" transform="translate(170,400) rotate(20) scale(0.9)"/>
+    <use href="#leafGold" transform="translate(90,400) rotate(-26) scale(0.85)"/>
+
+    <!-- small navy -->
+    <use href="#fNavy" transform="translate(60,450) scale(0.5)"/>
+    <use href="#bud" transform="translate(120,460)"/>
+
+    <!-- medium white lower -->
+    <use href="#fWhite" transform="translate(110,510) scale(0.78)"/>
+    <use href="#leafGreen" transform="translate(70,540) rotate(-18) scale(0.85)"/>
+    <use href="#leafGold" transform="translate(150,540) rotate(22) scale(0.75)"/>
+
+    <!-- small white lower -->
+    <use href="#fWhite" transform="translate(56,590) scale(0.48)"/>
+    <use href="#bud" transform="translate(100,610)"/>
+
+    <!-- bottom anchor: large white -->
+    <use href="#fWhite" transform="translate(110,670) scale(1)"/>
+    <use href="#leafGreen" transform="translate(150,700) rotate(16) scale(0.9)"/>
+    <use href="#leafGold" transform="translate(72,650) rotate(-24) scale(0.8)"/>
+
+    <!-- small navy near bottom -->
+    <use href="#fNavy" transform="translate(70,740) scale(0.55)"/>
+    <use href="#bud" transform="translate(120,750)"/>
+  </g>
+</svg>

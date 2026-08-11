@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 320" fill="none">
+  <defs>
+    <filter id="sfShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0D1B3D" flood-opacity="0.25"/>
+    </filter>
+    <radialGradient id="fpetalWhite" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EDE5D6"/>
+    </radialGradient>
+    <radialGradient id="fpetalNavy" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#2C4179"/>
+      <stop offset="100%" stop-color="#0B1730"/>
+    </radialGradient>
+    <g id="ffWhite">
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#fpetalWhite)" transform="scale(27) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#fpetalWhite)" transform="rotate(72) scale(27) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#fpetalWhite)" transform="rotate(144) scale(27) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#fpetalWhite)" transform="rotate(216) scale(27) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.22" fill="url(#fpetalWhite)" transform="rotate(288) scale(27) translate(0,-0.85)"/>
+      <circle r="9" fill="#E8B84F"/>
+      <circle r="5" fill="#F7E6B1"/>
+    </g>
+    <g id="ffNavy">
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#fpetalNavy)" transform="scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#fpetalNavy)" transform="rotate(72) scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#fpetalNavy)" transform="rotate(144) scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#fpetalNavy)" transform="rotate(216) scale(20) translate(0,-0.85)"/>
+      <ellipse cx="0" cy="-1" rx="1" ry="1.18" fill="url(#fpetalNavy)" transform="rotate(288) scale(20) translate(0,-0.85)"/>
+      <circle r="6.5" fill="#D4AF37"/>
+    </g>
+    <g id="ffLeafGreen">
+      <path d="M0 0 C -16 -8, -26 2, -32 16 C -20 15, -8 9, 0 0 Z" fill="#7C8F5E"/>
+    </g>
+    <g id="ffLeafGold">
+      <path d="M0 0 C 14 -8, 22 2, 28 14 C 18 13, 8 8, 0 0 Z" fill="#C8A75E"/>
+    </g>
+  </defs>
+
+  <g filter="url(#sfShadow)">
+    <use href="#ffWhite" transform="translate(80,90)"/>
+    <use href="#ffNavy" transform="translate(150,180) scale(0.9)"/>
+    <use href="#ffLeafGreen" transform="translate(130,110) rotate(24) scale(1.1)"/>
+    <use href="#ffLeafGold" transform="translate(50,150) rotate(-20) scale(1)"/>
+    <use href="#ffLeafGreen" transform="translate(170,230) rotate(10) scale(0.9)"/>
+  </g>
+</svg>
