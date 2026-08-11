@@ -169,10 +169,13 @@ body.home-premium .hero-visual { max-width: 640px; }
 body.home-premium .hp-collage { position: relative; width: 100%; height: 100%; }
 
 body.home-premium .hp-floral { position: absolute; z-index: 5; pointer-events: none; }
-body.home-premium .hp-floral-a { width: 32%; top: -7%; right: -7%; }
-body.home-premium .hp-floral-b { width: 28%; bottom: -7%; left: -6%; }
-body.home-premium .hp-floral-c { width: 20%; top: -5%; left: -5%; transform: scaleX(-1); }
-body.home-premium .hp-floral-d { width: 24%; bottom: -5%; right: -6%; transform: scaleX(-1); }
+body.home-premium .hp-floral-a { width: 30%; top: -6%; right: -6%; }
+body.home-premium .hp-floral-d { width: 22%; bottom: -4%; right: -5%; transform: scaleX(-1); }
+
+body.home-premium .hp-garland {
+  position: absolute; z-index: 6; pointer-events: none;
+  top: -2%; left: -14%; width: 30%; height: 104%;
+}
 
 body.home-premium .hp-photo {
   position: absolute;
@@ -184,7 +187,7 @@ body.home-premium .hp-photo {
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 body.home-premium .hp-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-body.home-premium .hp-photo:hover { transform: scale(1.03) !important; box-shadow: 0 30px 60px -14px rgba(13, 27, 61, 0.45); }
+body.home-premium .hp-photo:hover { box-shadow: 0 30px 60px -14px rgba(13, 27, 61, 0.45); }
 
 body.home-premium .hp-photo-1 { width: 56%; height: 56%; top: 2%; left: 0; z-index: 2; transform: rotate(-4deg); }
 body.home-premium .hp-photo-2 { width: 42%; height: 40%; top: 0; left: 55%; z-index: 3; transform: rotate(4deg); }
@@ -202,15 +205,7 @@ body.home-premium .hp-badge {
 body.home-premium .hp-badge svg { width: 20px; height: 20px; color: var(--hp-navy); flex-shrink: 0; }
 body.home-premium .hp-badge .hp-badge-heart { color: var(--hp-gold-light); }
 
-@keyframes hpFloat { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-10px) rotate(var(--r, 0deg)); } }
-body.home-premium .hp-photo-1 { animation: hpFloat 9s ease-in-out infinite; --r: -4deg; }
-body.home-premium .hp-photo-2 { animation: hpFloat 7.5s ease-in-out infinite; animation-delay: -2s; --r: 4deg; }
-body.home-premium .hp-photo-3 { animation: hpFloat 8.5s ease-in-out infinite; animation-delay: -4s; --r: -3deg; }
-body.home-premium .hp-photo-4 { animation: hpFloat 7s ease-in-out infinite; animation-delay: -1s; --r: 5deg; }
-body.home-premium .hp-floral-a { animation: hpFloat 11s ease-in-out infinite; }
-body.home-premium .hp-floral-b { animation: hpFloat 10s ease-in-out infinite; animation-delay: -3s; }
-body.home-premium .hp-floral-c { animation: hpFloat 9.5s ease-in-out infinite; animation-delay: -1.5s; }
-body.home-premium .hp-floral-d { animation: hpFloat 10.5s ease-in-out infinite; animation-delay: -4.5s; }
+/* Photo frames and florals stay put — no floating/bobbing motion. */
 
 @media (prefers-reduced-motion: reduce) {
   body.home-premium .hp-photo, body.home-premium .hp-floral { animation: none; }
@@ -334,7 +329,7 @@ body.home-premium[data-theme="dark"] { background-color: var(--hp-navy-dark); co
     border-radius: 20px; border-width: 2.5px;
   }
   body.home-premium .hp-photo:hover { transform: none !important; }
-  body.home-premium .hp-floral { display: none; }
+  body.home-premium .hp-floral, body.home-premium .hp-garland { display: none; }
   body.home-premium .hp-badge { position: static; grid-column: 1 / -1; margin-top: 6px; max-width: 100%; justify-content: center; text-align: left; }
   body.home-premium .hp-heart-divider { margin: 0.9rem 0 1.1rem; }
   body.home-premium .hero-search button { width: 100%; }
