@@ -256,10 +256,27 @@ body.home-premium footer.site-footer { border-top-color: rgba(200, 167, 94, 0.25
 body.home-premium .footer-tg { color: rgba(13, 27, 61, 0.55); }
 
 /* ---------- Dark mode (keeps the existing toggle working) ---------- */
-:root[data-theme="dark"] body.home-premium,
-body.home-premium[data-theme="dark"] { background-color: var(--hp-navy-dark); color: var(--hp-cream); }
+:root[data-theme="dark"] body.home-premium {
+  background-color: var(--hp-navy-dark);
+  background-image:
+    radial-gradient(circle at 6% 10%, rgba(212, 175, 55, 0.09), transparent 42%),
+    radial-gradient(circle at 96% 20%, rgba(212, 175, 55, 0.08), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(212, 175, 55, 0.05), transparent 45%),
+    linear-gradient(rgba(8, 21, 47, 0.93), rgba(8, 21, 47, 0.93)),
+    url('/assets/images/home-bg-marble.jpg');
+  color: var(--hp-cream);
+}
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body.home-premium { background-color: var(--hp-navy-dark); color: var(--hp-cream); }
+  :root:not([data-theme="light"]) body.home-premium {
+    background-color: var(--hp-navy-dark);
+    background-image:
+      radial-gradient(circle at 6% 10%, rgba(212, 175, 55, 0.09), transparent 42%),
+      radial-gradient(circle at 96% 20%, rgba(212, 175, 55, 0.08), transparent 38%),
+      radial-gradient(circle at 50% 100%, rgba(212, 175, 55, 0.05), transparent 45%),
+      linear-gradient(rgba(8, 21, 47, 0.93), rgba(8, 21, 47, 0.93)),
+      url('/assets/images/home-bg-marble.jpg');
+    color: var(--hp-cream);
+  }
 }
 :root[data-theme="dark"] body.home-premium .topnav { background: rgba(8, 21, 47, 0.9); border-bottom-color: rgba(200, 167, 94, 0.22); }
 :root[data-theme="dark"] body.home-premium .brand,
