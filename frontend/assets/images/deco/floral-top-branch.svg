@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" fill="none">
+  <defs>
+    <filter id="tSoftShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2.6" flood-color="#0D1B3D" flood-opacity="0.25"/>
+    </filter>
+    <g id="tb-rose-navy">
+      <ellipse cx="0" cy="-22" rx="15" ry="18" fill="#0B1730"/>
+      <ellipse cx="18" cy="-10" rx="15" ry="18" fill="#16265A" transform="rotate(72 18 -10)"/>
+      <ellipse cx="11" cy="15" rx="15" ry="18" fill="#0D1B3D" transform="rotate(144 11 15)"/>
+      <ellipse cx="-11" cy="15" rx="15" ry="18" fill="#16265A" transform="rotate(216 -11 15)"/>
+      <ellipse cx="-18" cy="-10" rx="15" ry="18" fill="#0B1730" transform="rotate(288 -18 -10)"/>
+      <circle r="6.2" fill="#D4AF37"/>
+      <circle r="2.4" fill="#F7E6B1"/>
+    </g>
+    <g id="tb-rose-white">
+      <ellipse cx="0" cy="-18" rx="13" ry="15" fill="#EFE8DA"/>
+      <ellipse cx="15" cy="-8" rx="13" ry="15" fill="#FFFFFF" transform="rotate(72 15 -8)"/>
+      <ellipse cx="9" cy="13" rx="13" ry="15" fill="#F2ECE1" transform="rotate(144 9 13)"/>
+      <ellipse cx="-9" cy="13" rx="13" ry="15" fill="#FFFFFF" transform="rotate(216 -9 13)"/>
+      <ellipse cx="-15" cy="-8" rx="13" ry="15" fill="#F2ECE1" transform="rotate(288 -15 -8)"/>
+      <circle r="5.4" fill="#D4AF37"/>
+    </g>
+    <g id="tb-leaf">
+      <path d="M0 0 C -18 -10, -30 -4, -38 8 C -24 8, -10 6, 0 0 Z" fill="#C8A75E"/>
+      <path d="M0 0 C 18 10, 30 4, 38 -8 C 24 -8, 10 -6, 0 0 Z" fill="#D4AF37"/>
+    </g>
+    <g id="tb-pearl">
+      <circle r="4" fill="#F3E3AE"/>
+      <circle cx="-1.1" cy="-1.1" r="1.3" fill="#FFFDF5"/>
+    </g>
+  </defs>
+
+  <path d="M20 40 C 140 10, 260 55, 380 24 C 460 4, 540 26, 600 14" stroke="#C8A75E" stroke-width="2.4" stroke-linecap="round" opacity="0.6"/>
+  <path d="M120 40 L 120 90 M 260 34 L 260 76 M 400 26 L 400 96 M 520 20 L 520 66" stroke="#D4AF37" stroke-width="1.2" opacity="0.55"/>
+
+  <g filter="url(#tSoftShadow)">
+    <use href="#tb-rose-navy" transform="translate(46,44) scale(1.3)"/>
+    <use href="#tb-leaf" transform="translate(90,26) rotate(-14) scale(1)"/>
+    <use href="#tb-rose-white" transform="translate(170,50) scale(1.05)"/>
+    <use href="#tb-leaf" transform="translate(226,30) rotate(10) scale(0.95)"/>
+    <use href="#tb-rose-navy" transform="translate(300,30) scale(1.1)"/>
+    <use href="#tb-leaf" transform="translate(350,50) rotate(-8) scale(0.9)"/>
+    <use href="#tb-rose-white" transform="translate(430,38) scale(0.95)"/>
+    <use href="#tb-leaf" transform="translate(480,18) rotate(16) scale(0.85)"/>
+    <use href="#tb-rose-navy" transform="translate(560,26) scale(0.85)"/>
+  </g>
+
+  <use href="#tb-pearl" transform="translate(120,92)"/>
+  <use href="#tb-pearl" transform="translate(260,78)"/>
+  <use href="#tb-pearl" transform="translate(400,98)"/>
+  <use href="#tb-pearl" transform="translate(520,68)"/>
+</svg>
