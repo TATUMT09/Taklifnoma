@@ -168,9 +168,11 @@ body.home-premium .hp-trust-text { font-size: 0.88rem; font-weight: 600; color: 
 body.home-premium .hero-visual { max-width: 640px; }
 body.home-premium .hp-collage { position: relative; width: 100%; height: 100%; }
 
-body.home-premium .hp-floral { position: absolute; z-index: 1; pointer-events: none; }
-body.home-premium .hp-floral-a { width: 46%; top: -9%; right: -9%; }
-body.home-premium .hp-floral-b { width: 38%; bottom: -10%; left: -8%; }
+body.home-premium .hp-floral { position: absolute; z-index: 5; pointer-events: none; }
+body.home-premium .hp-floral-a { width: 32%; top: -7%; right: -7%; }
+body.home-premium .hp-floral-b { width: 28%; bottom: -7%; left: -6%; }
+body.home-premium .hp-floral-c { width: 20%; top: -5%; left: -5%; transform: scaleX(-1); }
+body.home-premium .hp-floral-d { width: 24%; bottom: -5%; right: -6%; transform: scaleX(-1); }
 
 body.home-premium .hp-photo {
   position: absolute;
@@ -207,6 +209,8 @@ body.home-premium .hp-photo-3 { animation: hpFloat 8.5s ease-in-out infinite; an
 body.home-premium .hp-photo-4 { animation: hpFloat 7s ease-in-out infinite; animation-delay: -1s; --r: 5deg; }
 body.home-premium .hp-floral-a { animation: hpFloat 11s ease-in-out infinite; }
 body.home-premium .hp-floral-b { animation: hpFloat 10s ease-in-out infinite; animation-delay: -3s; }
+body.home-premium .hp-floral-c { animation: hpFloat 9.5s ease-in-out infinite; animation-delay: -1.5s; }
+body.home-premium .hp-floral-d { animation: hpFloat 10.5s ease-in-out infinite; animation-delay: -4.5s; }
 
 @media (prefers-reduced-motion: reduce) {
   body.home-premium .hp-photo, body.home-premium .hp-floral { animation: none; }
