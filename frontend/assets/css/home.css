@@ -233,7 +233,6 @@ body.home-premium .tpl-desc { color: rgba(13, 27, 61, 0.6); }
 body.home-premium .tpl-badge { background: var(--hp-gold-gradient); color: var(--hp-navy-dark); box-shadow: 0 6px 16px -4px rgba(200, 167, 94, 0.5); }
 
 body.home-premium .gallery-item { box-shadow: var(--hp-shadow-soft); }
-body.home-premium .gallery-subtitle { font-family: var(--hp-serif); color: var(--hp-navy); }
 body.home-premium .gallery-more-btn { border-color: var(--hp-gold); color: var(--hp-navy); }
 body.home-premium .gallery-more-btn:hover { border-color: var(--hp-gold-light); color: var(--hp-gold-light); }
 

@@ -39,11 +39,10 @@
   const GALLERY_PAGE_SIZE = 8;
 
   function renderGalleryCategory(cat, grid, catPhotos) {
-    const moreId = `gallery-more-${cat}`;
-    let moreWrap = document.getElementById(moreId);
+    let moreWrap = document.getElementById('gallery-more');
     if (!moreWrap) {
       moreWrap = document.createElement('div');
-      moreWrap.id = moreId;
+      moreWrap.id = 'gallery-more';
       moreWrap.className = 'gallery-more-wrap';
       grid.insertAdjacentElement('afterend', moreWrap);
     }
@@ -123,19 +122,22 @@
   }
 
   async function renderGallery() {
-    const GALLERY_CATEGORIES = ['toy', 'juftlik', 'oila'];
-    const grids = {};
-    GALLERY_CATEGORIES.forEach((cat) => { grids[cat] = document.getElementById(`gallery-grid-${cat}`); });
-    if (!grids.toy) return;
+    const grid = document.getElementById('gallery-grid');
+    const categorySelect = document.getElementById('gallery-category-filter');
+    if (!grid) return;
     try {
       const { photos } = await api.getGallery();
-      GALLERY_CATEGORIES.forEach((cat) => {
+      const showCategory = (cat) => {
         const catPhotos = photos.filter((p) => (p.category || 'toy') === cat);
-        renderGalleryCategory(cat, grids[cat], catPhotos);
-      });
-      initScrollReveal();
+        renderGalleryCategory(cat, grid, catPhotos);
+        initScrollReveal();
+      };
+      showCategory(categorySelect ? categorySelect.value : 'toy');
+      if (categorySelect) {
+        categorySelect.addEventListener('change', () => showCategory(categorySelect.value));
+      }
     } catch (e) {
-      grids.toy.innerHTML = `<p class="gallery-empty">${escapeHtml(e.message)}</p>`;
+      grid.innerHTML = `<p class="gallery-empty">${escapeHtml(e.message)}</p>`;
     }
   }
 
