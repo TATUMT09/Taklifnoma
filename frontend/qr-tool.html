@@ -48,9 +48,9 @@
     <p class="auth-sub">Kelin-kuyov suratini qo'ying, keyin video yoki 10 tagacha rasm (va xohlasangiz qo'shiq) yuklang — chiroyli QR kod tayyor bo'ladi. Uni skanerlagan kishi xotiralaringizni ko'radi.</p>
 
     <div class="field">
-      <label for="qr-cover-input">Kelin-kuyov surati (asosiy)</label>
+      <label for="qr-cover-input">Kelin-kuyov surati (ixtiyoriy)</label>
       <input type="file" id="qr-cover-input" accept="image/png,image/jpeg,image/webp" />
-      <p class="field-hint" id="qr-cover-status"></p>
+      <p class="field-hint" id="qr-cover-status">Tanlanmasa, pastdagi rasmlarning birinchisi ishlatiladi</p>
     </div>
 
     <div class="qr-mode-switch">
@@ -349,21 +349,22 @@
   }
 
   generateBtn.addEventListener('click', async () => {
-    if (!coverFile) { generateStatus.textContent = 'Kelin-kuyov suratini tanlang'; return; }
     if (mode === 'video' && !videoFile) { generateStatus.textContent = 'Video tanlang'; return; }
     if (mode === 'photos' && photoFiles.length === 0) { generateStatus.textContent = 'Kamida bitta rasm tanlang'; return; }
+    if (!coverFile && mode === 'video') { generateStatus.textContent = 'Kelin-kuyov suratini tanlang'; return; }
 
     generateBtn.disabled = true;
     resultEl.hidden = true;
     try {
-      generateStatus.textContent = 'Kelin-kuyov surati yuklanmoqda...';
-      const { url: coverUrl } = await api.uploadPhoto(coverFile);
-
       let videoUrl = '';
       let photoUrls = [];
       let songUrl = '';
+      let coverUrl = '';
 
       if (mode === 'video') {
+        generateStatus.textContent = 'Kelin-kuyov surati yuklanmoqda...';
+        const cr = await api.uploadPhoto(coverFile);
+        coverUrl = cr.url;
         generateStatus.textContent = 'Video yuklanmoqda...';
         const r = await api.uploadVideo(videoFile);
         videoUrl = r.url;
@@ -372,6 +373,13 @@
           generateStatus.textContent = `Rasmlar yuklanmoqda... (${i + 1}/${photoFiles.length})`;
           const r = await api.uploadPhoto(photoFiles[i]);
           photoUrls.push(r.url);
+        }
+        if (coverFile) {
+          generateStatus.textContent = 'Kelin-kuyov surati yuklanmoqda...';
+          const cr = await api.uploadPhoto(coverFile);
+          coverUrl = cr.url;
+        } else {
+          coverUrl = photoUrls[0];
         }
         if (songFile) {
           generateStatus.textContent = "Qo'shiq yuklanmoqda...";
