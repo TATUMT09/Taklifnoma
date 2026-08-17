@@ -990,13 +990,27 @@ footer.site-footer {
 .gallery-more-wrap { text-align: center; margin-top: 1.6rem; }
 
 #site-lightbox {
-  position: fixed; inset: 0; z-index: 1000; background: rgba(10, 8, 14, 0.94);
+  position: fixed; inset: 0; z-index: 1000; background: #0A080E;
   display: none; align-items: center; justify-content: center;
+  overflow: hidden;
 }
 #site-lightbox.open { display: flex; }
+#site-lightbox .lightbox-bg {
+  position: absolute; inset: -20px;
+  width: calc(100% + 40px); height: calc(100% + 40px);
+  object-fit: cover;
+  filter: blur(38px) brightness(0.55) saturate(1.1);
+  transform: scale(1.1);
+  z-index: 0;
+  user-select: none; pointer-events: none;
+}
 #site-lightbox .lightbox-img {
-  max-width: min(92vw, 1100px); max-height: 88vh; object-fit: contain;
+  position: relative; z-index: 1;
+  max-width: min(94vw, 1100px); max-height: 92vh; object-fit: contain;
   border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); user-select: none;
+}
+@media (max-width: 600px) {
+  #site-lightbox .lightbox-img { max-width: 96vw; max-height: 90vh; border-radius: 6px; }
 }
 #site-lightbox .lightbox-close {
   position: absolute; top: 18px; right: 18px; width: 44px; height: 44px; border-radius: 50%;

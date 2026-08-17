@@ -99,6 +99,7 @@
     lb = document.createElement('div');
     lb.id = 'site-lightbox';
     lb.innerHTML = `
+      <img class="lightbox-bg" src="" alt="" aria-hidden="true" />
       <button type="button" class="lightbox-close" aria-label="Yopish">&times;</button>
       <button type="button" class="lightbox-zone lightbox-prev" aria-label="Oldingi rasm"><span>&#8249;</span></button>
       <img class="lightbox-img" src="" alt="" />
@@ -119,7 +120,9 @@
 
   function updateLightboxImg() {
     const lb = document.getElementById('site-lightbox');
-    lb.querySelector('.lightbox-img').src = lightboxPhotos[lightboxIndex].url;
+    const url = lightboxPhotos[lightboxIndex].url;
+    lb.querySelector('.lightbox-img').src = url;
+    lb.querySelector('.lightbox-bg').src = url;
   }
 
   function openLightbox(photos, index) {
