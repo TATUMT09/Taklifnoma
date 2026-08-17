@@ -284,7 +284,7 @@
       { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.svg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
       { id: 'sevgi_izhor', name: 'Sevgi izhori', theme: 'vau', badge: 'Premium', image: '/assets/images/categories/sevgi_izhor_premium.png', desc: "Yangi: Premium ✨ — kinematik, animatsiyali sevgi izhori sahifasi." },
       { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." },
-      { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
+      { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', video: '/assets/images/hero/vedeo.mp4', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
     ];
 
     // One card per layout — layouts are structurally distinct (envelope / gold-frame /
@@ -313,7 +313,8 @@
       cards.push(`
         <div class="tpl-card" data-category="${cat.id}" data-name="${cat.name.toLowerCase()}">
           ${cat.badge ? `<span class="tpl-badge">${cat.badge}</span>` : ''}
-          <a class="tpl-preview" href="/preview?${catParams}" target="_blank" rel="noopener" aria-label="Namunani ko'rish" style="background-image:url('${cat.image}');background-size:cover;background-position:center;">
+          <a class="tpl-preview" href="/preview?${catParams}" target="_blank" rel="noopener" aria-label="Namunani ko'rish" ${cat.video ? '' : `style="background-image:url('${cat.image}');background-size:cover;background-position:center;"`}>
+            ${cat.video ? `<video class="tpl-video-bg" src="${cat.video}" poster="${cat.image}" autoplay muted loop playsinline preload="metadata"></video>` : ''}
             <span class="tpl-cat-badge">${cat.name}</span>
           </a>
           <div class="tpl-body">
