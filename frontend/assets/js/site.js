@@ -22,9 +22,31 @@
     renderTemplateGallery();
     renderGallery();
     wireDropdown('notif-btn', 'notif-dropdown');
+    wireMobileNavDrawer();
     initScrollReveal();
     initButtonRipple();
   });
+
+  function wireMobileNavDrawer() {
+    const btn = document.getElementById('nav-hamburger-btn');
+    const drawer = document.getElementById('nav-links-list');
+    const backdrop = document.getElementById('nav-drawer-backdrop');
+    if (!btn || !drawer || !backdrop) return;
+
+    function setOpen(open) {
+      drawer.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    btn.addEventListener('click', () => setOpen(!drawer.classList.contains('open')));
+    backdrop.addEventListener('click', () => setOpen(false));
+    drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) setOpen(false);
+    });
+  }
 
   function galleryItemHtml(p) {
     return `

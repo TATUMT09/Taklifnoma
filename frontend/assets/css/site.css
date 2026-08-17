@@ -206,8 +206,54 @@ body.has-top-gradient {
   display: grid; place-items: center;
 }
 
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px; height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-hamburger span { width: 16px; height: 1.6px; background: var(--text); border-radius: 1px; transition: transform 0.25s ease, opacity 0.25s ease; }
+.nav-hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.6px) rotate(45deg); }
+.nav-hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.6px) rotate(-45deg); }
+
+.nav-drawer-backdrop {
+  /* Must stay below .topnav's z-index (40): .nav-links is a fixed-position
+     descendant of .topnav, so its own z-index is scoped to .topnav's
+     stacking context, not the root — a backdrop z-index higher than 40
+     would render above the drawer in the root context and eat its clicks. */
+  position: fixed; inset: 0; z-index: 39;
+  background: rgba(13, 15, 20, 0.45);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.nav-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+
 @media (max-width: 860px) {
-  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links {
+    position: fixed; z-index: 59;
+    top: 0; right: 0; height: 100vh;
+    width: min(78vw, 320px);
+    background: var(--panel);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: 104px 28px 28px;
+    box-shadow: -20px 0 50px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(.2,.8,.3,1);
+    overflow-y: auto;
+  }
+  .nav-links.open { transform: translateX(0); }
+  .nav-links a { width: 100%; padding: 0.85rem 0.2rem; font-size: 1rem; border-bottom: 1px solid var(--line); }
 }
 @media (max-width: 640px) {
   .topnav-inner { padding: 0 16px; gap: 0.6rem; }
