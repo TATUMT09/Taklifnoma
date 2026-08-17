@@ -182,6 +182,14 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+body[data-theme="bayram"] {
+  background: url('/assets/images/categories/tugilgan_kun_roses_bg.jpg') center/cover no-repeat;
+  background-attachment: fixed;
+}
+body[data-layout="nafis"][data-theme="lavanda"] {
+  background: url('/assets/images/categories/toy_lavanda_bg.jpg') center/cover no-repeat;
+  background-attachment: fixed;
+}
 ::selection { background: var(--gold); color: var(--ink); }
 a { color: inherit; }
 
@@ -238,9 +246,12 @@ body[data-theme="nur"] .cover {
   background-position: center;
 }
 body[data-theme="bayram"] .cover {
-  background:
-    linear-gradient(180deg, rgba(52,20,42,0.45), rgba(52,20,42,0.8) 55%, var(--ink) 92%),
-    url('/assets/images/categories/tugilgan_kun.png');
+  background: url('/assets/images/categories/tugilgan_kun_roses_bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+body[data-layout="nafis"][data-theme="lavanda"] .cover {
+  background: url('/assets/images/categories/toy_lavanda_bg.jpg');
   background-size: cover;
   background-position: center;
 }
@@ -293,7 +304,7 @@ body[data-theme="muhabbat"] .cover {
 .cover.opened .envelope-wrap { gap: clamp(10px, 3vw, 18px); }
 .envelope {
   appearance: none; border: none; background: none; padding: 0; cursor: pointer;
-  width: clamp(160px, 50vw, 280px);
+  width: clamp(160px, 50vw, 640px);
   aspect-ratio: 240 / 346;
   position: relative;
   flex-shrink: 0;
@@ -313,7 +324,7 @@ body[data-theme="muhabbat"] .cover {
 }
 .envelope-card {
   flex-shrink: 0;
-  width: clamp(105px, 33vw, 184px);
+  width: clamp(160px, 50vw, 640px);
   aspect-ratio: 458 / 770;
   background-image: url('/assets/images/card-open.jpg');
   background-size: cover; background-position: center;
@@ -377,7 +388,7 @@ body[data-theme="muhabbat"] .cover {
 .cover.opened .envelope-seal { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
 .cover.opened .envelope-card {
   opacity: 1;
-  max-width: 190px;
+  max-width: 640px;
 }
 .cover.opened .envelope-shadow { opacity: 0.35; }
 
@@ -482,7 +493,7 @@ body[data-layout="nafis"] .cover.revealed .scroll-hint { opacity: 1; }
 .tagline { font-family: var(--serif); font-style: italic; font-weight: 500; color: var(--ivory-dim); font-size: 1.05rem; margin-top: 0.6rem; }
 
 .photo-frame {
-  width: min(100%, 320px);
+  width: 100%;
   aspect-ratio: 4 / 5;
   border-radius: 6px;
   padding: 10px;
@@ -1337,4 +1348,170 @@ body[data-layout="shohona"] .contact-tg { color: #cbd0da; }
 
 @media (prefers-reduced-motion: reduce) {
   .shohona-enter-btn, .shohona-gate-text, .shohona-monogram, .scroll-hint { transition: none; }
+}
+
+/* ============================================================
+   "Tantanali marosim" layout — premium wedding invitation card.
+   Fixed palette regardless of selected theme; built from real
+   HTML/CSS/SVG (no flattened background image) so groom/venue/
+   date/address text stays editable per invitation.
+   ============================================================ */
+.marosim-outer {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(20px, 4vw, 56px) 12px;
+  background: #102A23;
+}
+.marosim-card {
+  position: relative;
+  width: min(93vw, 1400px);
+  aspect-ratio: 1.4 / 1;
+  max-height: 1000px;
+  background: #F8F0DF;
+  border-radius: 20px;
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,0.55);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: marosimCardIn 900ms ease-out forwards;
+}
+@keyframes marosimCardIn { to { opacity: 1; transform: translateY(0); } }
+
+.marosim-inner-border {
+  position: absolute; inset: 22px;
+  border: 1.3px solid #CFA34A;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.marosim-corner { position: absolute; width: 64px; height: 64px; z-index: 6; pointer-events: none; }
+.marosim-corner.tl { top: 30px; left: 30px; }
+.marosim-corner.tr { top: 30px; right: 30px; transform: scaleX(-1); }
+.marosim-corner.bl { bottom: 30px; left: 30px; transform: scaleY(-1); }
+.marosim-corner.br { bottom: 30px; right: 30px; transform: scale(-1, -1); }
+
+.marosim-top-title {
+  position: absolute; top: 105px; left: 0; right: 0; z-index: 4;
+  text-align: center; margin: 0;
+  font-family: var(--sans); font-weight: 600; font-size: 20px;
+  letter-spacing: 6px; text-transform: uppercase;
+  color: #7D2935;
+}
+.marosim-top-ornament {
+  position: absolute; top: 148px; left: 0; right: 0; z-index: 4;
+  text-align: center; color: #CFA34A; font-size: 14px; letter-spacing: 4px;
+}
+
+.marosim-side-panel {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 155px; height: 480px;
+  border-radius: 78px 78px 12px 12px;
+  border: 1px solid rgba(207, 163, 74, 0.55);
+  background-color: rgba(207, 163, 74, 0.05);
+  background-image: url('/assets/images/deco/marosim-lattice.svg');
+  background-size: 130px 130px;
+  background-position: center;
+  opacity: 0.85;
+  z-index: 1;
+}
+.marosim-side-panel.left { left: 78px; }
+.marosim-side-panel.right { right: 78px; }
+.marosim-side-panel::after {
+  content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 34px; height: 34px; border: 1px solid #CFA34A; border-radius: 4px; opacity: 0.6;
+}
+
+.marosim-floral { position: absolute; z-index: 3; width: 300px; height: 300px; pointer-events: none; }
+.marosim-floral.left { left: -18px; bottom: -10px; }
+.marosim-floral.right { right: -18px; bottom: -10px; transform: scaleX(-1); }
+
+.marosim-arch-wrap {
+  position: absolute; z-index: 4;
+  top: 210px; left: 50%; transform: translateX(-50%);
+  width: 580px; height: 720px;
+}
+.marosim-arch-fill {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #FFF9EE, #F8F0DF);
+  clip-path: url(#marosimArchClip);
+  box-shadow: 0 18px 40px -20px rgba(93, 42, 46, 0.35);
+}
+.marosim-arch-outline { position: absolute; inset: 0; width: 100%; height: 100%; }
+.marosim-arch-content {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 190px 30px 0;
+  text-align: center;
+}
+.marosim-ornament-top { color: #CFA34A; font-size: 15px; margin-bottom: 14px; }
+.marosim-venue-name {
+  margin: 0; font-family: var(--hp-serif, 'Playfair Display', 'Fraunces', serif);
+  font-style: italic; font-weight: 600; font-size: 60px; line-height: 1.15;
+  color: #7D2935;
+  max-width: 100%;
+}
+.marosim-venue-sub {
+  margin: 2px 0 0; font-family: var(--hp-serif, 'Playfair Display', 'Fraunces', serif);
+  font-style: italic; font-weight: 500; font-size: 46px; line-height: 1.15;
+  color: #7D2935;
+  max-width: 100%;
+}
+.marosim-divider-mid { display: flex; align-items: center; gap: 10px; margin: 22px 0 40px; color: #CFA34A; }
+.marosim-divider-mid span { width: 60px; height: 1px; background: #CFA34A; display: inline-block; }
+.marosim-divider-mid i { font-style: normal; font-size: 13px; }
+.marosim-pin { width: 46px; height: 46px; flex-shrink: 0; }
+.marosim-address {
+  margin: 14px 0 0; font-family: var(--sans); font-weight: 500; font-size: 20px; line-height: 1.55;
+  color: #5E5550;
+}
+.marosim-address span { display: block; }
+
+.marosim-bottom-divider {
+  position: absolute; z-index: 4; bottom: 60px; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: 14px; color: #CFA34A;
+}
+.marosim-bottom-divider span { width: 180px; height: 1px; background: #CFA34A; display: inline-block; }
+.marosim-bottom-divider i { font-style: normal; font-size: 14px; }
+
+@media (max-width: 1080px) {
+  .marosim-arch-wrap { width: 460px; height: 600px; top: 195px; }
+  .marosim-venue-name { font-size: 46px; }
+  .marosim-venue-sub { font-size: 36px; }
+  .marosim-floral { width: 240px; height: 240px; }
+  .marosim-side-panel { width: 120px; height: 380px; }
+  .marosim-side-panel.left { left: 40px; }
+  .marosim-side-panel.right { right: 40px; }
+}
+
+@media (max-width: 760px) {
+  .marosim-outer { min-height: auto; padding-top: 32px; padding-bottom: 32px; }
+  .marosim-card {
+    width: calc(100% - 24px); aspect-ratio: auto; max-height: none; height: auto;
+    padding-bottom: 60px;
+  }
+  .marosim-inner-border { inset: 14px; }
+  .marosim-corner { width: 44px; height: 44px; }
+  .marosim-corner.tl, .marosim-corner.tr { top: 18px; }
+  .marosim-corner.bl, .marosim-corner.br { bottom: 18px; }
+  .marosim-corner.tl, .marosim-corner.bl { left: 18px; }
+  .marosim-corner.tr, .marosim-corner.br { right: 18px; }
+  .marosim-top-title { top: 56px; font-size: 14px; letter-spacing: 4px; }
+  .marosim-top-ornament { top: 84px; }
+  .marosim-side-panel { display: none; }
+  .marosim-floral { width: 42vw; height: 42vw; max-width: 220px; max-height: 220px; opacity: 0.9; }
+  .marosim-arch-wrap {
+    position: relative; top: auto; left: auto; transform: none;
+    width: 82%; height: auto; aspect-ratio: 500 / 670; margin: 118px auto 40px;
+  }
+  .marosim-arch-content { padding: 26vw 22px 0; }
+  .marosim-venue-name { font-size: 40px; }
+  .marosim-venue-sub { font-size: 33px; }
+  .marosim-address { font-size: 16px; }
+  .marosim-bottom-divider { position: relative; bottom: auto; margin-top: 20px; }
+  .marosim-bottom-divider span { width: 70px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marosim-card { animation: none; opacity: 1; transform: none; }
 }

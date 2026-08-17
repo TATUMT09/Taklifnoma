@@ -14,6 +14,7 @@ const uploadRoutes = require('./routes/uploads');
 const geocodeRoutes = require('./routes/geocode');
 const galleryRoutes = require('./routes/gallery');
 const qrMemoryRoutes = require('./routes/qrMemory');
+const vizitkaRoutes = require('./routes/vizitka');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -32,12 +33,13 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/geocode', geocodeRoutes);
 app.use('/api/qr-memory', qrMemoryRoutes);
+app.use('/api/vizitka', vizitkaRoutes);
 
 app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(express.static(FRONTEND_DIR));
 
 // Clean URLs for multi-page frontend (no build step, no client router)
-const pages = ['login', 'register', 'dashboard', 'create', 'edit', 'admin', 'contact', 'preview', 'qr-tool'];
+const pages = ['login', 'register', 'dashboard', 'create', 'edit', 'admin', 'contact', 'preview', 'qr-tool', 'gallery'];
 pages.forEach((p) => {
   app.get(`/${p}`, (req, res) => res.sendFile(path.join(FRONTEND_DIR, `${p}.html`)));
 });
@@ -92,6 +94,10 @@ app.get('/i/:slug', (req, res) => {
 
 app.get('/xotira/:token', (req, res) => {
   res.sendFile(path.join(FRONTEND_DIR, 'memory.html'));
+});
+
+app.get('/vizitka/:token', (req, res) => {
+  res.sendFile(path.join(FRONTEND_DIR, 'vizitka-view.html'));
 });
 
 app.use((req, res) => {

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <pattern id="latticeTile" width="50" height="50" patternUnits="userSpaceOnUse">
+      <g stroke="#CFA34A" stroke-width="1" fill="none" opacity="0.7">
+        <path d="M25 2 L48 25 L25 48 L2 25 Z"/>
+        <circle cx="25" cy="25" r="8"/>
+        <path d="M25 8 L38 25 L25 42 L12 25 Z"/>
+      </g>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="400" height="400" fill="url(#latticeTile)"/>
+</svg>

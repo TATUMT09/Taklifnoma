@@ -342,6 +342,16 @@ body.has-top-gradient {
   font-weight: 600;
 }
 
+.tpl-locked-badge {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;
+  border: 1px solid var(--gold); border-radius: 999px;
+  background: rgba(169, 120, 47, 0.08);
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem; font-weight: 600; color: var(--gold-hi);
+}
+.tpl-locked-badge a { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-decoration: underline; }
+.tpl-locked-badge a:hover { color: var(--gold-hi); }
+
 /* ---------- Auth pages ---------- */
 .auth-shell {
   min-height: calc(100vh - 70px);
@@ -960,3 +970,4 @@ footer.site-footer {
   #site-lightbox .lightbox-zone { font-size: 1.8rem; width: 35%; }
 }
 .gallery-empty { text-align: center; color: var(--text-faint); padding: 2rem; grid-column: 1 / -1; }
+

@@ -7,7 +7,7 @@ const { generateSlug } = require('../utils/slug');
 const router = express.Router();
 
 const THEMES = ['zumrad', 'lavanda', 'shafaq', 'bayram', 'oltin', 'nur', 'muhabbat', 'bahor', 'layli', 'vau', 'zar'];
-const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona', 'nikoh'];
+const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona', 'nikoh', 'marosim'];
 const EVENT_TYPES = ['toy', 'qiz_bazmi', 'tugilgan_kun', 'tabrik', 'haj_safari', 'sevgi_izhor', 'nahor_oshi', 'sevgimga_hat'];
 const SLUG_RE = /^[a-z0-9-]{3,40}$/;
 

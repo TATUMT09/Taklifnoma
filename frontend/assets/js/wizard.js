@@ -354,6 +354,22 @@
   });
   applyCategory(state.event_type);
 
+  // Arrived via a specific template's "Boshlash" link (not a bare /create visit, not
+  // editing an existing invitation) — lock the category/layout pickers to exactly that
+  // template instead of leaving them freely switchable to an unrelated combination.
+  const cameFromTemplate = !isEdit && params.has('event_type');
+  if (cameFromTemplate) {
+    const eventTypeFieldEl = document.getElementById('event-type-field');
+    const lockedSummaryEl = document.getElementById('template-locked-summary');
+    const lockedTextEl = document.getElementById('template-locked-text');
+    const cat = getEventCategory(state.event_type);
+    const layoutMeta = LAYOUT_META.find((l) => l.id === state.layout);
+    lockedTextEl.textContent = `${cat.label} — ${(layoutMeta && layoutMeta.label) || state.layout}`;
+    eventTypeFieldEl.hidden = true;
+    layoutChoicesFieldEl.hidden = true;
+    lockedSummaryEl.hidden = false;
+  }
+
   document.querySelectorAll('[data-choice]').forEach((group) => {
     const key = group.getAttribute('data-choice');
     if (key === 'theme') return; // theme buttons are generated + wired by renderThemeChoices

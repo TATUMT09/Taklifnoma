@@ -173,7 +173,7 @@
   }
 
   function initScrollReveal() {
-    const els = document.querySelectorAll('.landing-section, .tpl-card, .feature-card, .gallery-item');
+    const els = document.querySelectorAll('.landing-section, .tpl-card, .gallery-item');
     if (!els.length) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       els.forEach((el) => el.classList.add('reveal-visible'));
@@ -262,14 +262,17 @@
       { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
     ];
 
+    // One card per layout — layouts are structurally distinct (envelope / gold-frame /
+    // modern), but the 3 color themes within a layout were near-identical small mock
+    // previews. The theme (color) is chosen inside the /create wizard instead.
     const cards = [];
     LAYOUTS.forEach((layout) => {
-      THEMES.forEach((theme) => {
-        cards.push(`
-          <div class="tpl-card" data-layout="${layout.id}" data-category="toy" data-name="to'y ${layout.name.toLowerCase()} ${theme.name.toLowerCase()}">
+      const theme = THEMES[0];
+      cards.push(`
+          <div class="tpl-card" data-layout="${layout.id}" data-category="toy" data-name="to'y ${layout.name.toLowerCase()}">
             <a class="tpl-preview" href="/preview?layout=${layout.id}&theme=${theme.id}&event_type=toy" target="_blank" rel="noopener" aria-label="Namunani ko'rish" style="display:flex;">${mock(layout.id, theme)}</a>
             <div class="tpl-body">
-              <span class="tpl-name">${layout.name} <small>· ${theme.name}</small></span>
+              <span class="tpl-name">${layout.name}</span>
               <p class="tpl-desc">${layout.desc}</p>
               <div style="display:flex;gap:0.5rem;">
                 <a href="/preview?layout=${layout.id}&theme=${theme.id}&event_type=toy" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Ko'rish</a>
@@ -277,7 +280,6 @@
               </div>
             </div>
           </div>`);
-      });
     });
     OTHER_CATEGORIES.forEach((cat) => {
       const catTheme = cat.theme || getThemesForCategory(cat.id)[0].id;

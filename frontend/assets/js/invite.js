@@ -2,7 +2,7 @@
   const app = document.getElementById('app');
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona', 'nikoh'];
+  const LAYOUTS = ['nafis', 'klassik', 'zamonaviy', 'dasturxon', 'maktub', 'premium', 'shohona', 'nikoh', 'marosim'];
   const isPreview = window.location.pathname.replace(/\/$/, '') === '/preview';
 
   function escapeHtml(str) {
@@ -143,8 +143,11 @@
     const calendar = buildCalendarGrid(inv.event_date);
     const dateLabel = formatUzDateLong(inv.event_date);
     const cat = getEventCategory(inv.event_type);
-    const headline = cat.headline;
     const isCouple = !!bride && cat.pair;
+    const headline = (cat.headlineByTheme && cat.headlineByTheme[inv.theme]) || cat.headline;
+    const tagline = (cat.taglineByTheme && cat.taglineByTheme[inv.theme])
+      || (!isCouple && cat.taglineSolo)
+      || cat.tagline;
     const premiumStyle = parsePremiumStyle(inv.premium_style);
     if (layout === 'premium') {
       document.body.style.setProperty('--pg-bg-from', premiumStyle.bgFrom);
@@ -154,7 +157,7 @@
       document.body.style.setProperty('--pg-btn-to', premiumStyle.btnTo);
       document.body.style.setProperty('--pg-accent', premiumStyle.accent);
     }
-    const ctx = { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat, premiumStyle };
+    const ctx = { inv, groom, bride, headline, tagline, isCouple, calendar, dateLabel, cat, premiumStyle };
 
     const coverHtml = layout === 'klassik' ? coverKlassik(ctx)
       : layout === 'zamonaviy' ? coverZamonaviy(ctx)
@@ -162,6 +165,7 @@
       : layout === 'maktub' ? coverMaktub(ctx)
       : layout === 'premium' ? coverPremium(ctx)
       : (layout === 'shohona' || layout === 'nikoh') ? coverShohona(ctx)
+      : layout === 'marosim' ? coverMarosim(ctx)
       : coverNafis(ctx);
     const sectionsHtml = layout === 'dasturxon' ? dasturxonSectionsHtml(ctx)
       : layout === 'maktub' ? maktubSectionsHtml(ctx)
@@ -210,8 +214,76 @@
 
   // ---------- Cover variants ----------
 
+  function splitVenueName(venue) {
+    if (!venue) return { line1: "Bog'i Zebo", line2: "to'y saroyi" };
+    if (venue.includes(',')) {
+      const idx = venue.indexOf(',');
+      return { line1: venue.slice(0, idx).trim(), line2: venue.slice(idx + 1).trim() };
+    }
+    const words = venue.trim().split(/\s+/);
+    if (words.length >= 3) {
+      const mid = Math.ceil(words.length / 2);
+      return { line1: words.slice(0, mid).join(' '), line2: words.slice(mid).join(' ') };
+    }
+    return { line1: venue, line2: '' };
+  }
+
+  function coverMarosim(ctx) {
+    const { inv } = ctx;
+    const venue = splitVenueName(inv.venue_name);
+    const addressLines = (inv.address || 'Toshkent shahri, Yunusobod tumani, Bogʻishamol koʻchasi, 12-uy')
+      .split(',').map((s) => s.trim()).filter(Boolean).slice(0, 3);
+    return `
+        <section class="marosim-outer" id="cover">
+          <div class="marosim-card">
+            <div class="marosim-inner-border"></div>
+            <img class="marosim-corner tl" src="/assets/images/deco/marosim-corner.svg" alt="" aria-hidden="true" />
+            <img class="marosim-corner tr" src="/assets/images/deco/marosim-corner.svg" alt="" aria-hidden="true" />
+            <img class="marosim-corner bl" src="/assets/images/deco/marosim-corner.svg" alt="" aria-hidden="true" />
+            <img class="marosim-corner br" src="/assets/images/deco/marosim-corner.svg" alt="" aria-hidden="true" />
+
+            <p class="marosim-top-title">Tantanali marosim</p>
+            <div class="marosim-top-ornament" aria-hidden="true">— ◇ —</div>
+
+            <div class="marosim-side-panel left" aria-hidden="true"></div>
+            <div class="marosim-side-panel right" aria-hidden="true"></div>
+
+            <img class="marosim-floral left" src="/assets/images/deco/marosim-floral-left.svg" alt="" aria-hidden="true" />
+            <img class="marosim-floral right" src="/assets/images/deco/marosim-floral-right.svg" alt="" aria-hidden="true" />
+
+            <div class="marosim-arch-wrap">
+              <svg width="0" height="0" style="position:absolute;">
+                <defs>
+                  <clipPath id="marosimArchClip" clipPathUnits="objectBoundingBox">
+                    <path d="M0 1 L0 0.42 C0 0.15 0.22 0 0.5 0 C0.78 0 1 0.15 1 0.42 L1 1 Z"/>
+                  </clipPath>
+                </defs>
+              </svg>
+              <div class="marosim-arch-fill"></div>
+              <svg class="marosim-arch-outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M2 100 L2 40 C2 14 24 2 50 2 C76 2 98 14 98 40 L98 100" stroke="#CFA34A" stroke-width="2" fill="none" vector-effect="non-scaling-stroke"/>
+                <path d="M8 100 L8 41 C8 18 27 8 50 8 C73 8 92 18 92 41 L92 100" stroke="#CFA34A" stroke-width="1" fill="none" opacity="0.7" vector-effect="non-scaling-stroke"/>
+              </svg>
+              <div class="marosim-arch-content">
+                <div class="marosim-ornament-top" aria-hidden="true">✦</div>
+                <h2 class="marosim-venue-name">${escapeHtml(venue.line1)}</h2>
+                ${venue.line2 ? `<p class="marosim-venue-sub">${escapeHtml(venue.line2)}</p>` : ''}
+                <div class="marosim-divider-mid" aria-hidden="true"><span></span><i>◇</i><span></span></div>
+                <svg class="marosim-pin" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8z" fill="#7D2935"/>
+                  <circle cx="12" cy="10" r="3" fill="#F8F0DF"/>
+                </svg>
+                <p class="marosim-address">${addressLines.map((l) => `<span>${escapeHtml(l)}</span>`).join('')}</p>
+              </div>
+            </div>
+
+            <div class="marosim-bottom-divider" aria-hidden="true"><span></span><i>◆</i><span></span></div>
+          </div>
+        </section>`;
+  }
+
   function coverNafis(ctx) {
-    const { groom, bride, headline, isCouple, cat } = ctx;
+    const { groom, bride, headline, tagline, isCouple, cat } = ctx;
     return `
         <section class="section cover" id="cover">
           <div class="frame-strip"></div>
@@ -238,7 +310,7 @@
               </span>
             </div>
             <p class="envelope-hint" id="envelope-hint">Ochish uchun bosing</p>
-            <p class="cover-tagline" id="cover-tagline">${escapeHtml(cat.tagline)}</p>
+            <p class="cover-tagline" id="cover-tagline">${escapeHtml(tagline)}</p>
           </div>
           <div class="scroll-hint">
             <span>Pastga suring</span>
@@ -248,7 +320,7 @@
   }
 
   function coverKlassik(ctx) {
-    const { inv, groom, bride, headline, isCouple, dateLabel, cat } = ctx;
+    const { inv, groom, bride, headline, tagline, isCouple, dateLabel, cat } = ctx;
     return `
         <section class="section cover cover-klassik" id="cover">
           <div class="klassik-frame" aria-hidden="true">
@@ -265,7 +337,7 @@
                 <span class="name bride">${escapeHtml(bride)}</span>
               ` : ''}
             </div>
-            <p class="tagline">${escapeHtml(cat.tagline)}</p>
+            <p class="tagline">${escapeHtml(tagline)}</p>
             <div class="amp-ornament"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
             ${inv.event_date ? `<p class="klassik-datebar">${escapeHtml(dateLabel)}</p>` : ''}
           </div>
@@ -319,7 +391,7 @@
   }
 
   function coverMaktub(ctx) {
-    const { groom, headline, cat } = ctx;
+    const { groom, headline, tagline } = ctx;
     const initial = (groom[0] || '?').toUpperCase();
     return `
         <section class="maktub-cover" id="cover">
@@ -329,7 +401,7 @@
               <span class="wax-seal-glyph">${escapeHtml(initial)}</span>
             </button>
             <p class="maktub-hint" id="envelope-hint">Muhrni bosib oching</p>
-            <p class="maktub-tagline" id="cover-tagline">${escapeHtml(cat.tagline)}</p>
+            <p class="maktub-tagline" id="cover-tagline">${escapeHtml(tagline)}</p>
           </div>
           <div class="scroll-hint">
             <span>Pastga suring</span>
@@ -431,7 +503,7 @@
   // ---------- Shared scroll sections (used by Nafis/Klassik/Zamonaviy) ----------
 
   function sharedSectionsHtml(ctx) {
-    const { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat } = ctx;
+    const { inv, groom, bride, headline, tagline, isCouple, calendar, dateLabel, cat } = ctx;
     const defaultSalomMsg = "Bu maxsus go'zal kunni biz eng yaqin va sevimli odamlar bilan o'tkazishni xohlaymiz, bayram va ruhiy iliqlik muhitida. Biz ishonamizki, bu kun bizning birgalikdagi hayotimizning go'zal boshlanishi bo'ladi. Agar aynan siz bu baxtli lahzalarni biz bilan baham ko'rsangiz, bizga juda yoqimli bo'ladi.";
     return `
         <section class="section" id="salom">
@@ -452,7 +524,7 @@
                 <span class="name bride">${escapeHtml(bride)}</span>
               ` : ''}
             </div>
-            <p class="tagline">${escapeHtml(cat.tagline)}</p>
+            <p class="tagline">${escapeHtml(tagline)}</p>
           </div>
         </section>
 
@@ -798,9 +870,8 @@
   }
 
   function shohonaSectionsHtml(ctx) {
-    const { inv, groom, bride, headline, isCouple, calendar, dateLabel, cat } = ctx;
+    const { inv, groom, bride, headline, tagline, isCouple, calendar, dateLabel, cat } = ctx;
     const names = isCouple ? `${escapeHtml(groom)} & ${escapeHtml(bride)}` : escapeHtml(groom);
-    const tagline = isCouple ? cat.tagline : (cat.taglineSolo || cat.tagline);
     const galleryPhotos = (inv.gallery && inv.gallery.length)
       ? inv.gallery
       : (inv.photo_url ? [{ url: inv.photo_url, caption: '' }] : []);

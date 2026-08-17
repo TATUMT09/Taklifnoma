@@ -37,11 +37,9 @@ router.post('/login', (req, res) => {
   if (!email || !password) return res.status(400).json({ error: 'Email va parolni kiriting' });
 
   const row = db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase().trim());
-  if (!row) return res.status(401).json({ error: "Email yoki parol noto'g'ri" });
-  if (!row.password_hash) {
-    return res.status(401).json({ error: 'Bu akkaunt Google orqali ochilgan. "Google bilan kirish" tugmasidan foydalaning.' });
-  }
-  if (!bcrypt.compareSync(password, row.password_hash)) {
+  // Same generic error for "no such user", "Google-only account", and "wrong password" —
+  // distinguishing any of these would let an outsider enumerate registered emails.
+  if (!row || !row.password_hash || !bcrypt.compareSync(password, row.password_hash)) {
     return res.status(401).json({ error: "Email yoki parol noto'g'ri" });
   }
 

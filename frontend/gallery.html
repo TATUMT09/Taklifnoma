@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Galereya — Taklifnoma</title>
+<link rel="manifest" href="/manifest.json" />
+<link rel="stylesheet" href="/assets/css/site.css" />
+<link rel="stylesheet" href="/assets/css/home.css" />
+</head>
+<body class="home-premium">
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <defs><clipPath id="brandHeartL"><rect x="0" y="0" width="12" height="24"/></clipPath><clipPath id="brandHeartR"><rect x="12" y="0" width="12" height="24"/></clipPath></defs>
+        <path clip-path="url(#brandHeartL)" d="M12 20.25c-.2 0-.39-.06-.55-.18C7.3 17.1 3 13.28 3 9.06 3 6.27 5.11 4 7.72 4c1.68 0 3.2.86 4.28 2.24C13.08 4.86 14.6 4 16.28 4 18.89 4 21 6.27 21 9.06c0 4.22-4.3 8.04-8.45 11.01-.16.12-.35.18-.55.18z" fill="#0D1B3D"/>
+        <path clip-path="url(#brandHeartR)" d="M12 20.25c-.2 0-.39-.06-.55-.18C7.3 17.1 3 13.28 3 9.06 3 6.27 5.11 4 7.72 4c1.68 0 3.2.86 4.28 2.24C13.08 4.86 14.6 4 16.28 4 18.89 4 21 6.27 21 9.06c0 4.22-4.3 8.04-8.45 11.01-.16.12-.35.18-.55.18z" fill="#D4AF37"/>
+      </svg>
+      <span class="brand-text">Taklifnoma</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#templates">Andazalar</a>
+      <a href="/gallery" class="active">Galereya</a>
+      <a href="/qr-tool">QR kod</a>
+      <a href="/#how">Qanday ishlaydi</a>
+      <a href="/#pricing">Narxlar</a>
+      <a href="/contact">Aloqa</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-dropdown-wrap">
+        <button class="nav-icon-btn" id="notif-btn" aria-label="Bildirishnomalar" title="Bildirishnomalar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <div class="nav-dropdown" id="notif-dropdown">
+          <p class="nav-dropdown-empty">Hozircha bildirishnomalar yo'q</p>
+        </div>
+      </div>
+      <button class="theme-toggle" data-theme-toggle aria-label="Mavzuni almashtirish" title="Yorug'/qorong'i mavzu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <div class="nav-right" data-nav-auth style="gap:0.6rem;"></div>
+    </div>
+  </div>
+</nav>
+
+<section class="landing-section" id="gallery" style="padding-top:64px;">
+  <div class="section-head">
+    <p class="eyebrow">Galereya</p>
+    <h2 class="section-title">Ilhom uchun rasmlar</h2>
+    <p class="section-sub">Yoqqan rasmni yuklab oling va o'z taklifnomangizda ishlating.</p>
+  </div>
+  <div class="tpl-filter-selects">
+    <div class="field">
+      <label for="gallery-category-filter">Bo'lim</label>
+      <select id="gallery-category-filter">
+        <option value="toy">To'y</option>
+        <option value="juftlik">Juftlik</option>
+        <option value="oila">Oila</option>
+      </select>
+    </div>
+  </div>
+  <div class="gallery-grid" id="gallery-grid"></div>
+</section>
+
+<footer class="site-footer">
+  <p>Taklifnoma — raqamli to'y taklifnomasi xizmati</p>
+  <div class="footer-contact">
+    <a class="footer-tg" href="https://t.me/sunnatov_03" target="_blank" rel="noopener" aria-label="Telegram">
+      <svg class="tg-icon" viewBox="0 0 240 240" aria-hidden="true">
+        <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+        <path fill="#fff" d="M52 118l122-47c5.6-2.2 10.5 1.4 8.7 9.7l-20.8 98c-1.5 6.9-5.6 8.6-11.4 5.3l-31.5-23.2-15.2 14.6c-1.7 1.7-3.1 3.1-6.3 3.1l2.2-31.8 58-52.4c2.5-2.2-.5-3.5-3.9-1.3l-71.7 45.1-30.9-9.6c-6.7-2.1-6.8-6.7 1.8-9.5z"/>
+      </svg>
+    </a>
+    <a class="btn btn-outline btn-sm" href="/contact">Adminga yozish</a>
+  </div>
+</footer>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/categories.js"></script>
+<script src="/assets/js/site.js"></script>
+</body>
+</html>

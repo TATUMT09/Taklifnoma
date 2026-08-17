@@ -38,7 +38,14 @@
       <p class="wizard-step-label">1 / 3 — Ismlar</p>
       <h1 class="wizard-title">Kim va qachon?</h1>
       <div class="wizard-form">
-        <div class="field">
+        <div class="field" id="template-locked-summary" hidden>
+          <label>Tanlangan andoza</label>
+          <div class="tpl-locked-badge">
+            <span id="template-locked-text"></span>
+            <a href="/#templates">Boshqa andoza tanlash</a>
+          </div>
+        </div>
+        <div class="field" id="event-type-field">
           <label>Tadbir turi</label>
           <div class="choice-row" data-choice="event_type">
             <button type="button" class="choice-pill active" data-value="toy">To'y</button>

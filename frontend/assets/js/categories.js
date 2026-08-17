@@ -7,6 +7,14 @@ const EVENT_CATEGORIES = [
     inviteWord: 'Taklif etamiz',
     tagline: 'Ikki qalbning birikishi — eng buyuk baxt',
     taglineSolo: "Bu tantanali kunda yoningizda bo'lishni istaymiz",
+    headlineByTheme: {
+      zumrad: 'Baxtli nikoh boshlanishi',
+      shafaq: 'Ikki qalb tantanasi'
+    },
+    taglineByTheme: {
+      zumrad: "Umrbod baxt sari qo'yilgan birinchi qadam",
+      shafaq: 'Ikki yurak bitta shafaq nurida birlashdi'
+    },
     venueEyebrow: 'Tantanali marosim',
     dateLabel: 'Sana',
     msgLabel: 'Qo\'shimcha xabar (ixtiyoriy)',
@@ -19,6 +27,14 @@ const EVENT_CATEGORIES = [
     headline: 'Qiz bazmi kechasi',
     inviteWord: 'Taklif etamiz',
     tagline: 'Bu kunni siz bilan nishonlashni istaymiz',
+    headlineByTheme: {
+      zumrad: "Qizlar kechasi — o'ziga xos ertak",
+      shafaq: 'Shafaq ostidagi bazm kechasi'
+    },
+    taglineByTheme: {
+      zumrad: 'Kulgi, raqs va eng yaqinlar — bir kechada jamlanadi',
+      shafaq: "Bu kechani birga nishonlaylik, xotira abadiy qolsin"
+    },
     venueEyebrow: 'Tadbir',
     dateLabel: 'Sana',
     msgLabel: 'Qo\'shimcha xabar (ixtiyoriy)',
@@ -166,7 +182,8 @@ const LAYOUT_META = [
   { id: 'maktub', label: 'Maktub', categories: ['sevgimga_hat'] },
   { id: 'premium', label: 'Premium ✨ Yangi', categories: ['sevgi_izhor'] },
   { id: 'shohona', label: 'Shohona ✨ Yangi', categories: null },
-  { id: 'nikoh', label: "Nikoh to'yi (kuyov) ✨ Yangi", categories: ['toy'], requiresBrideName: false, notDefault: true }
+  { id: 'nikoh', label: "Nikoh to'yi (kuyov) ✨ Yangi", categories: ['toy'], requiresBrideName: false, notDefault: true },
+  { id: 'marosim', label: 'Tantanali marosim ✨ Yangi', categories: ['toy'], notDefault: true }
 ];
 
 function getLayoutsForCategory(eventTypeId) {

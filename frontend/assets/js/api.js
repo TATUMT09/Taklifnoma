@@ -81,6 +81,9 @@ const api = (() => {
     createQrMemory: (payload) => request('POST', '/api/qr-memory', payload),
     getQrMemory: (token) => request('GET', `/api/qr-memory/${token}`),
 
+    createVizitka: (payload) => request('POST', '/api/vizitka', payload),
+    getVizitka: (token) => request('GET', `/api/vizitka/${token}`),
+
     adminGallery: () => request('GET', '/api/admin/gallery'),
     adminAddGalleryPhoto: (payload) => request('POST', '/api/admin/gallery', payload),
     adminDeleteGalleryPhoto: (id) => request('DELETE', `/api/admin/gallery/${id}`)
