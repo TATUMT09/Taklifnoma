@@ -848,7 +848,7 @@ body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); 
 }
 .maktub-bg-overlay {
   position: fixed; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(253, 246, 240, 0.72), rgba(253, 246, 240, 0.82) 45%, var(--paper) 100%);
+  background: linear-gradient(180deg, rgba(10, 6, 8, 0.34), rgba(10, 6, 8, 0.1) 35%, rgba(10, 6, 8, 0.15) 65%, rgba(10, 6, 8, 0.4) 100%);
   pointer-events: none;
 }
 .maktub-mid {
@@ -858,6 +858,11 @@ body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); 
 .maktub-eyebrow {
   font-family: var(--serif); font-style: italic; font-weight: 500;
   font-size: clamp(1.1rem, 4vw, 1.4rem); color: var(--wine); max-width: 20ch;
+}
+body[data-layout="maktub"] .maktub-eyebrow,
+body[data-layout="maktub"] .maktub-hint,
+body[data-layout="maktub"] .maktub-tagline {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .wax-seal {
