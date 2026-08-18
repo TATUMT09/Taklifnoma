@@ -304,7 +304,7 @@ body[data-theme="muhabbat"] .cover {
 .cover.opened .envelope-wrap { gap: clamp(10px, 3vw, 18px); }
 .envelope {
   appearance: none; border: none; background: none; padding: 0; cursor: pointer;
-  width: clamp(160px, 50vw, 640px);
+  width: clamp(175px, 49vw, 560px);
   aspect-ratio: 240 / 346;
   position: relative;
   flex-shrink: 0;
@@ -324,7 +324,7 @@ body[data-theme="muhabbat"] .cover {
 }
 .envelope-card {
   flex-shrink: 0;
-  width: clamp(160px, 50vw, 640px);
+  width: clamp(150px, 42vw, 480px);
   aspect-ratio: 458 / 770;
   background-image: url('/assets/images/card-open.jpg');
   background-size: cover; background-position: center;
@@ -388,7 +388,7 @@ body[data-theme="muhabbat"] .cover {
 .cover.opened .envelope-seal { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
 .cover.opened .envelope-card {
   opacity: 1;
-  max-width: 640px;
+  max-width: 480px;
 }
 .cover.opened .envelope-shadow { opacity: 0.35; }
 
