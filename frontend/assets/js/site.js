@@ -284,7 +284,7 @@
       { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.svg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
       { id: 'sevgi_izhor', name: 'Sevgi izhori', theme: 'vau', badge: 'Premium', image: '/assets/images/categories/sevgi_izhor_premium.png', desc: "Yangi: Premium ✨ — kinematik, animatsiyali sevgi izhori sahifasi." },
       { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." },
-      { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', photoTag: '/assets/images/hero/yuzixatniki.jpg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
+      { id: 'sevgimga_hat', name: 'Sevgimga hat', image: '/assets/images/categories/sevgi_izhor.svg', video: '/assets/images/hero/vedeo.mp4', photoTag: '/assets/images/hero/yuzixatniki.jpg', desc: "Sevgan insoningizga chin yurakdan hat bitib, uni chiroyli raqamli sahifada taqdim eting." }
     ];
 
     // One card per layout — layouts are structurally distinct (envelope / gold-frame /
@@ -315,7 +315,7 @@
           ${cat.badge ? `<span class="tpl-badge">${cat.badge}</span>` : ''}
           <a class="tpl-preview" href="/preview?${catParams}" target="_blank" rel="noopener" aria-label="Namunani ko'rish" ${(cat.video || cat.photoTag) ? '' : `style="background-image:url('${cat.image}');background-size:cover;background-position:center;"`}>
             ${cat.video ? `<video class="tpl-media-bg" src="${cat.video}" poster="${cat.image}" autoplay muted loop playsinline preload="metadata"></video>` : ''}
-            ${cat.photoTag ? `<img class="tpl-media-bg" src="${cat.photoTag}" alt="${cat.name}">` : ''}
+            ${cat.photoTag ? `<img class="${cat.video ? 'tpl-photo-frame' : 'tpl-media-bg'}" src="${cat.photoTag}" alt="${cat.name}">` : ''}
             <span class="tpl-cat-badge">${cat.name}</span>
           </a>
           <div class="tpl-body">
