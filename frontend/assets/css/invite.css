@@ -841,6 +841,23 @@ body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); 
   background: radial-gradient(60% 50% at 50% 30%, rgba(122, 32, 53, 0.07), transparent 70%);
   pointer-events: none;
 }
+.maktub-bg-video {
+  position: fixed; inset: 0; z-index: -1;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+.maktub-bg-overlay {
+  position: fixed; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(253, 246, 240, 0.82), rgba(253, 246, 240, 0.9) 45%, var(--paper) 100%);
+  opacity: 0; transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+.maktub-cover.opened .maktub-bg-video,
+.maktub-cover.opened .maktub-bg-overlay { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .maktub-bg-video, .maktub-bg-overlay { transition: none; }
+}
 .maktub-mid {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 1.7rem; position: relative; z-index: 1;
@@ -858,6 +875,13 @@ body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); 
   box-shadow: 0 16px 32px -14px rgba(58, 20, 32, 0.5), inset 0 2px 3px rgba(255,255,255,0.35), inset 0 -3px 6px rgba(0,0,0,0.3);
   display: flex; align-items: center; justify-content: center;
   transition: transform 0.5s cubic-bezier(.3,.8,.4,1), opacity 0.5s ease, box-shadow 0.5s ease;
+}
+body[data-layout="maktub"] .wax-seal {
+  background-image:
+    radial-gradient(circle at 32% 28%, rgba(224, 171, 140, 0.45), rgba(58, 15, 28, 0.55) 60%, rgba(30, 10, 18, 0.82) 100%),
+    url('/assets/images/hero/yuzixatniki.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
 }
 .wax-seal:hover { transform: scale(1.05); }
 .wax-seal:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 6px; }

@@ -395,6 +395,10 @@
     const initial = (groom[0] || '?').toUpperCase();
     return `
         <section class="maktub-cover" id="cover">
+          <video class="maktub-bg-video" muted loop playsinline preload="auto">
+            <source src="/assets/images/hero/vedeo.mp4" type="video/mp4">
+          </video>
+          <div class="maktub-bg-overlay"></div>
           <div class="maktub-mid">
             <p class="maktub-eyebrow">${escapeHtml(headline)}</p>
             <button type="button" class="wax-seal" id="envelope-btn" aria-label="Muhrni ochish">
@@ -1027,6 +1031,10 @@
         const hint = document.getElementById('envelope-hint');
         if (hint) hint.textContent = '';
         if (layout === 'premium') playHeartbeat();
+        if (layout === 'maktub') {
+          const bgVideo = document.querySelector('.maktub-bg-video');
+          if (bgVideo) bgVideo.play().catch(() => {});
+        }
         if (bgAudio) bgAudio.play().catch(() => {});
         if (reduceMotion) {
           coverEl.classList.add('revealed');
