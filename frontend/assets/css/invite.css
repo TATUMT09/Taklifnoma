@@ -844,19 +844,12 @@ body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); 
 .maktub-bg-video {
   position: fixed; inset: 0; z-index: -1;
   width: 100%; height: 100%; object-fit: cover;
-  opacity: 0; transition: opacity 1.2s ease;
   pointer-events: none;
 }
 .maktub-bg-overlay {
   position: fixed; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(253, 246, 240, 0.82), rgba(253, 246, 240, 0.9) 45%, var(--paper) 100%);
-  opacity: 0; transition: opacity 1.2s ease;
+  background: linear-gradient(180deg, rgba(253, 246, 240, 0.72), rgba(253, 246, 240, 0.82) 45%, var(--paper) 100%);
   pointer-events: none;
-}
-.maktub-cover.opened .maktub-bg-video,
-.maktub-cover.opened .maktub-bg-overlay { opacity: 1; }
-@media (prefers-reduced-motion: reduce) {
-  .maktub-bg-video, .maktub-bg-overlay { transition: none; }
 }
 .maktub-mid {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;

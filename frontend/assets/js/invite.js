@@ -395,7 +395,7 @@
     const initial = (groom[0] || '?').toUpperCase();
     return `
         <section class="maktub-cover" id="cover">
-          <video class="maktub-bg-video" muted loop playsinline preload="auto">
+          <video class="maktub-bg-video" autoplay muted loop playsinline preload="auto">
             <source src="/assets/images/hero/vedeo.mp4" type="video/mp4">
           </video>
           <div class="maktub-bg-overlay"></div>
