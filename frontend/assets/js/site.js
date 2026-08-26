@@ -57,7 +57,10 @@
     if (dismissedAt && Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return;
 
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const isMobile = isIOS || isAndroid || /mobile/i.test(navigator.userAgent);
     let deferredPrompt = null;
+    let realPromptFired = false;
 
     function dismiss(banner) {
       localStorage.setItem('tn_install_dismissed_at', String(Date.now()));
@@ -70,20 +73,25 @@
       const banner = document.createElement('div');
       banner.id = 'pwa-install-banner';
       banner.className = 'pwa-install-banner';
-      banner.innerHTML = mode === 'ios' ? `
+      const copy = {
+        ios: "Pastdagi Ulashish tugmasini bosing, so'ng \"Bosh ekranga qo'shish\"ni tanlang.",
+        'android-manual': "Yuqori o'ng burchakdagi ⋮ menyusini oching, so'ng \"Ilova o'rnatish\" yoki \"Bosh ekranga qo'shish\"ni tanlang.",
+        'android-prompt': "Tezroq ochiladi va bosh ekranda qulay turadi."
+      };
+      banner.innerHTML = mode === 'android-prompt' ? `
           <span class="pib-icon">📲</span>
           <div class="pib-text">
             <strong>Taklifnoma ilovasini o'rnating</strong>
-            <span>Pastdagi Ulashish tugmasini bosing, so'ng "Bosh ekranga qo'shish"ni tanlang.</span>
+            <span>${copy['android-prompt']}</span>
           </div>
+          <button type="button" class="pib-install">O'rnatish</button>
           <button type="button" class="pib-close" aria-label="Yopish">&times;</button>
         ` : `
           <span class="pib-icon">📲</span>
           <div class="pib-text">
             <strong>Taklifnoma ilovasini o'rnating</strong>
-            <span>Tezroq ochiladi va bosh ekranda qulay turadi.</span>
+            <span>${copy[mode]}</span>
           </div>
-          <button type="button" class="pib-install">O'rnatish</button>
           <button type="button" class="pib-close" aria-label="Yopish">&times;</button>
         `;
       document.body.appendChild(banner);
@@ -112,7 +120,8 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      showBanner('android');
+      realPromptFired = true;
+      showBanner('android-prompt');
     });
 
     window.addEventListener('appinstalled', () => {
@@ -123,6 +132,11 @@
 
     if (isIOS) {
       setTimeout(() => showBanner('ios'), 1500);
+    } else if (isMobile) {
+      // beforeinstallprompt needs a secure (HTTPS) origin to ever fire; over
+      // plain HTTP it silently never does, so without this fallback Android/
+      // other mobile visitors get no install guidance at all.
+      setTimeout(() => { if (!realPromptFired) showBanner('android-manual'); }, 2500);
     }
   }
 
