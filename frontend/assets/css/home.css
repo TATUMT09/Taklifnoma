@@ -301,6 +301,8 @@ body.home-premium .footer-tg { color: rgba(13, 27, 61, 0.55); }
 }
 :root[data-theme="dark"] body.home-premium .hero-search input::placeholder { color: rgba(247, 243, 238, 0.45); }
 :root[data-theme="dark"] body.home-premium [data-nav-auth] .btn-outline { border-color: var(--hp-gold); color: var(--hp-cream); }
+:root[data-theme="dark"] body.home-premium .btn-outline { border-color: var(--hp-gold); color: var(--hp-cream); }
+:root[data-theme="dark"] body.home-premium .btn-outline:hover { border-color: var(--hp-gold-light); color: var(--hp-gold-light); }
 :root[data-theme="dark"] body.home-premium .landing-section.alt { background: rgba(230, 240, 255, 0.04); }
 
 /* =========================================================================
