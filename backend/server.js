@@ -39,9 +39,43 @@ app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(express.static(FRONTEND_DIR));
 
 // Clean URLs for multi-page frontend (no build step, no client router)
-const pages = ['login', 'register', 'dashboard', 'create', 'edit', 'admin', 'contact', 'preview', 'qr-tool', 'gallery'];
+const pages = ['login', 'register', 'dashboard', 'create', 'edit', 'admin', 'contact', 'qr-tool', 'gallery'];
 pages.forEach((p) => {
   app.get(`/${p}`, (req, res) => res.sendFile(path.join(FRONTEND_DIR, `${p}.html`)));
+});
+
+// Template demo links (/preview?layout=...&theme=...&event_type=...) get static
+// server-rendered Open Graph tags too, so sharing a demo in Telegram/WhatsApp shows
+// a real image instead of a bare text link (these are mock pages, no DB row to read).
+const PREVIEW_TEMPLATE = fs.readFileSync(path.join(FRONTEND_DIR, 'preview.html'), 'utf8');
+const PREVIEW_CATEGORY_LABELS = {
+  toy: "To'y taklifnomasi",
+  tugilgan_kun: "Tug'ilgan kun taklifnomasi",
+  tabrik: 'Tabriknoma',
+  haj_safari: 'Haj safari xayrlashuv sahifasi',
+  sevgi_izhor: 'Sevgi izhori sahifasi',
+  nahor_oshi: 'Nahor oshi taklifnomasi',
+  sevgimga_hat: 'Sevgimga hat'
+};
+
+app.get('/preview', (req, res) => {
+  const origin = `${req.protocol}://${req.get('host')}`;
+  const label = PREVIEW_CATEGORY_LABELS[req.query.event_type] || 'Taklifnoma';
+  const title = `${label} — namuna | Taklifnoma`;
+  const description = "O'zingiz uchun shunga o'xshash chiroyli raqamli taklifnoma yarating.";
+  const imageUrl = `${origin}/assets/images/hero/hero-1.jpg`;
+
+  const ogTags = `<title>${escapeHtmlAttr(title)}</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="${escapeHtmlAttr(title)}" />
+<meta property="og:description" content="${escapeHtmlAttr(description)}" />
+<meta property="og:image" content="${escapeHtmlAttr(imageUrl)}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${escapeHtmlAttr(title)}" />
+<meta name="twitter:description" content="${escapeHtmlAttr(description)}" />
+<meta name="twitter:image" content="${escapeHtmlAttr(imageUrl)}" />`;
+
+  res.send(PREVIEW_TEMPLATE.replace('<title>Namuna — Taklifnoma</title>', ogTags));
 });
 
 // Public invitation page: /i/:slug -> static shell (client-side fetches the full data),

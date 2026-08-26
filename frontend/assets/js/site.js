@@ -358,7 +358,6 @@
     const OTHER_CATEGORIES = [
       { id: 'toy', name: "To'y", badge: "Tavsiya etilgan", image: '/assets/images/categories/toy_featured.svg', desc: "Marmar va oltin bezaklar bilan bezatilgan, tantanali to'y taklifnomasi." },
       { id: 'tugilgan_kun', name: "Tug'ilgan kun", image: '/assets/images/categories/tugilgan_kun.svg', desc: "Yaqinlaringizning tug'ilgan kunini chiroyli raqamli tabrik bilan nishonlang." },
-      { id: 'tabrik', name: 'Tabrik', image: '/assets/images/categories/tabrik.svg', desc: 'Har qanday quvonchli voqea uchun chiroyli tabriknoma yarating.' },
       { id: 'haj_safari', name: 'Haj safari', image: '/assets/images/categories/haj_safari.svg', desc: "Haj safariga yo'l olayotgan yaqiningiz uchun xayrlashuv va duo sahifasi." },
       { id: 'sevgi_izhor', name: 'Sevgi izhori', theme: 'vau', badge: 'Premium', image: '/assets/images/categories/sevgi_izhor_premium.png', desc: "Yangi: Premium ✨ — kinematik, animatsiyali sevgi izhori sahifasi." },
       { id: 'nahor_oshi', name: 'Nahor oshi', image: '/assets/images/categories/nahor_oshi.png', desc: "Ertalabki osh dasturxoningiz uchun alohida, o'ziga xos taklifnoma." },
