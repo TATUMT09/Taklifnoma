@@ -1048,3 +1048,35 @@ footer.site-footer {
 }
 .gallery-empty { text-align: center; color: var(--text-faint); padding: 2rem; grid-column: 1 / -1; }
 
+.pwa-install-banner {
+  position: fixed; left: 50%; bottom: 16px;
+  transform: translate(-50%, 130%);
+  width: min(94vw, 460px);
+  display: flex; align-items: center; gap: 0.8rem;
+  background: #0D1B3D;
+  color: #F5F0E6;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  box-shadow: 0 18px 40px -14px rgba(13, 27, 61, 0.55);
+  z-index: 200;
+  transition: transform 0.4s cubic-bezier(.2,.8,.3,1);
+}
+.pwa-install-banner.visible { transform: translate(-50%, 0); }
+.pib-icon { font-size: 1.6rem; flex-shrink: 0; }
+.pib-text { display: flex; flex-direction: column; gap: 0.15rem; flex: 1; min-width: 0; }
+.pib-text strong { font-family: var(--sans); font-size: 0.92rem; }
+.pib-text span { font-size: 0.78rem; color: rgba(245, 240, 230, 0.75); line-height: 1.35; }
+.pib-install {
+  flex-shrink: 0; appearance: none; border: none; cursor: pointer;
+  background: #D4AF37; color: #0D1B3D; font-weight: 700; font-family: var(--sans);
+  font-size: 0.82rem; padding: 0.55rem 0.9rem; border-radius: 999px;
+}
+.pib-close {
+  flex-shrink: 0; appearance: none; border: none; cursor: pointer; background: none;
+  color: rgba(245, 240, 230, 0.6); font-size: 1.3rem; line-height: 1; padding: 0.2rem 0.3rem;
+}
+.pib-close:hover { color: #F5F0E6; }
+@media (prefers-reduced-motion: reduce) {
+  .pwa-install-banner { transition: none; }
+}
+

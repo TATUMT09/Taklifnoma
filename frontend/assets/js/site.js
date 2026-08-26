@@ -25,6 +25,7 @@
     wireMobileNavDrawer();
     initScrollReveal();
     initButtonRipple();
+    wireInstallPrompt();
   });
 
   function wireMobileNavDrawer() {
@@ -46,6 +47,83 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && drawer.classList.contains('open')) setOpen(false);
     });
+  }
+
+  function wireInstallPrompt() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) return;
+    if (localStorage.getItem('tn_install_installed') === '1') return;
+    const dismissedAt = Number(localStorage.getItem('tn_install_dismissed_at') || 0);
+    if (dismissedAt && Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return;
+
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    let deferredPrompt = null;
+
+    function dismiss(banner) {
+      localStorage.setItem('tn_install_dismissed_at', String(Date.now()));
+      banner.classList.remove('visible');
+      setTimeout(() => banner.remove(), 300);
+    }
+
+    function showBanner(mode) {
+      if (document.getElementById('pwa-install-banner')) return;
+      const banner = document.createElement('div');
+      banner.id = 'pwa-install-banner';
+      banner.className = 'pwa-install-banner';
+      banner.innerHTML = mode === 'ios' ? `
+          <span class="pib-icon">📲</span>
+          <div class="pib-text">
+            <strong>Taklifnoma ilovasini o'rnating</strong>
+            <span>Pastdagi Ulashish tugmasini bosing, so'ng "Bosh ekranga qo'shish"ni tanlang.</span>
+          </div>
+          <button type="button" class="pib-close" aria-label="Yopish">&times;</button>
+        ` : `
+          <span class="pib-icon">📲</span>
+          <div class="pib-text">
+            <strong>Taklifnoma ilovasini o'rnating</strong>
+            <span>Tezroq ochiladi va bosh ekranda qulay turadi.</span>
+          </div>
+          <button type="button" class="pib-install">O'rnatish</button>
+          <button type="button" class="pib-close" aria-label="Yopish">&times;</button>
+        `;
+      document.body.appendChild(banner);
+      requestAnimationFrame(() => banner.classList.add('visible'));
+
+      banner.querySelector('.pib-close').addEventListener('click', () => dismiss(banner));
+
+      const installBtn = banner.querySelector('.pib-install');
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          const choice = await deferredPrompt.userChoice.catch(() => null);
+          deferredPrompt = null;
+          if (choice && choice.outcome === 'accepted') {
+            localStorage.setItem('tn_install_installed', '1');
+            banner.classList.remove('visible');
+            setTimeout(() => banner.remove(), 300);
+          } else {
+            dismiss(banner);
+          }
+        });
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showBanner('android');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      localStorage.setItem('tn_install_installed', '1');
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.remove();
+    });
+
+    if (isIOS) {
+      setTimeout(() => showBanner('ios'), 1500);
+    }
   }
 
   function galleryItemHtml(p) {
