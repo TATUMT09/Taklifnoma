@@ -675,10 +675,10 @@ body.has-top-gradient {
 .tpl-filter-selects select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--violet-50); }
 
 .template-grid {
-  max-width: 1280px;
+  max-width: 1600px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
 }
 @media (max-width: 1080px) { .template-grid { grid-template-columns: repeat(2, 1fr); } }

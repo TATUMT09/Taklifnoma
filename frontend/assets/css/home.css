@@ -276,6 +276,32 @@ body.home-premium .footer-tg { color: rgba(13, 27, 61, 0.55); }
       url('/assets/images/home-bg-marble.jpg');
     color: var(--hp-cream);
   }
+  :root:not([data-theme="light"]) body.home-premium .topnav { background: rgba(8, 21, 47, 0.9); border-bottom-color: rgba(200, 167, 94, 0.22); }
+  :root:not([data-theme="light"]) body.home-premium .brand,
+  :root:not([data-theme="light"]) body.home-premium .nav-links,
+  :root:not([data-theme="light"]) body.home-premium .hero-title,
+  :root:not([data-theme="light"]) body.home-premium .hero-sub,
+  :root:not([data-theme="light"]) body.home-premium .section-title,
+  :root:not([data-theme="light"]) body.home-premium .tpl-name,
+  :root:not([data-theme="light"]) body.home-premium .step-title,
+  :root:not([data-theme="light"]) body.home-premium .pricing-list li { color: var(--hp-cream); }
+  :root:not([data-theme="light"]) body.home-premium .hero-sub,
+  :root:not([data-theme="light"]) body.home-premium .section-sub,
+  :root:not([data-theme="light"]) body.home-premium .tpl-desc,
+  :root:not([data-theme="light"]) body.home-premium .step-desc { color: rgba(247, 243, 238, 0.65); }
+  :root:not([data-theme="light"]) body.home-premium .theme-toggle,
+  :root:not([data-theme="light"]) body.home-premium .nav-icon-btn,
+  :root:not([data-theme="light"]) body.home-premium .hero-search input,
+  :root:not([data-theme="light"]) body.home-premium .hp-btn-secondary,
+  :root:not([data-theme="light"]) body.home-premium .tpl-card,
+  :root:not([data-theme="light"]) body.home-premium .pricing-card,
+  :root:not([data-theme="light"]) body.home-premium .nav-dropdown {
+    background: rgba(247, 243, 238, 0.06); border-color: rgba(200, 167, 94, 0.3); color: var(--hp-cream);
+  }
+  :root:not([data-theme="light"]) body.home-premium .hero-search input::placeholder { color: rgba(247, 243, 238, 0.45); }
+  :root:not([data-theme="light"]) body.home-premium [data-nav-auth] .btn-outline { border-color: var(--hp-gold); color: var(--hp-cream); }
+  :root:not([data-theme="light"]) body.home-premium .btn-outline { border-color: var(--hp-gold); color: var(--hp-cream); }
+  :root:not([data-theme="light"]) body.home-premium .btn-outline:hover { border-color: var(--hp-gold-light); color: var(--hp-gold-light); }
 }
 :root[data-theme="dark"] body.home-premium .topnav { background: rgba(8, 21, 47, 0.9); border-bottom-color: rgba(200, 167, 94, 0.22); }
 :root[data-theme="dark"] body.home-premium .brand,
