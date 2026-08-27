@@ -69,7 +69,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body {
   margin: 0;
   background: var(--bg);
@@ -78,6 +78,7 @@ body {
   font-size: 16px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
 h1, h2, h3, p { margin: 0; }
@@ -979,12 +980,10 @@ footer.site-footer {
 .gallery-admin-item:hover .btn { opacity: 1; }
 
 .gallery-grid {
-  max-width: 1280px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  max-width: 1600px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
 }
-@media (max-width: 1080px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 720px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 460px) { .gallery-grid { grid-template-columns: 1fr; } }
 .gallery-item {
   position: relative; border-radius: var(--radius-card); overflow: hidden;
   aspect-ratio: 4 / 5; box-shadow: var(--shadow-card);
