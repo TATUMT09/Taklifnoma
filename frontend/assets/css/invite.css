@@ -862,7 +862,15 @@ body[data-layout="maktub"] { background: var(--paper); color: var(--deep-text); 
 body[data-layout="maktub"] .maktub-eyebrow,
 body[data-layout="maktub"] .maktub-hint,
 body[data-layout="maktub"] .maktub-tagline {
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  background: rgba(253, 246, 240, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+}
+body[data-layout="maktub"] .maktub-hint {
+  padding: 0.4rem 0.9rem;
 }
 
 .wax-seal {
