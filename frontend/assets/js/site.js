@@ -184,6 +184,19 @@
 
   let lightboxPhotos = [];
   let lightboxIndex = 0;
+  let lightboxTimer = null;
+  const LIGHTBOX_AUTO_MS = 3500;
+
+  function startLightboxAuto() {
+    stopLightboxAuto();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (lightboxPhotos.length <= 1) return;
+    lightboxTimer = setInterval(() => navLightbox(1), LIGHTBOX_AUTO_MS);
+  }
+
+  function stopLightboxAuto() {
+    if (lightboxTimer) { clearInterval(lightboxTimer); lightboxTimer = null; }
+  }
 
   function ensureLightbox() {
     let lb = document.getElementById('site-lightbox');
@@ -224,18 +237,21 @@
     updateLightboxImg();
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
+    startLightboxAuto();
   }
 
   function navLightbox(dir) {
     if (!lightboxPhotos.length) return;
     lightboxIndex = (lightboxIndex + dir + lightboxPhotos.length) % lightboxPhotos.length;
     updateLightboxImg();
+    startLightboxAuto();
   }
 
   function closeLightbox() {
     const lb = document.getElementById('site-lightbox');
     if (lb) lb.classList.remove('open');
     document.body.style.overflow = '';
+    stopLightboxAuto();
   }
 
   async function renderGallery() {
