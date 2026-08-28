@@ -1494,6 +1494,8 @@ body[data-layout="shohona"] .contact-tg { color: #cbd0da; }
 .marosim-address {
   margin: 14px 0 0; font-family: var(--sans); font-weight: 500; font-size: 20px; line-height: 1.55;
   color: #5E5550;
+  width: 100%; max-width: 100%;
+  overflow-wrap: break-word; word-break: break-word;
 }
 .marosim-address span { display: block; }
 
@@ -1534,10 +1536,13 @@ body[data-layout="shohona"] .contact-tg { color: #cbd0da; }
     position: relative; top: auto; left: auto; transform: none;
     width: 82%; height: auto; aspect-ratio: 500 / 670; margin: 118px auto 40px;
   }
-  .marosim-arch-content { padding: 26vw 22px 0; }
-  .marosim-venue-name { font-size: 40px; }
-  .marosim-venue-sub { font-size: 33px; }
-  .marosim-address { font-size: 16px; }
+  .marosim-arch-content { padding: 19vw 18px 24px; }
+  .marosim-ornament-top { margin-bottom: 6px; }
+  .marosim-venue-name { font-size: 36px; }
+  .marosim-venue-sub { font-size: 28px; }
+  .marosim-divider-mid { margin: 12px 0 16px; }
+  .marosim-pin { width: 34px; height: 34px; }
+  .marosim-address { font-size: 15px; margin-top: 10px; line-height: 1.45; }
   .marosim-bottom-divider { position: relative; bottom: auto; margin-top: 20px; }
   .marosim-bottom-divider span { width: 70px; }
 }
