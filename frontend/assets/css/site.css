@@ -863,6 +863,20 @@ footer.site-footer {
   gap: 1rem;
 }
 
+.premium-page-gate {
+  text-align: center;
+  padding: 5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.premium-page-gate-icon { font-size: 2.4rem; }
+.premium-page-gate-title { font-family: var(--serif); font-style: italic; font-size: 1.25rem; margin: 0; color: var(--text); }
+.premium-page-gate-sub { color: var(--text-dim); font-size: 0.92rem; margin: 0 0 0.4rem; }
+
 /* ---------- Create/edit wizard ---------- */
 .wizard-shell { max-width: 640px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
 .wizard-progress { display: flex; gap: 0.4rem; margin-bottom: 1.6rem; }

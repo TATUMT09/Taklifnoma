@@ -15,6 +15,7 @@ const geocodeRoutes = require('./routes/geocode');
 const galleryRoutes = require('./routes/gallery');
 const qrMemoryRoutes = require('./routes/qrMemory');
 const vizitkaRoutes = require('./routes/vizitka');
+const premiumRoutes = require('./routes/premium');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -34,6 +35,7 @@ app.use('/api/uploads', uploadRoutes);
 app.use('/api/geocode', geocodeRoutes);
 app.use('/api/qr-memory', qrMemoryRoutes);
 app.use('/api/vizitka', vizitkaRoutes);
+app.use('/api/premium', premiumRoutes);
 
 app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(express.static(FRONTEND_DIR));

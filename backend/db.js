@@ -102,7 +102,9 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS premium_payments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    invitation_id INTEGER NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
+    payment_type TEXT NOT NULL DEFAULT 'invitation',
+    invitation_id INTEGER REFERENCES invitations(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     amount INTEGER NOT NULL DEFAULT 0,
     screenshot_url TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending',
@@ -125,6 +127,34 @@ if (!userColumns.includes('avatar_url')) {
 }
 if (!userColumns.includes('is_admin')) {
   db.exec('ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0');
+}
+if (!userColumns.includes('is_premium')) {
+  db.exec('ALTER TABLE users ADD COLUMN is_premium INTEGER NOT NULL DEFAULT 0');
+}
+
+// premium_payments originally only supported per-invitation payments
+// (invitation_id NOT NULL). Membership payments are tied to a user instead,
+// so the table needs invitation_id to be nullable — SQLite can't relax a
+// NOT NULL constraint in place, so rebuild the table when upgrading.
+const premiumPaymentsColumns = db.prepare("PRAGMA table_info(premium_payments)").all().map((c) => c.name);
+if (!premiumPaymentsColumns.includes('payment_type')) {
+  db.exec(`
+    ALTER TABLE premium_payments RENAME TO premium_payments_old;
+    CREATE TABLE premium_payments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      payment_type TEXT NOT NULL DEFAULT 'invitation',
+      invitation_id INTEGER REFERENCES invitations(id) ON DELETE CASCADE,
+      user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      amount INTEGER NOT NULL DEFAULT 0,
+      screenshot_url TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      reviewed_at TEXT
+    );
+    INSERT INTO premium_payments (id, payment_type, invitation_id, user_id, amount, screenshot_url, status, created_at, reviewed_at)
+      SELECT id, 'invitation', invitation_id, NULL, amount, screenshot_url, status, created_at, reviewed_at FROM premium_payments_old;
+    DROP TABLE premium_payments_old;
+  `);
 }
 
 const invitationColumns = db.prepare("PRAGMA table_info(invitations)").all().map((c) => c.name);

@@ -132,7 +132,10 @@
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/site.js"></script>
 <script>
-(function () {
+(async function () {
+  const allowed = await checkPremiumGate('.auth-shell', 'QR kod vositasi');
+  if (!allowed) return;
+
   const coverInput = document.getElementById('qr-cover-input');
   const coverStatus = document.getElementById('qr-cover-status');
   const modeBtns = document.querySelectorAll('.qr-mode-btn');

@@ -258,6 +258,8 @@
     const grid = document.getElementById('gallery-grid');
     const categorySelect = document.getElementById('gallery-category-filter');
     if (!grid) return;
+    const allowed = await checkPremiumGate('#gallery', 'Galereya');
+    if (!allowed) return;
     try {
       const { photos } = await api.getGallery();
       const showCategory = (cat) => {
@@ -557,5 +559,47 @@
       window.location.href = '/login';
       return null;
     }
+  };
+
+  function premiumGateHtml({ needsLogin, featureLabel, status }) {
+    if (needsLogin) {
+      return `
+        <div class="premium-page-gate">
+          <p class="premium-page-gate-icon">💎</p>
+          <h2 class="premium-page-gate-title">${escapeHtml(featureLabel)} — Premium a'zolar uchun</h2>
+          <p class="premium-page-gate-sub">Davom etish uchun avval tizimga kiring.</p>
+          <a href="/login" class="btn btn-primary">Kirish</a>
+        </div>`;
+    }
+    if (status === 'pending') {
+      return `
+        <div class="premium-page-gate">
+          <p class="premium-page-gate-icon">⏳</p>
+          <h2 class="premium-page-gate-title">To'lovingiz ko'rib chiqilmoqda</h2>
+          <p class="premium-page-gate-sub">Tasdiqlangach shu sahifa avtomatik ochiladi.</p>
+        </div>`;
+    }
+    return `
+      <div class="premium-page-gate">
+        <p class="premium-page-gate-icon">💎</p>
+        <h2 class="premium-page-gate-title">${escapeHtml(featureLabel)} — Premium a'zolar uchun</h2>
+        <p class="premium-page-gate-sub">Bu bo'limdan foydalanish uchun Premium a'zo bo'ling.</p>
+        <a href="/dashboard" class="btn btn-primary">Premium a'zo bo'lish</a>
+      </div>`;
+  }
+
+  window.checkPremiumGate = async function (sectionSelector, featureLabel) {
+    const section = document.querySelector(sectionSelector);
+    if (!section) return true;
+    let info;
+    try {
+      info = await api.getMembershipStatus();
+    } catch (e) {
+      section.innerHTML = premiumGateHtml({ needsLogin: true, featureLabel });
+      return false;
+    }
+    if (info.is_premium) return true;
+    section.innerHTML = premiumGateHtml({ needsLogin: false, featureLabel, status: info.status });
+    return false;
   };
 })();

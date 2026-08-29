@@ -198,7 +198,7 @@
       premiumBody.innerHTML = payments.map((p) => `
         <tr>
           <td><div class="cell-primary">${escapeHtml(p.owner_name)}</div><div class="cell-sub">${escapeHtml(p.owner_email)}</div></td>
-          <td class="cell-primary">${escapeHtml(p.groom_name)}${p.bride_name ? ' va ' + escapeHtml(p.bride_name) : ''}</td>
+          <td class="cell-primary">${p.payment_type === 'membership' ? '💎 Premium a\'zolik' : escapeHtml(p.groom_name || '') + (p.bride_name ? ' va ' + escapeHtml(p.bride_name) : '')}</td>
           <td>${Number(p.amount).toLocaleString('uz-UZ')} so'm</td>
           <td><a href="${p.screenshot_url}" target="_blank" rel="noopener"><img src="${p.screenshot_url}" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" /></a></td>
           <td>${escapeHtml(PREMIUM_STATUS_LABELS[p.status] || p.status)}</td>

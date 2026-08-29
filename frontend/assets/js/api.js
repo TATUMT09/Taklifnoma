@@ -32,6 +32,9 @@ const api = (() => {
     unlockInvitation: (slug, password) => request('POST', `/api/public/${slug}/unlock`, { password }),
     getPremiumStatus: (slug) => request('GET', `/api/public/${slug}/premium-status`),
     submitPremiumPayment: (slug, screenshotUrl) => request('POST', `/api/public/${slug}/premium-payment`, { screenshot_url: screenshotUrl }),
+
+    getMembershipStatus: () => request('GET', '/api/premium/status'),
+    submitMembershipPayment: (screenshotUrl) => request('POST', '/api/premium/membership-payment', { screenshot_url: screenshotUrl }),
     getWishes: (slug) => request('GET', `/api/public/${slug}/wishes`),
     submitRsvp: (slug, payload) => request('POST', `/api/public/${slug}/rsvp`, payload),
     sendContactMessage: (payload) => request('POST', '/api/public/contact', payload),

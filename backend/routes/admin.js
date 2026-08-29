@@ -94,10 +94,14 @@ router.delete('/invitations/:id', (req, res) => {
 router.get('/premium-payments', (req, res) => {
   const rows = db
     .prepare(
-      `SELECT p.*, i.slug, i.groom_name, i.bride_name, i.event_type, i.layout, u.name AS owner_name, u.email AS owner_email
+      `SELECT p.*,
+              i.slug, i.groom_name, i.bride_name, i.event_type, i.layout,
+              COALESCE(iu.name, mu.name) AS owner_name,
+              COALESCE(iu.email, mu.email) AS owner_email
        FROM premium_payments p
-       JOIN invitations i ON i.id = p.invitation_id
-       JOIN users u ON u.id = i.user_id
+       LEFT JOIN invitations i ON i.id = p.invitation_id
+       LEFT JOIN users iu ON iu.id = i.user_id
+       LEFT JOIN users mu ON mu.id = p.user_id
        ORDER BY p.created_at DESC`
     )
     .all();
@@ -108,6 +112,9 @@ router.post('/premium-payments/:id/approve', (req, res) => {
   const row = db.prepare('SELECT * FROM premium_payments WHERE id = ?').get(req.params.id);
   if (!row) return res.status(404).json({ error: "To'lov topilmadi" });
   db.prepare("UPDATE premium_payments SET status = 'approved', reviewed_at = datetime('now') WHERE id = ?").run(row.id);
+  if (row.payment_type === 'membership' && row.user_id) {
+    db.prepare('UPDATE users SET is_premium = 1 WHERE id = ?').run(row.user_id);
+  }
   res.json({ ok: true });
 });
 
