@@ -1,9 +1,9 @@
-// Premium paywall settings. Replace CARD_NUMBER / CARD_HOLDER with the real
-// receiving card before going live — these are shown to payers in the
-// payment-required screen on premium invitations.
-const CARD_NUMBER = '0000 0000 0000 0000';
-const CARD_HOLDER = "TODO: ISM FAMILIYA";
-const PRICE = 20000;
+// Premium paywall settings — shown to payers in the payment-required screen
+// on premium invitations. Real card details come from .env (never committed
+// to git) — set PREMIUM_CARD_NUMBER / PREMIUM_CARD_HOLDER there.
+const CARD_NUMBER = process.env.PREMIUM_CARD_NUMBER || '0000 0000 0000 0000';
+const CARD_HOLDER = process.env.PREMIUM_CARD_HOLDER || 'TODO: ISM FAMILIYA';
+const PRICE = Number(process.env.PREMIUM_PRICE) || 20000;
 
 // Layouts and event types that require payment before the public link works.
 const PREMIUM_LAYOUTS = ['shohona'];
