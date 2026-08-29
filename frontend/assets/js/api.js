@@ -30,6 +30,8 @@ const api = (() => {
 
     getPublicInvitation: (slug) => request('GET', `/api/public/${slug}`),
     unlockInvitation: (slug, password) => request('POST', `/api/public/${slug}/unlock`, { password }),
+    getPremiumStatus: (slug) => request('GET', `/api/public/${slug}/premium-status`),
+    submitPremiumPayment: (slug, screenshotUrl) => request('POST', `/api/public/${slug}/premium-payment`, { screenshot_url: screenshotUrl }),
     getWishes: (slug) => request('GET', `/api/public/${slug}/wishes`),
     submitRsvp: (slug, payload) => request('POST', `/api/public/${slug}/rsvp`, payload),
     sendContactMessage: (payload) => request('POST', '/api/public/contact', payload),
@@ -86,6 +88,10 @@ const api = (() => {
 
     adminGallery: () => request('GET', '/api/admin/gallery'),
     adminAddGalleryPhoto: (payload) => request('POST', '/api/admin/gallery', payload),
-    adminDeleteGalleryPhoto: (id) => request('DELETE', `/api/admin/gallery/${id}`)
+    adminDeleteGalleryPhoto: (id) => request('DELETE', `/api/admin/gallery/${id}`),
+
+    adminPremiumPayments: () => request('GET', '/api/admin/premium-payments'),
+    adminApprovePremiumPayment: (id) => request('POST', `/api/admin/premium-payments/${id}/approve`),
+    adminRejectPremiumPayment: (id) => request('POST', `/api/admin/premium-payments/${id}/reject`)
   };
 })();

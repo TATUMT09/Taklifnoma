@@ -91,6 +91,33 @@ router.delete('/invitations/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+router.get('/premium-payments', (req, res) => {
+  const rows = db
+    .prepare(
+      `SELECT p.*, i.slug, i.groom_name, i.bride_name, i.event_type, i.layout, u.name AS owner_name, u.email AS owner_email
+       FROM premium_payments p
+       JOIN invitations i ON i.id = p.invitation_id
+       JOIN users u ON u.id = i.user_id
+       ORDER BY p.created_at DESC`
+    )
+    .all();
+  res.json({ payments: rows });
+});
+
+router.post('/premium-payments/:id/approve', (req, res) => {
+  const row = db.prepare('SELECT * FROM premium_payments WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: "To'lov topilmadi" });
+  db.prepare("UPDATE premium_payments SET status = 'approved', reviewed_at = datetime('now') WHERE id = ?").run(row.id);
+  res.json({ ok: true });
+});
+
+router.post('/premium-payments/:id/reject', (req, res) => {
+  const row = db.prepare('SELECT * FROM premium_payments WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: "To'lov topilmadi" });
+  db.prepare("UPDATE premium_payments SET status = 'rejected', reviewed_at = datetime('now') WHERE id = ?").run(row.id);
+  res.json({ ok: true });
+});
+
 router.get('/gallery', (req, res) => {
   const rows = db.prepare('SELECT * FROM site_gallery ORDER BY sort_order ASC, id DESC').all();
   res.json({ photos: rows });

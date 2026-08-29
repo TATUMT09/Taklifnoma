@@ -100,6 +100,16 @@ db.exec(`
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
+  CREATE TABLE IF NOT EXISTS premium_payments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invitation_id INTEGER NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
+    amount INTEGER NOT NULL DEFAULT 0,
+    screenshot_url TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    reviewed_at TEXT
+  );
+
   CREATE INDEX IF NOT EXISTS idx_invitations_user ON invitations(user_id);
   CREATE INDEX IF NOT EXISTS idx_rsvps_invitation ON rsvps(invitation_id);
   CREATE INDEX IF NOT EXISTS idx_gallery_invitation ON invitation_gallery(invitation_id);

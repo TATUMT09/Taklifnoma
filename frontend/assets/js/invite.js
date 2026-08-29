@@ -74,6 +74,7 @@
       .then((data) => {
         if (data.expired) return renderExpired();
         if (data.locked) return renderLocked(slug);
+        if (data.premium_locked) return renderPremiumPaywall(slug, data);
         render(data.invitation);
       })
       .catch(() => {
@@ -124,9 +125,99 @@
       try {
         const data = await api.unlockInvitation(slugValue, password);
         if (data.expired) return renderExpired();
+        if (data.premium_locked) return renderPremiumPaywall(slugValue, data);
         render(data.invitation);
       } catch (err) {
         errEl.textContent = err.message;
+      }
+    });
+  }
+
+  function renderPremiumPaywall(slugValue, info) {
+    document.body.setAttribute('data-theme', 'vau');
+    document.body.setAttribute('data-layout', 'premium');
+
+    if (info.status === 'pending') {
+      app.innerHTML = `
+        <div class="premium-gate-shell">
+          <div class="premium-gate-card reveal visible">
+            <p class="premium-gate-icon">⏳</p>
+            <h1 class="premium-gate-title">To'lovingiz ko'rib chiqilmoqda</h1>
+            <p class="premium-gate-sub">Tasdiqlangach taklifnoma shu havola orqali avtomatik ochiladi. Sahifani keyinroq yangilab ko'ring.</p>
+          </div>
+        </div>`;
+      return;
+    }
+
+    app.innerHTML = `
+      <div class="premium-gate-shell">
+        <div class="premium-gate-card reveal visible pay-card">
+          <p class="premium-gate-icon">💎</p>
+          <h1 class="premium-gate-title">Bu Premium taklifnoma</h1>
+          <p class="premium-gate-sub">${info.status === 'rejected' ? "Oldingi to'lov tasdiqlanmadi. Qaytadan urinib ko'ring." : "Faollashtirish uchun to'lov qiling"}</p>
+
+          <div class="pay-card-box">
+            <div class="pay-card-top">
+              <div class="pay-card-number" id="pay-card-number">${escapeHtml(info.card_number)}</div>
+              <button type="button" class="pay-card-copy" id="pay-card-copy">Nusxalash</button>
+            </div>
+            <div class="pay-card-holder">${escapeHtml(info.card_holder)}</div>
+            <div class="pay-card-amount">${Number(info.amount).toLocaleString('uz-UZ')} so'm</div>
+          </div>
+
+          <form id="premium-pay-form" class="premium-pay-form">
+            <label for="premium-pay-file" class="pay-upload-label">
+              <span id="pay-upload-text">To'lov skrinshotini yuklang</span>
+              <input type="file" id="premium-pay-file" accept="image/png,image/jpeg,image/webp" hidden />
+            </label>
+            <button type="submit" class="btn-gold" id="premium-pay-submit" disabled>Yuborish</button>
+          </form>
+          <p class="premium-unlock-error" id="premium-pay-error"></p>
+        </div>
+      </div>`;
+
+    const copyBtn = document.getElementById('pay-card-copy');
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(info.card_number.replace(/\s+/g, '')).then(() => {
+        copyBtn.textContent = 'Nusxalandi!';
+        setTimeout(() => { copyBtn.textContent = 'Nusxalash'; }, 1500);
+      }).catch(() => {});
+    });
+
+    const fileInput = document.getElementById('premium-pay-file');
+    const uploadText = document.getElementById('pay-upload-text');
+    const submitBtn = document.getElementById('premium-pay-submit');
+    let uploadedUrl = '';
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      uploadText.textContent = 'Yuklanmoqda...';
+      try {
+        const { url } = await api.uploadPhoto(file);
+        uploadedUrl = url;
+        uploadText.textContent = "Skrinshot yuklandi ✓";
+        submitBtn.disabled = false;
+      } catch (err) {
+        uploadText.textContent = "To'lov skrinshotini yuklang";
+        document.getElementById('premium-pay-error').textContent = err.message;
+      }
+    });
+
+    document.getElementById('premium-pay-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('premium-pay-error');
+      errEl.textContent = '';
+      if (!uploadedUrl) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Yuborilmoqda...';
+      try {
+        await api.submitPremiumPayment(slugValue, uploadedUrl);
+        renderPremiumPaywall(slugValue, { ...info, status: 'pending' });
+      } catch (err) {
+        errEl.textContent = err.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Yuborish';
       }
     });
   }

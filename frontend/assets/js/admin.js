@@ -179,8 +179,68 @@
       document.getElementById('tab-users').hidden = tab !== 'users';
       document.getElementById('tab-messages').hidden = tab !== 'messages';
       document.getElementById('tab-gallery').hidden = tab !== 'gallery';
+      document.getElementById('tab-premium').hidden = tab !== 'premium';
     });
   });
+
+  const PREMIUM_STATUS_LABELS = { pending: 'Kutilmoqda', approved: 'Tasdiqlangan', rejected: 'Rad etilgan' };
+  const premiumBody = document.getElementById('premium-body');
+
+  async function loadPremiumPayments() {
+    if (!premiumBody) return;
+    premiumBody.innerHTML = `<tr><td colspan="7" class="skeleton-loading">Yuklanmoqda...</td></tr>`;
+    try {
+      const { payments } = await api.adminPremiumPayments();
+      if (!payments.length) {
+        premiumBody.innerHTML = `<tr><td colspan="7" class="skeleton-loading">Hali to'lov yo'q</td></tr>`;
+        return;
+      }
+      premiumBody.innerHTML = payments.map((p) => `
+        <tr>
+          <td><div class="cell-primary">${escapeHtml(p.owner_name)}</div><div class="cell-sub">${escapeHtml(p.owner_email)}</div></td>
+          <td class="cell-primary">${escapeHtml(p.groom_name)}${p.bride_name ? ' va ' + escapeHtml(p.bride_name) : ''}</td>
+          <td>${Number(p.amount).toLocaleString('uz-UZ')} so'm</td>
+          <td><a href="${p.screenshot_url}" target="_blank" rel="noopener"><img src="${p.screenshot_url}" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" /></a></td>
+          <td>${escapeHtml(PREMIUM_STATUS_LABELS[p.status] || p.status)}</td>
+          <td class="cell-sub">${escapeHtml(p.created_at)}</td>
+          <td>
+            ${p.status === 'pending' ? `
+              <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-primary btn-sm" data-approve-pay="${p.id}">Tasdiqlash</button>
+                <button class="btn btn-danger-ghost btn-sm" data-reject-pay="${p.id}">Rad etish</button>
+              </div>
+            ` : ''}
+          </td>
+        </tr>
+      `).join('');
+
+      premiumBody.querySelectorAll('[data-approve-pay]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          try {
+            await api.adminApprovePremiumPayment(btn.getAttribute('data-approve-pay'));
+            showToast("To'lov tasdiqlandi");
+            loadPremiumPayments();
+          } catch (e) {
+            showToast(e.message, true);
+          }
+        });
+      });
+      premiumBody.querySelectorAll('[data-reject-pay]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          if (!window.confirm("Bu to'lovni rad etmoqchimisiz?")) return;
+          try {
+            await api.adminRejectPremiumPayment(btn.getAttribute('data-reject-pay'));
+            showToast("To'lov rad etildi");
+            loadPremiumPayments();
+          } catch (e) {
+            showToast(e.message, true);
+          }
+        });
+      });
+    } catch (e) {
+      premiumBody.innerHTML = `<tr><td colspan="7" class="field-error">${escapeHtml(e.message)}</td></tr>`;
+    }
+  }
 
   const GALLERY_CATEGORIES = ['toy', 'juftlik', 'oila'];
   const galleryInput = document.getElementById('gallery_input');
@@ -248,4 +308,5 @@
   loadUsers();
   loadMessages();
   loadGallery();
+  loadPremiumPayments();
 })();

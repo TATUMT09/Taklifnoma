@@ -1,8 +1,16 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
+const premiumConfig = require('../config/premium');
 
 const router = express.Router();
+
+function premiumStatusFor(invitationId) {
+  const row = db
+    .prepare('SELECT status FROM premium_payments WHERE invitation_id = ? ORDER BY id DESC LIMIT 1')
+    .get(invitationId);
+  return row ? row.status : 'none';
+}
 
 function loadGallery(invitationId) {
   return db
@@ -49,10 +57,50 @@ router.get('/:slug', (req, res) => {
     return res.json({ locked: true });
   }
 
+  if (premiumConfig.isPremiumInvitation(inv) && premiumStatusFor(inv.id) !== 'approved') {
+    return res.json({
+      premium_locked: true,
+      status: premiumStatusFor(inv.id),
+      invitation_id: inv.id,
+      amount: premiumConfig.PRICE,
+      card_number: premiumConfig.CARD_NUMBER,
+      card_holder: premiumConfig.CARD_HOLDER
+    });
+  }
+
   db.prepare('UPDATE invitations SET views = views + 1 WHERE id = ?').run(inv.id);
   const publicInv = buildPublicInvitation(inv);
   publicInv.views = inv.views + 1;
   res.json({ invitation: publicInv });
+});
+
+router.get('/:slug/premium-status', (req, res) => {
+  const inv = db.prepare('SELECT id FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Taklifnoma topilmadi' });
+  res.json({ status: premiumStatusFor(inv.id) });
+});
+
+router.post('/:slug/premium-payment', (req, res) => {
+  const inv = db.prepare('SELECT * FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Taklifnoma topilmadi' });
+  if (!premiumConfig.isPremiumInvitation(inv)) {
+    return res.status(400).json({ error: 'Bu taklifnoma uchun to\'lov talab qilinmaydi' });
+  }
+  const currentStatus = premiumStatusFor(inv.id);
+  if (currentStatus === 'approved') {
+    return res.status(400).json({ error: "Bu taklifnoma allaqachon faollashtirilgan" });
+  }
+  if (currentStatus === 'pending') {
+    return res.status(409).json({ error: "To'lovingiz allaqachon ko'rib chiqilmoqda" });
+  }
+  const screenshotUrl = typeof req.body.screenshot_url === 'string' ? req.body.screenshot_url.trim() : '';
+  if (!screenshotUrl) return res.status(400).json({ error: "To'lov skrinshotini yuklang" });
+
+  db.prepare(
+    'INSERT INTO premium_payments (invitation_id, amount, screenshot_url, status) VALUES (?, ?, ?, ?)'
+  ).run(inv.id, premiumConfig.PRICE, screenshotUrl, 'pending');
+
+  res.status(201).json({ ok: true, status: 'pending' });
 });
 
 router.post('/:slug/unlock', (req, res) => {
@@ -66,6 +114,17 @@ router.post('/:slug/unlock', (req, res) => {
   const password = (req.body && req.body.password) || '';
   if (!inv.access_password_hash || !bcrypt.compareSync(password, inv.access_password_hash)) {
     return res.status(401).json({ error: "Parol noto'g'ri" });
+  }
+
+  if (premiumConfig.isPremiumInvitation(inv) && premiumStatusFor(inv.id) !== 'approved') {
+    return res.json({
+      premium_locked: true,
+      status: premiumStatusFor(inv.id),
+      invitation_id: inv.id,
+      amount: premiumConfig.PRICE,
+      card_number: premiumConfig.CARD_NUMBER,
+      card_holder: premiumConfig.CARD_HOLDER
+    });
   }
 
   db.prepare('UPDATE invitations SET views = views + 1 WHERE id = ?').run(inv.id);

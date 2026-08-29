@@ -1218,6 +1218,33 @@ body[data-layout="premium"] .chevron { border-color: #FF758F; }
 .premium-unlock-form button { flex-shrink: 0; }
 .premium-unlock-error { color: #FF758F; font-size: 0.9rem; min-height: 1.3em; margin: 0; }
 
+.pay-card.premium-gate-card { width: min(100%, 440px); }
+.pay-card-box {
+  background: linear-gradient(135deg, #7C3AED, #EC4899);
+  border-radius: 16px; padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; text-align: left;
+}
+.pay-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.5rem; }
+.pay-card-number {
+  font-family: var(--sans); font-size: clamp(0.92rem, 4.2vw, 1.15rem); font-weight: 700; letter-spacing: 0.03em; color: #fff;
+  flex: 1; min-width: 0; word-break: break-word;
+}
+.pay-card-copy {
+  flex-shrink: 0;
+  appearance: none; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.12);
+  color: #fff; font-size: 0.72rem; font-weight: 600; border-radius: 999px; padding: 0.3rem 0.7rem; cursor: pointer;
+}
+.pay-card-holder { color: rgba(255,255,255,0.85); font-size: 0.85rem; margin-bottom: 0.6rem; }
+.pay-card-amount { color: #fff; font-size: 1.3rem; font-weight: 700; }
+.premium-pay-form { display: flex; flex-direction: column; gap: 0.9rem; align-items: center; }
+.pay-upload-label {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 64px; border: 1.5px dashed rgba(255,255,255,0.3); border-radius: 12px;
+  color: #CBD5E1; font-size: 0.88rem; font-weight: 500; cursor: pointer; text-align: center; padding: 0.8rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.pay-upload-label:hover { border-color: var(--pg-accent, #FF3B81); background: rgba(255,255,255,0.05); }
+.premium-pay-form .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* ============================================================
    Layout: Shohona — a universal luxury gold/navy template,
    available for every category (like nafis/klassik/zamonaviy).
