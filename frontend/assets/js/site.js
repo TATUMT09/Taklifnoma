@@ -150,7 +150,7 @@
       </div>`;
   }
 
-  const GALLERY_PAGE_SIZE = 8;
+  const GALLERY_PAGE_SIZE = 9;
 
   function renderGalleryCategory(cat, grid, catPhotos) {
     let moreWrap = document.getElementById('gallery-more');
@@ -160,6 +160,7 @@
       moreWrap.className = 'gallery-more-wrap';
       grid.insertAdjacentElement('afterend', moreWrap);
     }
+    if (moreWrap._observer) { moreWrap._observer.disconnect(); moreWrap._observer = null; }
     if (!catPhotos.length) {
       grid.innerHTML = `<p class="gallery-empty">Hozircha rasm qo'shilmagan</p>`;
       moreWrap.innerHTML = '';
@@ -173,11 +174,19 @@
         item.querySelector('img').addEventListener('click', () => openLightbox(catPhotos, i));
       });
       const remaining = catPhotos.length - visible.length;
-      moreWrap.innerHTML = remaining > 0
-        ? `<button type="button" class="btn btn-outline gallery-more-btn">Yana ko'rsatish (+${Math.min(GALLERY_PAGE_SIZE, remaining)})</button>`
-        : '';
-      const btn = moreWrap.querySelector('button');
-      if (btn) btn.addEventListener('click', () => { shown += GALLERY_PAGE_SIZE; draw(); });
+      if (moreWrap._observer) { moreWrap._observer.disconnect(); moreWrap._observer = null; }
+      if (remaining > 0) {
+        moreWrap.innerHTML = `<p class="gallery-loading-hint">Yuklanmoqda...</p>`;
+        moreWrap._observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            shown += GALLERY_PAGE_SIZE;
+            draw();
+          }
+        }, { rootMargin: '400px' });
+        moreWrap._observer.observe(moreWrap);
+      } else {
+        moreWrap.innerHTML = '';
+      }
     };
     draw();
   }
@@ -385,6 +394,15 @@
         </div>`;
     }
 
+    const PREMIUM_LAYOUTS = ['shohona'];
+    const PREMIUM_EVENT_TYPES = ['sevgi_izhor'];
+    function tplPriceHtml(layoutId, eventType) {
+      const isPaid = PREMIUM_LAYOUTS.includes(layoutId) || PREMIUM_EVENT_TYPES.includes(eventType);
+      return isPaid
+        ? `<p class="tpl-price tpl-price-paid">💎 5 000 so'm</p>`
+        : `<p class="tpl-price tpl-price-free">Bepul</p>`;
+    }
+
     const OTHER_CATEGORIES = [
       { id: 'toy', name: "To'y", badge: "Tavsiya etilgan", image: '/assets/images/hero/hero-1.jpg', desc: "Marmar va oltin bezaklar bilan bezatilgan, tantanali to'y taklifnomasi." },
       { id: 'tugilgan_kun', name: "Tug'ilgan kun", image: '/assets/images/categories/tugilgan_kun.svg', desc: "Yaqinlaringizning tug'ilgan kunini chiroyli raqamli tabrik bilan nishonlang." },
@@ -410,6 +428,7 @@
                 <a href="/preview?layout=${layout.id}&theme=${theme.id}&event_type=toy" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Ko'rish</a>
                 <a href="/create?layout=${layout.id}&theme=${theme.id}&event_type=toy" class="btn btn-primary btn-sm">Boshlash</a>
               </div>
+              ${tplPriceHtml(layout.id, 'toy')}
             </div>
           </div>`);
     });
@@ -432,6 +451,7 @@
               <a href="/preview?${catParams}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Ko'rish</a>
               <a href="/create?${catParams}" class="btn btn-primary btn-sm">Boshlash</a>
             </div>
+            ${tplPriceHtml(catLayout, cat.id)}
           </div>
         </div>`);
     });
