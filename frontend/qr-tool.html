@@ -15,15 +15,21 @@
     cursor: pointer; transition: 0.2s ease;
   }
   .qr-mode-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
-  .qr-tool-nav { display: flex; gap: 0.7rem; justify-content: center; margin: 0 auto 1.8rem; max-width: 640px; }
+  .qr-tool-nav { display: flex; gap: 1.4rem; justify-content: center; margin: 0 auto 2.6rem; max-width: 720px; flex-wrap: wrap; }
   .qr-tool-tab {
-    flex: 1; height: 52px; display: flex; align-items: center; justify-content: center;
-    border-radius: 999px; border: 1px solid var(--line);
-    background: var(--panel); color: var(--text); font-family: var(--sans); font-weight: 700; font-size: 0.94rem;
-    text-decoration: none; transition: 0.2s ease;
+    flex: 1; min-width: 220px; min-height: 168px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+    border-radius: 22px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--text); text-decoration: none;
+    padding: 1.8rem 1.4rem; box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
-  .qr-tool-tab.active { background: var(--ink); border-color: var(--ink); color: #fff; }
-  .qr-tool-tab:hover:not(.active) { border-color: var(--gold); }
+  .qr-tool-tab-icon { font-size: 2.3rem; }
+  .qr-tool-tab-title { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 1.25rem; }
+  .qr-tool-tab-desc { font-size: 0.82rem; color: var(--text-dim); text-align: center; line-height: 1.4; }
+  .qr-tool-tab.active { border-color: var(--gold); box-shadow: 0 16px 34px -14px rgba(0,0,0,0.3); }
+  .qr-tool-tab.active .qr-tool-tab-title { color: var(--gold); }
+  .qr-tool-tab:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
   .qr-photos-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.7rem; }
   .qr-photo-thumb { position: relative; width: 72px; height: 72px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
   .qr-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -82,8 +88,16 @@
   </div>
 
   <div class="qr-tool-nav">
-    <a href="/qr-tool" class="qr-tool-tab active">💌 Xotira</a>
-    <a href="/vizitka-tool" class="qr-tool-tab">🅿️ Vizitka</a>
+    <a href="/qr-tool" class="qr-tool-tab active">
+      <span class="qr-tool-tab-icon">💌</span>
+      <span class="qr-tool-tab-title">Xotira</span>
+      <span class="qr-tool-tab-desc">Rasm yoki video xotiralar uchun QR kod</span>
+    </a>
+    <a href="/vizitka-tool" class="qr-tool-tab">
+      <span class="qr-tool-tab-icon">🅿️</span>
+      <span class="qr-tool-tab-title">Vizitka</span>
+      <span class="qr-tool-tab-desc">Ism va telefon raqamingiz uchun QR kod</span>
+    </a>
   </div>
 
   <div class="auth-card panel panel-pad qr-steps" id="qr-tool-card">
