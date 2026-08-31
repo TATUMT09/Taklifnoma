@@ -41,7 +41,7 @@ app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(express.static(FRONTEND_DIR));
 
 // Clean URLs for multi-page frontend (no build step, no client router)
-const pages = ['login', 'register', 'dashboard', 'create', 'edit', 'admin', 'contact', 'qr-tool', 'gallery'];
+const pages = ['login', 'register', 'dashboard', 'create', 'edit', 'admin', 'contact', 'qr-tool', 'vizitka-tool', 'gallery'];
 pages.forEach((p) => {
   app.get(`/${p}`, (req, res) => res.sendFile(path.join(FRONTEND_DIR, `${p}.html`)));
 });

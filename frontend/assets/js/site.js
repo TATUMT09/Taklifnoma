@@ -591,15 +591,23 @@
   window.checkPremiumGate = async function (sectionSelector, featureLabel) {
     const section = document.querySelector(sectionSelector);
     if (!section) return true;
+    // The section starts `hidden` in the HTML so nothing ever flashes before
+    // this check resolves — it's only revealed below, either as the real
+    // content or as the gate, never both.
     let info;
     try {
       info = await api.getMembershipStatus();
     } catch (e) {
       section.innerHTML = premiumGateHtml({ needsLogin: true, featureLabel });
+      section.hidden = false;
       return false;
     }
-    if (info.is_premium) return true;
+    if (info.is_premium) {
+      section.hidden = false;
+      return true;
+    }
     section.innerHTML = premiumGateHtml({ needsLogin: false, featureLabel, status: info.status });
+    section.hidden = false;
     return false;
   };
 })();

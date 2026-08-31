@@ -3,18 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Xotira QR kodi yaratish — Taklifnoma</title>
+<title>Vizitka QR kodi yaratish — Taklifnoma</title>
 <link rel="stylesheet" href="/assets/css/site.css" />
 <link rel="stylesheet" href="/assets/css/home.css" />
 <style>
   .qr-steps { max-width: 640px; margin: 0 auto; }
-  .qr-mode-switch { display: flex; gap: 0.6rem; margin: 0.8rem 0 1.2rem; }
-  .qr-mode-btn {
-    flex: 1; height: 48px; border-radius: 999px; border: 1px solid var(--line);
-    background: var(--panel); color: var(--text); font-family: var(--sans); font-weight: 600; font-size: 0.86rem;
-    cursor: pointer; transition: 0.2s ease;
-  }
-  .qr-mode-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
   .qr-tool-nav { display: flex; gap: 0.7rem; justify-content: center; margin: 0 auto 1.8rem; max-width: 640px; }
   .qr-tool-tab {
     flex: 1; height: 52px; display: flex; align-items: center; justify-content: center;
@@ -24,15 +17,7 @@
   }
   .qr-tool-tab.active { background: var(--ink); border-color: var(--ink); color: #fff; }
   .qr-tool-tab:hover:not(.active) { border-color: var(--gold); }
-  .qr-photos-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.7rem; }
-  .qr-photo-thumb { position: relative; width: 72px; height: 72px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
-  .qr-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .qr-photo-thumb button {
-    position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%;
-    background: rgba(0,0,0,0.6); color: #fff; border: none; font-size: 0.7rem; cursor: pointer; line-height: 1;
-  }
   #qr-canvas-final { max-width: 100%; border-radius: 16px; box-shadow: var(--shadow-card); }
-  .qr-count-hint { font-size: 0.76rem; color: var(--text-faint); margin-top: 0.3rem; }
 </style>
 </head>
 <body class="home-premium">
@@ -77,59 +62,39 @@
 <section class="landing-section" id="qr-tool-section" style="padding-top:96px;" hidden>
   <div class="section-head">
     <p class="eyebrow">QR vositalari</p>
-    <h2 class="section-title">Xotira uchun QR kod yarating</h2>
-    <p class="section-sub">Kelin-kuyov suratini qo'ying, keyin video yoki 10 tagacha rasm (va xohlasangiz qo'shiq) yuklang — chiroyli QR kod tayyor bo'ladi. Uni skanerlagan kishi xotiralaringizni ko'radi.</p>
+    <h2 class="section-title">Vizitka QR kodi yarating</h2>
+    <p class="section-sub">Ismingiz va telefon raqamingizni kiriting — QR kod tayyor bo'ladi. Masalan, mashinangiz kimgadir yo'l bermay qolsa, shu QR kodni oyna ortiga qo'ying: skanerlagan kishi darhol raqamingizni ko'rib qo'ng'iroq qila oladi.</p>
   </div>
 
   <div class="qr-tool-nav">
-    <a href="/qr-tool" class="qr-tool-tab active">💌 Xotira</a>
-    <a href="/vizitka-tool" class="qr-tool-tab">🅿️ Vizitka</a>
+    <a href="/qr-tool" class="qr-tool-tab">💌 Xotira</a>
+    <a href="/vizitka-tool" class="qr-tool-tab active">🅿️ Vizitka</a>
   </div>
 
   <div class="auth-card panel panel-pad qr-steps" id="qr-tool-card">
-    <div id="qr-tool-xotira">
+    <div id="qr-tool-vizitka">
       <div class="field">
-        <label for="qr-cover-input">Kelin-kuyov surati (ixtiyoriy)</label>
-        <input type="file" id="qr-cover-input" accept="image/png,image/jpeg,image/webp" />
-        <p class="field-hint" id="qr-cover-status">Tanlanmasa, pastdagi rasmlarning birinchisi ishlatiladi</p>
+        <label for="viz-name">Ismingiz</label>
+        <input type="text" id="viz-name" placeholder="Masalan: Aziz Karimov" />
+      </div>
+      <div class="field">
+        <label for="viz-phone">Telefon raqamingiz</label>
+        <input type="tel" id="viz-phone" placeholder="+998 90 123 45 67" />
+      </div>
+      <div class="field">
+        <label for="viz-note">Izoh (ixtiyoriy)</label>
+        <input type="text" id="viz-note" placeholder="Masalan: Mashina egasi" />
       </div>
 
-      <div class="qr-mode-switch">
-        <button type="button" class="qr-mode-btn active" data-mode="photos">Rasmlar (10 tagacha)</button>
-        <button type="button" class="qr-mode-btn" data-mode="video">Video</button>
-      </div>
-
-      <div id="qr-mode-photos">
-        <div class="field">
-          <label for="qr-photos-input">Rasmlar</label>
-          <input type="file" id="qr-photos-input" accept="image/png,image/jpeg,image/webp" multiple />
-          <p class="qr-count-hint" id="qr-photos-count">0 / 10 rasm tanlandi</p>
-          <div class="qr-photos-list" id="qr-photos-list"></div>
-        </div>
-        <div class="field">
-          <label for="qr-song-input">Qo'shiq (ixtiyoriy)</label>
-          <input type="file" id="qr-song-input" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/mp4,audio/x-m4a,audio/aac" />
-          <p class="field-hint" id="qr-song-status"></p>
-        </div>
-      </div>
-
-      <div id="qr-mode-video" hidden>
-        <div class="field">
-          <label for="qr-video-input">Video</label>
-          <input type="file" id="qr-video-input" accept="video/mp4,video/webm" />
-          <p class="field-hint" id="qr-video-status"></p>
-        </div>
-      </div>
-
-      <button type="button" class="btn btn-primary" id="qr-generate-btn" style="width:100%;margin-top:0.6rem;">Xotira QR kodini yaratish</button>
-      <p class="field-hint" id="qr-generate-status" style="text-align:center;margin-top:0.6rem;"></p>
+      <button type="button" class="btn btn-primary" id="viz-generate-btn" style="width:100%;margin-top:0.6rem;">Vizitka QR kodini yaratish</button>
+      <p class="field-hint" id="viz-generate-status" style="text-align:center;margin-top:0.6rem;"></p>
     </div>
 
     <div id="qr-result" hidden style="margin-top:1.6rem;text-align:center;">
       <canvas id="qr-canvas-final"></canvas>
       <p class="field-hint" id="qr-link" style="word-break:break-all;margin-top:0.8rem;"></p>
       <div style="display:flex;gap:0.6rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
-        <a href="#" download="xotira-qr.png" class="btn btn-primary btn-sm" id="qr-download-btn">QR kodni yuklab olish</a>
+        <a href="#" download="vizitka-qr.png" class="btn btn-primary btn-sm" id="qr-download-btn">QR kodni yuklab olish</a>
         <button type="button" class="btn btn-outline btn-sm" id="qr-copy-link-btn">Havolani nusxalash</button>
       </div>
     </div>
