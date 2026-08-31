@@ -258,8 +258,6 @@
     const grid = document.getElementById('gallery-grid');
     const categorySelect = document.getElementById('gallery-category-filter');
     if (!grid) return;
-    const allowed = await checkPremiumGate('#gallery', 'Galereya');
-    if (!allowed) return;
     try {
       const { photos } = await api.getGallery();
       const showCategory = (cat) => {

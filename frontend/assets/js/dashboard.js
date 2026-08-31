@@ -46,7 +46,6 @@
             <p class="display" style="font-size:1.15rem;margin:0 0 0.4rem;">💎 Premium a'zo bo'ling</p>
             <ul style="margin:0 0 0.9rem;padding-left:1.1rem;color:var(--text-dim);font-size:0.9rem;line-height:1.7;">
               <li>Shohona va Sevgi izhori andozalaridan cheksiz, to'lovsiz foydalanish</li>
-              <li>Galereya — ilhom rasmlari to'plamiga to'liq kirish</li>
               <li>QR kod vositasida video xotira funksiyasi</li>
             </ul>
           </div>
